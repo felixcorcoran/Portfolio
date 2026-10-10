@@ -394,60 +394,70 @@ const canonical = lang === 'en' ? urlEn : urlEs;
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                         
-                        <a href="https://kaloai.infinityfreeapp.com/?i=1" target="_blank" class="md:col-span-8 group relative overflow-hidden bg-neutral-900/40 border border-white/5 rounded-[2.5rem] block transition-all duration-700 hover:border-blue-500/50">
-                            <div class="p-10 md:p-16 h-full flex flex-col justify-between transition-all duration-700 group-hover:blur-2xl group-hover:scale-95 group-hover:opacity-10">
-                                <div>
-                                    <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-6">Full Stack & IA</span>
-                                    <h3 class="text-6xl md:text-7xl font-black text-white tracking-tighter uppercase mb-6">Kalo AI</h3>
-                                    <p class="text-neutral-400 text-lg font-light leading-relaxed max-w-md">
-                                        {t('projects.kalo.desc')}
-                                    </p>
+                        <!-- Los dos proyectos que se pueden visitar, a la mitad y con la misma tarjeta -->
+                        {[
+                            {
+                                url: 'https://kaloai.infinityfreeapp.com/?i=1',
+                                tag: 'Full Stack & IA',
+                                name: 'Kalo AI',
+                                desc: t('projects.kalo.desc'),
+                                chips: [t('projects.kalo.chip1'), t('projects.kalo.chip2'), t('projects.kalo.chip3')],
+                                action: t('btn.explore'),
+                                hover: t('projects.kalo.tag'),
+                                mark: 'AI',
+                            },
+                            {
+                                url: 'https://felixcorcoran.es',
+                                tag: t('projects.fc.tag'),
+                                // En pantallas muy estrechas se parte antes de «.es», nunca a mitad de palabra
+                                name: 'felixcorcoran\u200b.es',
+                                desc: t('projects.fc.desc'),
+                                chips: ['Astro', 'GSAP', 'Three.js', 'GLSL'],
+                                action: t('btn.visit'),
+                                hover: t('projects.fc.hover'),
+                                mark: 'fc',
+                            },
+                        ].map((project) => (
+                            <a href={project.url} target="_blank" rel="noopener" class="md:col-span-6 group relative overflow-hidden bg-neutral-900/40 border border-white/5 rounded-[2.5rem] block transition-all duration-700 hover:border-blue-500/50">
+                                <div class="p-8 md:p-14 h-full flex flex-col justify-between gap-10 transition-all duration-700 group-hover:blur-2xl group-hover:scale-95 group-hover:opacity-10">
+                                    <div>
+                                        <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-6">{project.tag}</span>
+                                        <h3 class="text-[clamp(1.5rem,7vw,3.25rem)] font-black text-white tracking-tighter uppercase mb-6 leading-[0.9]">{project.name}</h3>
+                                        <p class="text-neutral-400 text-lg font-light leading-relaxed">
+                                            {project.desc}
+                                        </p>
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        {project.chips.map((chip) => (
+                                            <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/60 uppercase font-bold">{chip}</span>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700">
-                                <div class="text-center">
-                                    <span class="text-7xl md:text-[6rem] font-black text-white uppercase tracking-tighter block leading-none">{t('btn.explore')}</span>
-                                    <span class="text-2xl font-mono text-blue-500 uppercase tracking-[0.5em]">{t('projects.kalo.tag')}</span>
+                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700">
+                                    <div class="text-center px-6">
+                                        <span class="text-6xl md:text-[5rem] font-black text-white uppercase tracking-tighter block leading-none">{project.action}</span>
+                                        <span class="text-xl font-mono text-blue-500 uppercase tracking-[0.4em]">{project.hover}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <span class="absolute -bottom-10 -right-10 text-[18rem] font-black text-white/[0.02] select-none pointer-events-none">AI</span>
-                        </a>
+                                <span class="absolute -bottom-10 -right-6 text-[16rem] font-black text-white/[0.02] select-none pointer-events-none">{project.mark}</span>
+                            </a>
+                        ))}
 
-                        <a href="https://orianar1.sg-host.com/es/" target="_blank" class="md:col-span-4 group relative p-10 bg-neutral-900/40 border border-white/5 rounded-[2.5rem] overflow-hidden block transition-all duration-500 hover:bg-blue-600">
-                            <div class="relative z-10 h-full flex flex-col transition-all duration-500 group-hover:-translate-y-full group-hover:opacity-0">
-                                <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-6">Web Landing</span>
-                                <h3 class="text-4xl font-black text-white uppercase tracking-tighter mb-4">Weebü Messenger</h3>
-                                <p class="text-neutral-300 text-sm leading-relaxed mb-10">
-                                    {t('projects.promo.desc')}
-                                </p>
-                                <div class="flex flex-wrap gap-2 mt-auto">
-                                    <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/60 uppercase font-bold">
-                                        {t('projects.promo.tag1')}
-                                    </span>
-                                    <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/60 uppercase font-bold">
-                                        {t('projects.promo.tag2')}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center translate-y-full group-hover:translate-y-0 transition-all duration-500 p-10">
-                                <div class="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center mb-4 bg-white/10 backdrop-blur-md">
-                                    <span class="text-white text-3xl">↗</span>
-                                </div>
-                                <span class="text-2xl font-black text-white uppercase tracking-tighter">{t('btn.visit')}</span>
-                            </div>
-                        </a>
-
-                        <!-- Spain Trading Cards: la tienda aún no es pública; el caso se cuenta en felixcorcoran.es -->
-                        <a href="https://felixcorcoran.es/#trabajo" target="_blank" rel="noopener" class="md:col-span-7 group relative overflow-hidden bg-neutral-900/40 border border-white/5 rounded-[2.5rem] block transition-all duration-700 hover:border-blue-500/50">
-                            <div class="p-10 md:p-14 h-full flex flex-col justify-between gap-10 transition-all duration-700 group-hover:blur-2xl group-hover:scale-95 group-hover:opacity-10">
-                                <div>
-                                    <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-6">{t('projects.stc.tag')}</span>
-                                    <h3 class="text-5xl md:text-6xl font-black text-white tracking-tighter uppercase mb-6 leading-[0.9]">Spain Trading Cards</h3>
-                                    <p class="text-neutral-400 text-lg font-light leading-relaxed max-w-lg">
+                        <!-- Spain Trading Cards: en desarrollo (la tienda aún no es pública). Tarjeta baja y
+                             discreta; lleva al caso contado en felixcorcoran.es, que sí existe -->
+                        <a href="https://felixcorcoran.es/#trabajo" target="_blank" rel="noopener" class="md:col-span-12 group relative overflow-hidden bg-neutral-900/20 border border-white/5 rounded-[2.5rem] block transition-all duration-700 hover:border-blue-500/50">
+                            <div class="p-8 md:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 lg:gap-12 transition-all duration-700 group-hover:blur-xl group-hover:opacity-10">
+                                <div class="lg:max-w-3xl">
+                                    <div class="flex flex-wrap items-center gap-3 mb-4">
+                                        <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">{t('projects.stc.tag')}</span>
+                                        <span class="px-2.5 py-1 rounded-full border border-amber-400/30 text-[9px] text-amber-300/80 uppercase font-bold tracking-widest">{t('projects.stc.status')}</span>
+                                    </div>
+                                    <h3 class="text-3xl md:text-4xl font-black text-white tracking-tighter uppercase mb-3 leading-none">Spain Trading Cards</h3>
+                                    <p class="text-neutral-400 text-base font-light leading-relaxed">
                                         {t('projects.stc.desc')}
                                     </p>
                                 </div>
-                                <div class="flex flex-wrap gap-2">
+                                <div class="flex flex-wrap gap-2 lg:justify-end lg:max-w-xs shrink-0">
                                     {['Telegram', 'Gemini', 'n8n', 'Shopify API'].map((tech) => (
                                         <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/60 uppercase font-bold">{tech}</span>
                                     ))}
@@ -455,32 +465,9 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                             </div>
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700">
                                 <div class="text-center px-6">
-                                    <span class="text-6xl md:text-[5rem] font-black text-white uppercase tracking-tighter block leading-none">{t('btn.case')}</span>
-                                    <span class="text-xl font-mono text-blue-500 uppercase tracking-[0.4em]">{t('projects.stc.hover')}</span>
+                                    <span class="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter block leading-none">{t('btn.case')}</span>
+                                    <span class="text-base md:text-lg font-mono text-blue-500 uppercase tracking-[0.4em]">{t('projects.stc.hover')}</span>
                                 </div>
-                            </div>
-                            <span class="absolute -bottom-10 -right-6 text-[16rem] font-black text-white/[0.02] select-none pointer-events-none">n8n</span>
-                        </a>
-
-                        <!-- felixcorcoran.es: la web de servicios -->
-                        <a href="https://felixcorcoran.es" target="_blank" rel="noopener" class="md:col-span-5 group relative p-10 bg-neutral-900/40 border border-white/5 rounded-[2.5rem] overflow-hidden block transition-all duration-500 hover:bg-blue-600">
-                            <div class="relative z-10 h-full flex flex-col transition-all duration-500 group-hover:-translate-y-full group-hover:opacity-0">
-                                <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-6">{t('projects.fc.tag')}</span>
-                                <h3 class="text-4xl font-black text-white uppercase tracking-tighter mb-4">felixcorcoran.es</h3>
-                                <p class="text-neutral-300 text-sm leading-relaxed mb-10">
-                                    {t('projects.fc.desc')}
-                                </p>
-                                <div class="flex flex-wrap gap-2 mt-auto">
-                                    {['Astro', 'GSAP', 'Three.js', 'GLSL'].map((tech) => (
-                                        <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/60 uppercase font-bold">{tech}</span>
-                                    ))}
-                                </div>
-                            </div>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center translate-y-full group-hover:translate-y-0 transition-all duration-500 p-10">
-                                <div class="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center mb-4 bg-white/10 backdrop-blur-md">
-                                    <span class="text-white text-3xl">↗</span>
-                                </div>
-                                <span class="text-2xl font-black text-white uppercase tracking-tighter">{t('btn.visit')}</span>
                             </div>
                         </a>
 
