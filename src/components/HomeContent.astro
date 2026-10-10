@@ -391,6 +391,9 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                                     alt={tech.name} 
                                                 />
                                                 <div class="absolute -bottom-2 w-0 h-px bg-indigo-500 group-hover/tech:w-full transition-all duration-500"></div>
+                                                <span class="absolute -bottom-8 text-[10px] font-mono text-indigo-500 opacity-0 group-hover/tech:opacity-100 uppercase tracking-tighter whitespace-nowrap">
+                                                    {tech.name}
+                                                </span>
                                             </div>
                                         ))}
                                     </div>
@@ -401,35 +404,79 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                 </div>
             </section>
 
-            <!-- Experiencia: lo mismo que el currículum, en dos filas -->
-            <section id="experiencia" class="py-32 md:py-40 px-6 bg-black border-t border-white/5">
-                <div class="max-w-7xl mx-auto">
+            <!-- Experiencia: lo mismo que el currículum. Una línea de tiempo que se dibuja con el
+                 scroll; cada puesto entra al llegar y reacciona al pasar el ratón -->
+            <section id="experiencia" class="relative py-32 md:py-40 px-6 bg-black border-t border-white/5 overflow-hidden">
+                <div class="pointer-events-none absolute -right-40 top-1/3 w-[40rem] h-[40rem] rounded-full bg-blue-600/10 blur-[140px]"></div>
+
+                <div class="relative max-w-7xl mx-auto">
                     <div class="flex items-center gap-6 text-blue-500 font-mono text-xs tracking-[0.3em] uppercase mb-16 md:mb-24">
                         <span>{t('exp.label')}</span>
                         <div class="h-px flex-1 bg-blue-500/20"></div>
                     </div>
 
-                    <h2 class="text-[clamp(2.25rem,11vw,8rem)] font-black text-white tracking-tighter uppercase leading-none mb-16 md:mb-24">
-                        {t('exp.title')}
+                    <h2 id="exp-title" class="text-[clamp(2.25rem,11vw,8rem)] font-black text-white tracking-tighter uppercase leading-none mb-16 md:mb-24">
+                        <span class="block overflow-hidden">
+                            <span class="exp-title-line block">{t('exp.title')}</span>
+                        </span>
                     </h2>
 
-                    <ol class="border-t border-white/10">
+                    <ol id="exp-list" class="relative pl-8 md:pl-16">
+                        <!-- La línea de tiempo: el relleno crece con el scroll (script) -->
+                        <span class="absolute left-0 top-0 bottom-0 w-px bg-white/10" aria-hidden="true">
+                            <span id="exp-progress" class="absolute inset-0 origin-top bg-gradient-to-b from-blue-400 via-indigo-500 to-indigo-500/0"></span>
+                        </span>
+
                         {[
-                            { role: t('exp.freelance.role'), place: 'Freelance', period: t('exp.freelance.period'), desc: t('exp.freelance.desc') },
-                            { role: t('exp.sti.role'), place: 'Simply Trade In', period: t('exp.sti.period'), desc: t('exp.sti.desc') },
-                        ].map((job) => (
-                            <li class="group grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-12 py-10 md:py-14 border-b border-white/10">
-                                <div class="md:col-span-4 font-mono text-[11px] uppercase tracking-[0.3em] space-y-2">
-                                    <span class="block text-blue-400">{job.period}</span>
-                                    <span class="block text-white/50">{job.place}</span>
-                                </div>
-                                <div class="md:col-span-8 space-y-4">
-                                    <h3 class="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-[0.95] transition-colors duration-500 group-hover:text-blue-400">
-                                        {job.role}
-                                    </h3>
-                                    <p class="text-neutral-400 text-lg md:text-xl font-light leading-relaxed max-w-3xl">
-                                        {job.desc}
-                                    </p>
+                            {
+                                role: t('exp.freelance.role'),
+                                place: 'Freelance',
+                                period: t('exp.freelance.period'),
+                                desc: t('exp.freelance.desc'),
+                                tags: lang === 'en' ? ['MVC', 'Online bookings', 'Client-facing'] : ['MVC', 'Reservas online', 'Trato con cliente'],
+                            },
+                            {
+                                role: t('exp.sti.role'),
+                                place: 'Simply Trade In',
+                                period: t('exp.sti.period'),
+                                desc: t('exp.sti.desc'),
+                                tags: ['n8n', 'JSON', 'UI/UX'],
+                            },
+                        ].map((job, index) => (
+                            <li class="exp-row group relative py-12 md:py-16">
+                                <!-- El punto de la línea de tiempo: se enciende al llegar -->
+                                <span class="exp-dot absolute -left-8 md:-left-16 top-[3.7rem] md:top-[4.7rem] -translate-x-1/2 w-3 h-3 rounded-full border border-white/30 bg-black transition-all duration-700" aria-hidden="true"></span>
+
+                                <!-- Destello sobre la línea superior al pasar el ratón -->
+                                <span class="absolute top-0 left-0 right-0 h-px bg-white/10 overflow-hidden" aria-hidden="true">
+                                    <span class="absolute top-0 left-[-100%] w-full h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent transition-all duration-1000 group-hover:left-full"></span>
+                                </span>
+
+                                <!-- Número de fondo, como en la galería -->
+                                <span class="pointer-events-none absolute right-0 top-6 text-[7rem] md:text-[11rem] font-black leading-none text-white/[0.03] transition-all duration-700 group-hover:scale-110 group-hover:rotate-6 group-hover:text-blue-500/[0.08]" aria-hidden="true">
+                                    0{index + 1}
+                                </span>
+
+                                <div class="relative grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-12">
+                                    <div class="md:col-span-4 font-mono text-[11px] uppercase tracking-[0.3em] space-y-2 pt-2">
+                                        <span class="block text-blue-400">{job.period}</span>
+                                        <span class="block text-white/50 transition-colors duration-500 group-hover:text-white">{job.place}</span>
+                                    </div>
+                                    <div class="md:col-span-8 space-y-6">
+                                        <!-- El cargo cambia como el botón «Proyectos»: sube y entra en azul -->
+                                        <h3 class="relative overflow-hidden text-3xl md:text-5xl font-black tracking-tighter uppercase leading-[0.95]">
+                                            <span class="block text-white transition-transform duration-500 group-hover:-translate-y-full">{job.role}</span>
+                                            <span class="absolute inset-0 block text-blue-400 italic translate-y-full transition-transform duration-500 group-hover:translate-y-0" aria-hidden="true">{job.role}</span>
+                                        </h3>
+                                        <p class="text-neutral-400 text-lg md:text-xl font-light leading-relaxed max-w-3xl transition-colors duration-500 group-hover:text-neutral-300">
+                                            {job.desc}
+                                        </p>
+                                        <div class="flex flex-wrap gap-2">
+                                            {job.tags.map((tag) => (
+                                                <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/60 uppercase font-bold transition-colors duration-500 group-hover:border-blue-400/30 group-hover:text-blue-200/80">{tag}</span>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
                             </li>
                         ))}
@@ -651,7 +698,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                 <div class="space-y-4 font-mono text-[10px] tracking-[0.2em] uppercase">
                                     <div class="flex justify-between border-b border-white/5 pb-2">
                                         <span class="text-white/50">{t('contact.meta.email')}</span>
-                                        <a href="mailto:felixxjbk@gmail.com" class="text-indigo-400 hover:text-white transition">felixxjbk@gmail.com</a>
+                                        <a href="mailto:contacto@felixcorcoran.es" class="text-indigo-400 hover:text-white transition">contacto@felixcorcoran.es</a>
                                     </div>
                                     <div class="flex justify-between border-b border-white/5 pb-2">
                                         <span class="text-white/50">{t('contact.meta.location')}</span>
@@ -834,6 +881,41 @@ const canonical = lang === 'en' ? urlEn : urlEs;
     .animate-reveal-up {
         animation: reveal-up 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
     }
+
+    /* ---------- Experiencia ----------
+       Solo con JS (el script añade .exp-anim): sin él, todo se ve tal cual.
+       El titular sube desde abajo; cada puesto entra desenfocado y se enfoca,
+       y su punto en la línea de tiempo se enciende. */
+    .exp-anim .exp-title-line {
+        transform: translateY(105%);
+        transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .exp-anim .exp-title-line.is-in { transform: none; }
+
+    .exp-anim .exp-row {
+        opacity: 0;
+        transform: translateY(48px);
+        filter: blur(8px);
+        transition:
+            opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+            transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+            filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .exp-anim .exp-row.is-in { opacity: 1; transform: none; filter: none; }
+
+    .exp-row.is-on .exp-dot {
+        border-color: #60a5fa;
+        background: #3b82f6;
+        box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.15), 0 0 24px rgba(99, 102, 241, 0.6);
+    }
+
+    #exp-progress { transform: scaleY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+        .exp-anim .exp-title-line,
+        .exp-anim .exp-row { opacity: 1; transform: none; filter: none; transition: none; }
+        #exp-progress { transform: none; }
+    }
 </style>
 
 <script>
@@ -881,6 +963,59 @@ const canonical = lang === 'en' ? urlEn : urlEs;
 
     window.addEventListener('scroll', handleScroll);
     handleScroll();
+
+    // ---------- Experiencia ----------
+    // La línea de tiempo se rellena con el scroll (de que la lista asoma por
+    // abajo a que su final pasa por el centro de la pantalla) y enciende el
+    // punto de cada puesto al llegar a él. Los puestos entran escalonados.
+    const expSection = document.getElementById('experiencia');
+    const expList = document.getElementById('exp-list');
+    const expProgress = document.getElementById('exp-progress');
+    const expRows = Array.from(document.querySelectorAll<HTMLElement>('.exp-row'));
+    const expTitle = document.querySelector<HTMLElement>('.exp-title-line');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (expSection && expList && expProgress) {
+        expSection.classList.add('exp-anim');
+
+        const updateTimeline = () => {
+            const rect = expList.getBoundingClientRect();
+            const progress = reduceMotion
+                ? 1
+                : Math.min(Math.max((innerHeight * 0.75 - rect.top) / rect.height, 0), 1);
+            expProgress.style.transform = `scaleY(${progress})`;
+            const reached = rect.top + rect.height * progress;
+            for (const row of expRows) {
+                const dot = row.querySelector('.exp-dot') as HTMLElement | null;
+                const dotY = dot ? dot.getBoundingClientRect().top : row.getBoundingClientRect().top;
+                row.classList.toggle('is-on', dotY <= reached);
+            }
+        };
+
+        const expObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target as HTMLElement;
+                // El titular se observa por su contenedor: la línea, desplazada
+                // fuera de su caja con overflow oculto, nunca «se vería»
+                const target = el.id === 'exp-title' ? expTitle : el;
+                const index = expRows.indexOf(el);
+                if (target) {
+                    target.style.transitionDelay = index > 0 ? `${index * 120}ms` : '';
+                    target.classList.add('is-in');
+                }
+                expObserver.unobserve(el);
+            });
+        }, { threshold: 0.25 });
+
+        expRows.forEach((row) => expObserver.observe(row));
+        const expTitleBox = document.getElementById('exp-title');
+        if (expTitleBox) expObserver.observe(expTitleBox);
+
+        window.addEventListener('scroll', updateTimeline, { passive: true });
+        window.addEventListener('resize', updateTimeline);
+        updateTimeline();
+    }
 
     const form = document.getElementById('contact-form');
     const btnText = document.getElementById('btn-text');
