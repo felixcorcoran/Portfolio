@@ -5,6 +5,12 @@ import { useTranslations } from '../utils/i18n';
 const title = "Félix Corcoran | Full Stack & AI Automation";
 const { lang = 'es' } = Astro.props; 
 const t = useTranslations(lang);
+
+// URLs absolutas para buscadores y redes: la página en cada idioma
+const site = Astro.site ?? new URL('https://dev.felixcorcoran.es');
+const urlEs = new URL('/', site).href;
+const urlEn = new URL('/en/', site).href;
+const canonical = lang === 'en' ? urlEn : urlEs;
 ---
 
 <html lang={lang}>
@@ -15,7 +21,16 @@ const t = useTranslations(lang);
         <meta name="generator" content={Astro.generator} />
         <meta name="description" content={t('seo.description')}>
         <title>{title}</title>
-    </head>    
+        <link rel="canonical" href={canonical} />
+        <link rel="alternate" hreflang="es" href={urlEs} />
+        <link rel="alternate" hreflang="en" href={urlEn} />
+        <link rel="alternate" hreflang="x-default" href={urlEs} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={t('seo.description')} />
+        <meta property="og:locale" content={lang === 'en' ? 'en_GB' : 'es_ES'} />
+    </head>
     <body class="bg-neutral-950 text-white selection:bg-blue-500/30 font-sans">
         
         <nav class="fixed top-6 right-6 z-50 flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] uppercase bg-neutral-900/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/5">
@@ -422,6 +437,53 @@ const t = useTranslations(lang);
                             </div>
                         </a>
 
+                        <!-- Spain Trading Cards: la tienda aún no es pública; el caso se cuenta en felixcorcoran.es -->
+                        <a href="https://felixcorcoran.es/#trabajo" target="_blank" rel="noopener" class="md:col-span-7 group relative overflow-hidden bg-neutral-900/40 border border-white/5 rounded-[2.5rem] block transition-all duration-700 hover:border-blue-500/50">
+                            <div class="p-10 md:p-14 h-full flex flex-col justify-between gap-10 transition-all duration-700 group-hover:blur-2xl group-hover:scale-95 group-hover:opacity-10">
+                                <div>
+                                    <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-6">{t('projects.stc.tag')}</span>
+                                    <h3 class="text-5xl md:text-6xl font-black text-white tracking-tighter uppercase mb-6 leading-[0.9]">Spain Trading Cards</h3>
+                                    <p class="text-neutral-400 text-lg font-light leading-relaxed max-w-lg">
+                                        {t('projects.stc.desc')}
+                                    </p>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    {['Telegram', 'Gemini', 'n8n', 'Shopify API'].map((tech) => (
+                                        <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/60 uppercase font-bold">{tech}</span>
+                                    ))}
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700">
+                                <div class="text-center px-6">
+                                    <span class="text-6xl md:text-[5rem] font-black text-white uppercase tracking-tighter block leading-none">{t('btn.case')}</span>
+                                    <span class="text-xl font-mono text-blue-500 uppercase tracking-[0.4em]">{t('projects.stc.hover')}</span>
+                                </div>
+                            </div>
+                            <span class="absolute -bottom-10 -right-6 text-[16rem] font-black text-white/[0.02] select-none pointer-events-none">n8n</span>
+                        </a>
+
+                        <!-- felixcorcoran.es: la web de servicios -->
+                        <a href="https://felixcorcoran.es" target="_blank" rel="noopener" class="md:col-span-5 group relative p-10 bg-neutral-900/40 border border-white/5 rounded-[2.5rem] overflow-hidden block transition-all duration-500 hover:bg-blue-600">
+                            <div class="relative z-10 h-full flex flex-col transition-all duration-500 group-hover:-translate-y-full group-hover:opacity-0">
+                                <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-6">{t('projects.fc.tag')}</span>
+                                <h3 class="text-4xl font-black text-white uppercase tracking-tighter mb-4">felixcorcoran.es</h3>
+                                <p class="text-neutral-300 text-sm leading-relaxed mb-10">
+                                    {t('projects.fc.desc')}
+                                </p>
+                                <div class="flex flex-wrap gap-2 mt-auto">
+                                    {['Astro', 'GSAP', 'Three.js', 'GLSL'].map((tech) => (
+                                        <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/60 uppercase font-bold">{tech}</span>
+                                    ))}
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center translate-y-full group-hover:translate-y-0 transition-all duration-500 p-10">
+                                <div class="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center mb-4 bg-white/10 backdrop-blur-md">
+                                    <span class="text-white text-3xl">↗</span>
+                                </div>
+                                <span class="text-2xl font-black text-white uppercase tracking-tighter">{t('btn.visit')}</span>
+                            </div>
+                        </a>
+
                         <div class="md:col-span-12 p-10 md:p-20 bg-neutral-900/20 border border-white/5 rounded-[3rem]">
                             
                             <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 border-b border-white/5 pb-10">
@@ -628,6 +690,11 @@ const t = useTranslations(lang);
                             <div class="group/footer font-mono text-[10px] text-white/60 tracking-[0.3em] uppercase max-w-xs leading-relaxed">
                                 {t('footer.desc')}
                             </div>
+                            <!-- La web de servicios para negocios: la marca principal -->
+                            <a href="https://felixcorcoran.es" target="_blank" rel="noopener" class="group inline-flex items-center gap-3 font-mono text-[10px] tracking-[0.3em] uppercase text-white/60 hover:text-white transition">
+                                <span>{t('footer.business')}</span>
+                                <span class="text-indigo-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500">felixcorcoran.es ↗</span>
+                            </a>
                         </div>
 
                         <div class="md:col-span-6 flex flex-col md:items-end gap-12">
@@ -641,7 +708,7 @@ const t = useTranslations(lang);
                                     { 
                                         name: 'linkedin', 
                                         icon: 'linkedin', 
-                                        url: 'https://www.linkedin.com/in/f%C3%A9lix-corcoran-b22866409/' 
+                                        url: 'https://www.linkedin.com/in/felixcorcoran'
                                     }
                                 ].map((link) => (
                                     <a 

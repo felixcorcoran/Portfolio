@@ -32,6 +32,12 @@ const languages = {
     'projects.promo.desc': 'Desarrollo integral de plataforma web promocional con navegación fluida y fiel al diseño original.',
     'projects.promo.tag1': 'Diseño Funcional',
     'projects.promo.tag2': 'Experiencia de Usuario',
+    'projects.stc.tag': 'Automatización e IA',
+    'projects.stc.desc': 'Alta de productos desde Telegram para una tienda Shopify: Gemini interpreta el mensaje, n8n orquesta el flujo y la API de Shopify crea el producto con su taxonomía, título, descripción y etiquetas. Fotos, precio y stock siguen bajo control humano.',
+    'projects.stc.hover': 'Del móvil a la tienda',
+    'projects.fc.tag': 'Web y WebGL',
+    'projects.fc.desc': 'Mi web de servicios para negocios: una narrativa guiada por el scroll con Astro y GSAP, una escultura 3D con shaders propios en Three.js y SEO técnico con datos estructurados.',
+    'btn.case': 'Ver caso',
     'projects.freelance.label': 'Galería Freelance',
     'projects.freelance.title': 'Proyectos Realizados',
     'projects.freelance.sub': 'Desarrollo de Soluciones a Medida',
@@ -47,7 +53,8 @@ const languages = {
     'contact.placeholder.project': 'DESCRIPCIÓN DEL PROYECTO...',
     
     // Footer
-    'footer.desc': 'Desarrollador full-stack especializado en orquestación de IA y sistemas MVC.'
+    'footer.desc': 'Desarrollador full-stack especializado en orquestación de IA y sistemas MVC.',
+    'footer.business': '¿Tienes un negocio?'
   },
   en: {
     // SEO Metas
@@ -82,6 +89,12 @@ const languages = {
     'projects.promo.desc': 'Full-stack development of a high-fidelity promotional platform with fluid, optimized interactions.',
     'projects.promo.tag1': 'Functional Design',
     'projects.promo.tag2': 'User Experience',
+    'projects.stc.tag': 'Automation & AI',
+    'projects.stc.desc': 'Product onboarding from Telegram for a Shopify store: Gemini parses the message, n8n orchestrates the flow and the Shopify API creates the product with its taxonomy, title, description and tags. Photos, price and stock stay under human control.',
+    'projects.stc.hover': 'From phone to store',
+    'projects.fc.tag': 'Web & WebGL',
+    'projects.fc.desc': 'My services website for businesses: a scroll-driven narrative built with Astro and GSAP, a 3D sculpture with custom Three.js shaders, and technical SEO with structured data.',
+    'btn.case': 'View case',
     'projects.freelance.label': 'Freelance Gallery',
     'projects.freelance.title': 'Completed Projects',
     'projects.freelance.sub': 'Custom Software Development',
@@ -97,7 +110,8 @@ const languages = {
     'contact.placeholder.project': 'PROJECT DESCRIPTION...',
     
     // Footer
-    'footer.desc': 'Full-stack developer specialized in AI orchestration and scalable architectures.'
+    'footer.desc': 'Full-stack developer specialized in AI orchestration and scalable architectures.',
+    'footer.business': 'Running a business?'
   }
 };
 
