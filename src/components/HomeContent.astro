@@ -20,7 +20,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="generator" content={Astro.generator} />
         <meta name="description" content={t('seo.description')}>
         <title>{title}</title>
@@ -33,6 +33,10 @@ const canonical = lang === 'en' ? urlEn : urlEs;
         <meta property="og:title" content={title} />
         <meta property="og:description" content={t('seo.description')} />
         <meta property="og:locale" content={lang === 'en' ? 'en_GB' : 'es_ES'} />
+        <meta property="og:image" content={new URL('/og.png', site).href} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
     </head>
     <body class="bg-neutral-950 text-white selection:bg-blue-500/30 font-sans">
         
@@ -76,11 +80,12 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                             </h1>
 
                             <div class="mt-8 flex flex-col md:flex-row md:items-end gap-6">
-                                <p class="text-3xl md:text-5xl font-extralight text-neutral-400 leading-none lowercase tracking-tighter">
+                                <!-- Sin minúsculas forzadas: «IA» / «AI» se leen como siglas -->
+                                <p class="text-3xl md:text-5xl font-extralight text-neutral-400 leading-none tracking-tighter">
                                     {lang === 'es' ? (
-                                        <>Desarrollador <span class="text-white italic">{t('hero.title.2')}</span> & <br class="hidden md:block"/> {t('hero.title.3')} <span class="text-blue-500 font-normal">{t('hero.title.4')}</span>.</>
+                                        <>{t('hero.title.1')}{' '}<span class="text-white italic">{t('hero.title.2')}</span> & <br class="hidden md:block"/> {t('hero.title.3')}{' '}<span class="text-blue-500 font-normal">{t('hero.title.4')}</span>.</>
                                     ) : (
-                                        <><span class="text-white italic">{t('hero.title.1')}</span> {t('hero.title.2')} & <br class="hidden md:block"/> {t('hero.title.3')} <span class="text-blue-500 font-normal">{t('hero.title.4')}</span>.</>
+                                        <><span class="text-white italic">{t('hero.title.1')}</span> {t('hero.title.2')} & <br class="hidden md:block"/> <span class="text-blue-500 font-normal">{t('hero.title.3')}</span> {t('hero.title.4')}.</>
                                     )}
                                 </p>
                             </div>
@@ -89,7 +94,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 mt-0 md:mt-10">
                             <div class="lg:col-span-7">
                                 <p class="text-xl md:text-2xl font-light text-neutral-400 leading-snug">
-                                    {t('hero.degree')} <span class="text-white font-medium underline decoration-blue-500/30 underline-offset-8">DAW</span>. 
+                                    {t('hero.degree')} <span class="text-white font-medium underline decoration-blue-500/30 underline-offset-8">{t('hero.degree.short')}</span>.
                                     {t('hero.desc')}
                                 </p>
                             </div>
@@ -103,7 +108,8 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                     <div class="mb-2 h-px w-0 bg-neutral-500 transition-all duration-500 group-hover:w-12 opacity-50 group-hover:opacity-100"></div>
                                 </a>
 
-                                <a href="/cv-felix-corcoran.pdf" target="_blank" class="group relative flex items-end gap-4">
+                                <!-- El currículum en el idioma de la página: se descarga directamente -->
+                                <a href={lang === 'en' ? '/resume-felix-corcoran.pdf' : '/cv-felix-corcoran.pdf'} download={lang === 'en' ? 'Resume-Felix-Corcoran.pdf' : 'CV-Felix-Corcoran.pdf'} class="group relative flex items-end gap-4">
                                     <div class="relative overflow-hidden">
                                         <span class="block text-4xl md:text-5xl font-black uppercase tracking-tighter text-neutral-300 transition-transform duration-500 group-hover:-translate-y-full">{t('btn.cv')}</span>
                                         <span class="absolute top-0 left-0 block text-4xl md:text-5xl font-black uppercase tracking-tighter text-indigo-400 transition-transform duration-500 translate-y-full group-hover:translate-y-0">{t('btn.download')}</span>
@@ -117,10 +123,10 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                         </div>
 
                         <div class="mt-0 md:mt-20 pt-0 md:pt-10 border-t border-white/5 flex flex-wrap gap-x-12 gap-y-2 md:gap-y-6 opacity-50">
+                            <span class="text-[10px] font-mono uppercase tracking-[0.5em]">n8n / AI APIs</span>
                             <span class="text-[10px] font-mono uppercase tracking-[0.5em]">PHP / Laravel</span>
-                            <span class="text-[10px] font-mono uppercase tracking-[0.5em]">MySQL / Architecture</span>
-                            <span class="text-[10px] font-mono uppercase tracking-[0.5em]">Tailwind CSS / Astro</span>
-                            <span class="text-[10px] font-mono uppercase tracking-[0.5em]">AJAX / REST API</span>
+                            <span class="text-[10px] font-mono uppercase tracking-[0.5em]">Astro / React</span>
+                            <span class="text-[10px] font-mono uppercase tracking-[0.5em]">MySQL / REST API</span>
                         </div>
                     </div>
                 </div>
@@ -135,7 +141,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                         </h2>
                         <div class="flex-1 lg:pl-10">
                             <p class="text-lg md:text-2xl font-extralight text-neutral-300 max-w-md leading-none lowercase tracking-tighter italic">
-                                Engineering meets <br/> intelligent automation.
+                                {t('stack.tagline.1')} <br/> {t('stack.tagline.2')}
                             </p>
                         </div>
                     </div>
@@ -175,7 +181,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                 </p>
 
                                 <div class="flex flex-wrap gap-4 pt-4">
-                                    {['php', 'laravel', 'java', 'mysql'].map((tech) => (
+                                    {['php', 'laravel', 'java', 'python', 'mysql'].map((tech) => (
                                         <div class="group/tech relative flex flex-col items-center">
                                             <img src={`https://skillicons.dev/icons?i=${tech}`} 
                                                 class="h-14 w-14 transition-all duration-300 grayscale-0 group-hover/section:grayscale group-hover/tech:grayscale-0 group-hover/tech:scale-110" 
@@ -216,7 +222,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                 </p>
                                 
                                 <div class="flex flex-wrap justify-end lg:justify-start gap-4 pt-4 w-full">
-                                    {['astro', 'tailwind', 'js', 'jquery'].map((tech) => (
+                                    {['astro', 'react', 'ts', 'tailwind', 'js'].map((tech) => (
                                         <div class="group/tech relative flex flex-col items-center">
                                             <img src={`https://skillicons.dev/icons?i=${tech}`} 
                                                 class="h-14 w-14 transition-all duration-300 grayscale-0 group-hover/section:grayscale group-hover/tech:grayscale-0 group-hover/tech:scale-110" 
@@ -253,8 +259,16 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                         {t('tech.automation')}
                                     </p>
                                                                         
+                                    <!-- Los proveedores de IA no tienen icono en skillicons: van como etiquetas
+                                         (el antiguo icono «ai» era el logo de Adobe Illustrator) -->
+                                    <div class="flex flex-wrap gap-2">
+                                        {['n8n', 'OpenAI API', 'Claude API', 'Gemini', 'JSON', 'REST API'].map((tool) => (
+                                            <span class="px-4 py-2 rounded-full bg-blue-500/5 border border-blue-400/20 text-xs text-blue-200/80 uppercase font-bold tracking-wider">{tool}</span>
+                                        ))}
+                                    </div>
+
                                     <div class="flex flex-wrap gap-4 pt-4">
-                                        {['ai', 'postman', 'docker', 'git'].map((tech) => (
+                                        {['docker', 'git', 'githubactions', 'postman'].map((tech) => (
                                             <div class="group/tech relative flex flex-col items-center">
                                                 <img src={`https://skillicons.dev/icons?i=${tech}`} 
                                                     class="h-14 w-14 transition-all duration-300 grayscale-0 group-hover/section:grayscale group-hover/tech:grayscale-0 group-hover/tech:scale-110" 
@@ -365,10 +379,10 @@ const canonical = lang === 'en' ? urlEn : urlEs;
 
                                     <div class="flex flex-wrap gap-4 justify-end w-full">
                                         {[
-                                            {id: 'react', name: 'React'}, 
-                                            {id: 'nextjs', name: 'Next.js'}, 
-                                            {id: 'ts', name: 'TypeScript'}, 
-                                            {id: 'supabase', name: 'Supabase'}
+                                            {id: 'nextjs', name: 'Next.js'},
+                                            {id: 'nodejs', name: 'Node.js'},
+                                            {id: 'supabase', name: 'Supabase'},
+                                            {id: 'threejs', name: 'Three.js'}
                                         ].map((tech) => (
                                             <div class="group/tech relative flex flex-col items-center">
                                                 <img 
@@ -387,10 +401,46 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                 </div>
             </section>
 
+            <!-- Experiencia: lo mismo que el currículum, en dos filas -->
+            <section id="experiencia" class="py-32 md:py-40 px-6 bg-black border-t border-white/5">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex items-center gap-6 text-blue-500 font-mono text-xs tracking-[0.3em] uppercase mb-16 md:mb-24">
+                        <span>{t('exp.label')}</span>
+                        <div class="h-px flex-1 bg-blue-500/20"></div>
+                    </div>
+
+                    <h2 class="text-[clamp(2.25rem,11vw,8rem)] font-black text-white tracking-tighter uppercase leading-none mb-16 md:mb-24">
+                        {t('exp.title')}
+                    </h2>
+
+                    <ol class="border-t border-white/10">
+                        {[
+                            { role: t('exp.freelance.role'), place: 'Freelance', period: t('exp.freelance.period'), desc: t('exp.freelance.desc') },
+                            { role: t('exp.sti.role'), place: 'Simply Trade In', period: t('exp.sti.period'), desc: t('exp.sti.desc') },
+                        ].map((job) => (
+                            <li class="group grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-12 py-10 md:py-14 border-b border-white/10">
+                                <div class="md:col-span-4 font-mono text-[11px] uppercase tracking-[0.3em] space-y-2">
+                                    <span class="block text-blue-400">{job.period}</span>
+                                    <span class="block text-white/50">{job.place}</span>
+                                </div>
+                                <div class="md:col-span-8 space-y-4">
+                                    <h3 class="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-[0.95] transition-colors duration-500 group-hover:text-blue-400">
+                                        {job.role}
+                                    </h3>
+                                    <p class="text-neutral-400 text-lg md:text-xl font-light leading-relaxed max-w-3xl">
+                                        {job.desc}
+                                    </p>
+                                </div>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+            </section>
+
             <section id="proyectos" class="py-32 px-6 bg-[#050505]">
                 <div class="max-w-7xl mx-auto">
                     <div class="flex flex-col mb-24 space-y-4">
-                        <h2 id="projects-title" class="text-[4.2rem] md:text-[8rem] font-black text-white tracking-tighter uppercase italic leading-none will-change-transform transition-all duration-1000 opacity-0 translate-y-20">
+                        <h2 id="projects-title" class="text-[clamp(2.75rem,15vw,4.2rem)] md:text-[8rem] font-black text-white tracking-tighter uppercase italic leading-none will-change-transform transition-all duration-1000 opacity-0 translate-y-20">
                             {t('projects.section.title')} <span class="text-transparent" style="-webkit-text-stroke: 1px rgba(255,255,255,0.4);"><br>{t('projects.section.subtitle')}</span>
                         </h2>
                     </div>
@@ -481,7 +531,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                     <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-4">
                                         {t('projects.freelance.label')}
                                     </span>
-                                    <h3 class="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter">
+                                    <h3 class="text-[clamp(2rem,10vw,3rem)] md:text-6xl font-black text-white uppercase tracking-tighter">
                                         {t('projects.freelance.title')}
                                     </h3>
                                 </div>
@@ -492,12 +542,12 @@ const canonical = lang === 'en' ? urlEn : urlEs;
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {[
-                                    { name: "MBH Builders", url: "https://mbhbuilders.es/inicio.html", cat: "Construcción" },
-                                    { name: "Pilar Peluquería", url: "https://pilarpeluqueria.com/inicio.html", cat: "Peluquería" },
-                                    { name: "Reformas Paola", url: "https://reformasymantenimientospaola.com/inicio", cat: "Reformas" },
-                                    { name: "Ávila Secretaria Online", url: "https://avilasecretariaonline.com/inicio.html", cat: "Servicios" },
-                                    { name: "Susana Floria Nails", url: "https://susanaflorianails.com/sobrenosotros.html", cat: "Estética" },
-                                    { name: "Construcciones Omega", url: "https://construccionesyserviciosomega.com/inicio", cat: "Arquitectura" }
+                                    { name: "MBH Builders", url: "https://mbhbuilders.es/inicio.html", cat: lang === 'en' ? "Construction" : "Construcción" },
+                                    { name: "Pilar Peluquería", url: "https://pilarpeluqueria.com/inicio.html", cat: lang === 'en' ? "Hair salon" : "Peluquería" },
+                                    { name: "Reformas Paola", url: "https://reformasymantenimientospaola.com/inicio", cat: lang === 'en' ? "Renovations" : "Reformas" },
+                                    { name: "Ávila Secretaria Online", url: "https://avilasecretariaonline.com/inicio.html", cat: lang === 'en' ? "Services" : "Servicios" },
+                                    { name: "Susana Floria Nails", url: "https://susanaflorianails.com/sobrenosotros.html", cat: lang === 'en' ? "Beauty" : "Estética" },
+                                    { name: "Construcciones Omega", url: "https://construccionesyserviciosomega.com/inicio", cat: lang === 'en' ? "Architecture" : "Arquitectura" }
                                 ].map((site, index) => (
 
                                     <a 
@@ -574,12 +624,12 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                     
                     <div class="flex items-center gap-6 text-indigo-500 font-mono text-xs tracking-[0.3em] uppercase mb-32">
                         <div class="h-px flex-1 bg-indigo-500/20"></div>
-                        <span>Establish Connection</span>
+                        <span>{t('contact.label')}</span>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-24">
+                    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-16 lg:gap-24">
                         
-                        <div class="md:col-span-5 space-y-12">
+                        <div class="space-y-12">
                             <h3 id="trigger-build" class="text-7xl md:text-8xl font-black text-white leading-[0.8] uppercase tracking-tighter">
                                 <div class="overflow-hidden">
                                     <span class="reveal-text block translate-y-full opacity-0 transition-all duration-700 ease-out">
@@ -600,25 +650,36 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                 
                                 <div class="space-y-4 font-mono text-[10px] tracking-[0.2em] uppercase">
                                     <div class="flex justify-between border-b border-white/5 pb-2">
-                                        <span class="text-white/50">Endpoint</span>
+                                        <span class="text-white/50">{t('contact.meta.email')}</span>
                                         <a href="mailto:felixxjbk@gmail.com" class="text-indigo-400 hover:text-white transition">felixxjbk@gmail.com</a>
                                     </div>
                                     <div class="flex justify-between border-b border-white/5 pb-2">
-                                        <span class="text-white/50">Location</span>
-                                        <span class="text-white/60">Málaga, ES / Remote</span>
+                                        <span class="text-white/50">{t('contact.meta.location')}</span>
+                                        <span class="text-white/60">{t('contact.location')}</span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span class="text-white/50">Status</span>
+                                        <span class="text-white/50">{t('contact.meta.status')}</span>
                                         <span class="text-green-500 flex items-center gap-2">
                                             <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                            Available
+                                            {t('contact.status')}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <form action="/api/send-email" method="POST" id="contact-form" class="md:col-span-7 space-y-1">
+                        <!-- Los mensajes de estado del envío, en el idioma de la página (los lee el script) -->
+                        <form
+                            action="/api/send-email"
+                            method="POST"
+                            id="contact-form"
+                            class="space-y-1"
+                            data-send={t('contact.send')}
+                            data-sending={t('contact.sending')}
+                            data-sent={t('contact.sent')}
+                            data-error={t('contact.error')}
+                            data-failed={t('contact.failed')}
+                        >
                             {['name', 'email', 'project'].map((key) => {
                                 const label = t(`contact.label.${key}`);
                                 const placeholder = t(`contact.placeholder.${key}`);
@@ -653,15 +714,15 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                 <button type="submit" id="submit-btn" class="group relative w-full py-6 md:py-8 border border-white/10 hover:border-indigo-500 transition-all duration-700 overflow-hidden">
                                     <div class="relative z-10 flex items-center justify-center gap-4 md:gap-6 px-4">
                                         <span id="btn-text" class="text-white font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-xs md:text-sm group-hover:text-indigo-400 transition break-words text-center">
-                                            PUSH TO PRODUCTION
+                                            {t('contact.send')}
                                         </span>
                                         <span class="text-indigo-500 group-hover:translate-x-4 transition-transform duration-700 shrink-0">→</span>
                                     </div>
                                     <div class="absolute inset-0 bg-indigo-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-700"></div>
                                 </button>
                             </div>
-                            <div id="success-msg" class="hidden pt-8 font-mono text-xs text-green-500 tracking-widest uppercase animate-pulse">
-                                > CONNECTION ESTABLISHED: MESSAGE DEPLOYED SUCCESSFULLY.
+                            <div id="success-msg" role="status" class="hidden pt-8 font-mono text-xs text-green-500 tracking-widest uppercase animate-pulse">
+                                {t('contact.success')}
                             </div>
                         </form>
                     </div>
@@ -826,15 +887,25 @@ const canonical = lang === 'en' ? urlEn : urlEs;
     const successMsg = document.getElementById('success-msg');
     const submitBtn = document.getElementById('submit-btn');
 
+    // Textos del botón en el idioma de la página (data-* del formulario)
+    const label = form.dataset;
+
+    // El botón vuelve a estar disponible: tras un éxito (pasado un rato) o
+    // tras un error (al momento, para poder reintentar)
+    const enable = () => {
+        submitBtn.style.pointerEvents = "auto";
+        submitBtn.style.opacity = "1";
+    };
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        btnText.innerText = "DEPLOYING...";
+
+        btnText.innerText = label.sending;
         submitBtn.style.pointerEvents = "none";
         submitBtn.style.opacity = "0.5";
 
         const formData = new FormData(form);
-        
+
         try {
             const response = await fetch('/api/send-email', {
                 method: 'POST',
@@ -843,19 +914,20 @@ const canonical = lang === 'en' ? urlEn : urlEs;
 
             if (response.ok) {
                 form.reset();
-                btnText.innerText = "DEPLOYED";
+                btnText.innerText = label.sent;
                 successMsg.classList.remove('hidden');
                 setTimeout(() => {
                     successMsg.classList.add('hidden');
-                    btnText.innerText = "PUSH TO PRODUCTION";
-                    submitBtn.style.pointerEvents = "auto";
-                    submitBtn.style.opacity = "1";
+                    btnText.innerText = label.send;
+                    enable();
                 }, 5000);
             } else {
-                btnText.innerText = "ERROR - TRY AGAIN";
+                btnText.innerText = label.error;
+                enable();
             }
         } catch (error) {
-            btnText.innerText = "CONNECTION FAILED";
+            btnText.innerText = label.failed;
+            enable();
         }
     });
 </script>
