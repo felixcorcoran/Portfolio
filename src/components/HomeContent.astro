@@ -16,7 +16,10 @@ const canonical = lang === 'en' ? urlEn : urlEs;
 <html lang={lang}>
     <head>
         <meta charset="utf-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <!-- El monograma «fc» de la marca, en la paleta oscura e índigo del portfolio -->
+        <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
         <meta name="description" content={t('seo.description')}>
