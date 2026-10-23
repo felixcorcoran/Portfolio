@@ -1,366 +1,280 @@
 /**
- * El currículum, en español (CV) e inglés (Resume), como HTML que se imprime
- * a PDF con Edge o Chrome sin cabeceras. Sustituye al PDF hecho a mano: para
- * añadir un proyecto basta con tocar los datos de abajo y volver a generarlo.
+ * El currículum, en español (CV) e inglés (Resume), generado a partir de
+ * src/data/perfil.ts: se cambian los datos y se vuelve a generar.
  *
- *   node cv/cv.mjs          → public/cv-felix-corcoran.pdf y public/resume-felix-corcoran.pdf
+ *   npm run cv        → public/cv-felix-corcoran.pdf y public/resume-felix-corcoran.pdf
  *
- * Medidas en puntos, sacadas del PDF anterior (A4 = 595.5 × 842.25 pt) para
- * que se vea igual. Fuentes: Questrial y Open Sans, como el original; la
- * Cocomat Pro de los enlaces (de pago) se sustituye por Montserrat.
+ * Es HTML impreso a PDF con Edge o Chrome sin cabeceras. Pensado para que lo
+ * lea bien un ATS: texto real, una columna de lectura, enlaces escritos tal
+ * cual y sin texto dentro de imágenes. El color es el coral de la marca.
  */
 
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { persona, experience, projects, skills, education, otherExperience, languages } from '../src/data/perfil.ts';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const asset = (file) => `data:image/${file.endsWith('.jpg') ? 'jpeg' : 'png'};base64,${readFileSync(join(here, 'assets', file)).toString('base64')}`;
+const photo = `data:image/jpeg;base64,${readFileSync(join(here, 'assets', 'foto.jpg')).toString('base64')}`;
 
-const links = {
-	linkedin: 'https://www.linkedin.com/in/felixcorcoran',
-	github: 'https://github.com/felixjbk',
-	portfolio: 'https://dev.felixcorcoran.es/',
-	kalo: 'https://kaloai.infinityfreeapp.com/',
-	fc: 'https://felixcorcoran.es/',
-};
-
-const freelance = [
-	['PILAR PELUQUERIA', 'https://pilarpeluqueria.com/inicio.html'],
-	['MBH BUILDERS'],
-	['AVILA SECRETARIA'],
-	['REFORMAS PAOLA'],
-	['SUSANA NAILS', 'https://susanaflorianails.com/'],
-	['CONSTR. OMEGA', 'https://construccionesyserviciosomega.com/'],
-];
-
-const data = {
+const files = { es: 'cv-felix-corcoran.pdf', en: 'resume-felix-corcoran.pdf' };
+const labels = {
 	es: {
-		file: 'cv-felix-corcoran.pdf',
 		title: 'CV · Félix Corcoran',
-		role: ['DESARROLLADOR FULL-STACK', 'AUTOMATIZACIÓN E INTEGRACIÓN DE IA'],
-		summary:
-			'Desarrollador Full-Stack titulado en DAW, especializado en la integración de IA (OpenAI, Anthropic Claude, Gemini) y la automatización de procesos con n8n. Experiencia real en producción conectando APIs de IA con aplicaciones web y construyendo sistemas escalables bajo el patrón MVC. Capacidad demostrada de adoptar rápidamente nuevas tecnologías apoyándose en IA. Acostumbrado a entornos remotos y a la comunicación directa con cliente.',
-		experience: 'EXPERIENCIA',
-		freelance: { title: 'FREELANCE', date: '(2025 - actualidad)', projects: 'PROYECTOS' },
-		freelanceBullets: [
-			'Adaptación y personalización de un sistema MVC existente en distintos proyectos web, con funcionalidades a medida como reservas y citas online.',
-			'Desarrollo de funciones y componentes según las necesidades específicas de cada cliente, apoyándome en herramientas de IA para acelerar la entrega.',
-			'Comunicación directa con el cliente para definir, ajustar y entregar cada proyecto web.',
-		],
-		internship: { title: 'DESARROLLADOR WEB (PRÁCTICAS) | SIMPLY TRADE IN', date: '(2025 - 2026)' },
-		internshipBullets: [
-			'Creación desde cero de la plataforma web promocional y de captación para el lanzamiento de una aplicación social, con fidelidad total al diseño UI/UX.',
-			'Diseño e implementación de workflows de automatización con IA en n8n para la generación automática de contenidos (imágenes y textos).',
-			'Procesamiento y transformación de JSON como capa puente entre formularios web y motores de IA.',
-		],
-		ownProjects: 'PROYECTOS PROPIOS',
-		projects: [
-			{
-				title: 'KALOAI | PLATAFORMA CON IA',
-				link: links.kalo,
-				bullets: [
-					'Generador inteligente de recetas basado en lenguaje natural e IA, filtrando por intolerancias y objetivos.',
-					'Sistema multi-rol (Administrador, Nutricionista, Usuario) con gestión de carteras de clientes.',
-					'Lógica de inventario automatizada: listas de la compra sincronizadas con el stock del usuario.',
-				],
-			},
-			{
-				title: 'MI PORTFOLIO PROFESIONAL',
-				link: links.portfolio,
-				bullets: [
-					'Arquitectura basada en islas (Astro) para maximizar rendimiento y optimizar el SEO técnico.',
-					'Animaciones dinámicas con Intersection Observer API para reforzar la narrativa visual.',
-					'Gestión serverless de contactos con Resend y optimización de activos.',
-				],
-			},
-			{
-				title: 'SPAIN TRADING CARDS',
-				note: '(Shopify · en desarrollo)',
-				bullets: [
-					'Tienda diseñada desde cero, con secciones Liquid a medida y cada resultado validado.',
-					'Alta de productos desde Telegram: Gemini interpreta, n8n orquesta y la API de Shopify publica.',
-					'Importación masiva desde CSV con la API GraphQL de Shopify, sin etiquetado manual.',
-				],
-			},
-			{
-				title: 'FELIXCORCORAN.ES',
-				link: links.fc,
-				bullets: [
-					'Web de servicios con scroll narrativo (Astro, GSAP) y escultura 3D con shaders en Three.js.',
-					'Diagnóstico web público y bilingüe: funciones serverless en Vercel con protección SSRF.',
-					'Radar comercial diario (GitHub Actions, Google Places, Gemini) que detecta negocios con fallos.',
-				],
-			},
-		],
-		tech: 'TECNOLOGIAS Y HERRAMIENTAS',
-		techLines: [
-			['IA y Automatización', 'n8n · OpenAI API · Anthropic Claude API · Gemini API · JSON · API REST'],
-			['Backend', 'PHP · Laravel · Node.js · Java · Python · MySQL'],
-			['Frontend', 'React · Astro · Tailwind · Three.js · GSAP · Vite · HTML/CSS/Sass · JavaScript · TypeScript'],
-			['Integraciones', 'Shopify (Liquid, GraphQL) · Telegram Bot API · Google Places API · Resend'],
-			['Herramientas', 'Git · Docker · GitHub Actions (CI/CD) · Vercel · Postman · AJAX'],
-		],
-		languages: 'IDIOMAS',
-		langs: [
-			['ESPAÑOL', '(Nativo)'],
-			['INGLÉS', '(Nativo)'],
-		],
+		profile: 'Perfil',
+		experience: 'Experiencia',
+		projects: 'Proyectos',
+		skills: 'Habilidades',
+		education: 'Formación',
+		languages: 'Idiomas',
+		other: 'Otra experiencia',
+		clients: 'Clientes',
 	},
 	en: {
-		file: 'resume-felix-corcoran.pdf',
 		title: 'Resume · Félix Corcoran',
-		role: ['FULL-STACK DEVELOPER &', 'AI AUTOMATION INTEGRATION'],
-		summary:
-			'Full-Stack Developer with a degree in DAW, specialized in AI integration (OpenAI, Anthropic Claude, Gemini) and process automation with n8n. Real-world production experience connecting AI APIs with web applications and building scalable systems under the MVC pattern. Demonstrated ability to quickly adopt new technologies leveraging AI. Accustomed to remote environments and direct client communication.',
-		experience: 'EXPERIENCE',
-		freelance: { title: 'FREELANCE', date: '(2025 - Present)', projects: 'PROJECTS' },
-		freelanceBullets: [
-			'Adaptation and customization of an existing MVC system across various web projects, featuring custom functionalities such as online bookings and appointments.',
-			'Development of features and components tailored to the specific needs of each client, relying on AI tools to accelerate delivery.',
-			'Direct communication with the client to define, adjust, and deliver each web project.',
-		],
-		internship: { title: 'WEB DEVELOPER (INTERNSHIP) | SIMPLY TRADE IN', date: '(2025 - 2026)' },
-		internshipBullets: [
-			'Creation from scratch of the promotional and lead-generation web platform for the launch of a social app, maintaining total fidelity to UI/UX design.',
-			'Design and implementation of AI automation workflows in n8n for automated content generation (images, videos and text).',
-			'Processing and transformation of JSON as a bridging layer between web forms and AI engines.',
-		],
-		ownProjects: 'PERSONAL PROJECTS',
-		projects: [
-			{
-				title: 'KALOAI | AI-POWERED PLATFORM',
-				link: links.kalo,
-				bullets: [
-					'Intelligent recipe generator based on natural language and AI, filtering by intolerances and goals.',
-					'Multi-role system (Administrator, Nutritionist, User) with user management.',
-					"Automated inventory logic: shopping lists synchronized with the user's stock.",
-				],
-			},
-			{
-				title: 'MY PROFESSIONAL PORTFOLIO',
-				link: links.portfolio,
-				bullets: [
-					'Architecture based on islands (Astro) to maximize performance and optimize technical SEO.',
-					'Dynamic animations with Intersection Observer API to reinforce visual storytelling.',
-					'Serverless contact management with Resend and asset optimization.',
-				],
-			},
-			{
-				title: 'SPAIN TRADING CARDS',
-				note: '(Shopify · in development)',
-				bullets: [
-					'Store designed from scratch, with custom Liquid sections and every result validated.',
-					'Product onboarding from Telegram: Gemini parses, n8n orchestrates, the Shopify API publishes.',
-					'Bulk CSV import with the Shopify GraphQL API, without manual tagging.',
-				],
-			},
-			{
-				title: 'FELIXCORCORAN.ES',
-				link: links.fc,
-				bullets: [
-					'Services site with scroll-driven storytelling (Astro, GSAP) and 3D Three.js shaders.',
-					'Public, bilingual website checker: Vercel serverless functions with SSRF protection.',
-					'Daily lead radar (GitHub Actions, Google Places, Gemini) that spots businesses with issues.',
-				],
-			},
-		],
-		tech: 'TECHNOLOGIES & TOOLS',
-		techLines: [
-			['AI & Automation', 'n8n · OpenAI API · Anthropic Claude API · Gemini API · JSON · REST API'],
-			['Backend', 'PHP · Laravel · Node.js · Java · Python · MySQL'],
-			['Frontend', 'React · Astro · Tailwind · Three.js · GSAP · Vite · HTML/CSS/Sass · JavaScript · TypeScript'],
-			['Integrations', 'Shopify (Liquid, GraphQL) · Telegram Bot API · Google Places API · Resend'],
-			['Tools', 'Git · Docker · GitHub Actions (CI/CD) · Vercel · Postman · AJAX'],
-		],
-		languages: 'LANGUAGES',
-		langs: [
-			['SPANISH', '(Native)'],
-			['ENGLISH', '(Native)'],
-		],
+		profile: 'Profile',
+		experience: 'Experience',
+		projects: 'Projects',
+		skills: 'Skills',
+		education: 'Education',
+		languages: 'Languages',
+		other: 'Other experience',
+		clients: 'Clients',
 	},
 };
 
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const bullets = (items) => items.map((b) => `<p class="bullet">• ${esc(b)}</p>`).join('');
-const linkLabel = (url) => (url ? `<a class="link" href="${url}">LINK</a>` : '');
+// Iconos vectoriales (Simple Icons para LinkedIn y GitHub): nítidos a cualquier tamaño
+const icon = {
+	pin: '<path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/>',
+	mail: '<path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm1 2.4V17h16V7.4l-8 5-8-5ZM5.2 7 12 11.2 18.8 7H5.2Z"/>',
+	phone: '<path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1L6.6 10.8Z"/>',
+	globe: '<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 6h-3a15.7 15.7 0 0 0-1.4-3.9A8 8 0 0 1 18.9 8ZM12 4.1c.8 1.1 1.5 2.4 1.9 3.9h-3.8c.4-1.5 1.1-2.8 1.9-3.9ZM4.3 14a8.2 8.2 0 0 1 0-4h3.4a16.5 16.5 0 0 0 0 4H4.3Zm.8 2h3c.3 1.4.8 2.7 1.4 3.9A8 8 0 0 1 5.1 16Zm3-8h-3a8 8 0 0 1 4.4-3.9C8.9 5.3 8.4 6.6 8.1 8ZM12 19.9c-.8-1.1-1.5-2.4-1.9-3.9h3.8c-.4 1.5-1.1 2.8-1.9 3.9Zm2.3-5.9H9.7a14.7 14.7 0 0 1 0-4h4.6a14.7 14.7 0 0 1 0 4Zm.2 5.9c.6-1.2 1.1-2.5 1.4-3.9h3a8 8 0 0 1-4.4 3.9Zm1.8-5.9a16.5 16.5 0 0 0 0-4h3.4a8.2 8.2 0 0 1 0 4h-3.4Z"/>',
+	linkedin:
+		'<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>',
+	github:
+		'<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>',
+};
+const svg = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${icon[name]}</svg>`;
+
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/** La dirección tal cual, sin https:// ni www: es lo que se lee impreso */
+const bare = (url) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+const link = (url, text = bare(url)) => `<a href="${url}">${esc(text)}</a>`;
 
 function page(lang) {
-	const t = data[lang];
-	const project = (p) => `
-		<div class="project">
-			<h3>${esc(p.title)} ${p.link ? linkLabel(p.link) : `<span class="note">${esc(p.note)}</span>`}</h3>
-			${bullets(p.bullets)}
-		</div>`;
+	const l = labels[lang];
+	const section = (title, body, cls = '') => `<section class="${cls}"><h2>${l[title]}</h2>${body}</section>`;
+
+	const contact = [
+		['pin', esc(persona.location)],
+		['mail', link(`mailto:${persona.email}`, persona.email)],
+		['phone', link(`tel:${persona.phone.replace(/\s/g, '')}`, persona.phone)],
+		['globe', link(persona.links.portfolio)],
+		['linkedin', link(persona.links.linkedin)],
+		['github', link(persona.links.github)],
+	]
+		.map(([name, html]) => `<li class="c-${name}">${svg(name)}<span>${html}</span></li>`)
+		.join('');
+
+	const jobs = experience
+		.map(
+			(job) => `
+		<article class="job">
+			<header>
+				<h3>${esc(job.role[lang])}${job.company ? ` <span class="at">· ${esc(job.company)}</span>` : ''}</h3>
+				<span class="period">${esc(job.period[lang])}</span>
+			</header>
+			<ul class="dots">${job.highlights.map((h) => `<li>${esc(h[lang])}</li>`).join('')}</ul>
+			${
+				job.clients.length
+					? `<p class="clients"><b>${l.clients}:</b> ${job.clients.map((c) => (c.url ? link(c.url, c.name) : esc(c.name))).join(' · ')}</p>`
+					: ''
+			}
+		</article>`,
+		)
+		.join('');
+
+	const work = projects
+		.map(
+			(p) => `
+		<article class="project">
+			<header>
+				<h3>${esc(typeof p.name === 'string' ? p.name : p.name[lang])}</h3>
+				${p.status ? `<span class="status">${esc(p.status[lang])}</span>` : ''}
+				${p.url ? `<a class="url" href="${p.url}">${esc(bare(p.url))}</a>` : ''}
+			</header>
+			<p class="summary">${esc(p.summary[lang])}</p>
+			${p.highlights.map((h) => `<p class="detail">${esc(h[lang])}</p>`).join('')}
+			<p class="stack">${p.stack.map((s) => `<span>${esc(s)}</span>`).join('')}</p>
+		</article>`,
+		)
+		.join('');
+
+	const skillRows = skills.map((s) => `<p><b>${esc(s.label[lang])}</b><span>${s.items.map(esc).join(' · ')}</span></p>`).join('');
+	const studies = education
+		.map((e) => {
+			const where = [e.center, e.period].filter(Boolean);
+			return `<p class="degree"><b>${esc(e.title[lang])}</b>${where.length ? `<span>${where.map(esc).join(' · ')}</span>` : ''}</p>`;
+		})
+		.join('');
+	const langs = languages.map((x) => `<p><b>${esc(x.name[lang])}</b> <span>${esc(x.level[lang])}</span></p>`).join('');
+
 	return `<!doctype html>
 <html lang="${lang}">
 <head>
 <meta charset="utf-8">
-<title>${esc(t.title)}</title>
+<title>${esc(l.title)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;700&family=Questrial&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@300;600&display=block" rel="stylesheet">
 <style>
-	@page { size: 595.5pt 842.25pt; margin: 0; }
+	@page { size: A4; margin: 0; }
+	:root {
+		--ink: #18181b;
+		--muted: #5c5d66;
+		--soft: #8a8b94;
+		--rule: #e8e3df;
+		--coral: #e8735e;
+		--coral-text: #b4472f;
+		--chip: #fbefeb;
+		--chip-text: #8f3a27;
+	}
 	* { box-sizing: border-box; }
 	html, body { margin: 0; padding: 0; }
+	html { height: 297mm; overflow: hidden; }
 	body {
-		width: 595.5pt;
-		height: 842.25pt;
+		width: 210mm;
+		height: 297mm;
 		overflow: hidden;
-		position: relative;
-		font-family: 'Questrial', sans-serif;
-		color: #000;
+		padding: 28pt 36pt 22pt;
+		font: 400 8.5pt/1.4 'Inter', sans-serif;
+		color: var(--ink);
 		-webkit-print-color-adjust: exact;
 		print-color-adjust: exact;
 	}
 	a { color: inherit; text-decoration: none; }
-	p, h1, h2, h3 { margin: 0; }
+	p, h1, h2, h3, ul { margin: 0; padding: 0; }
 
 	/* ---------- Cabecera ---------- */
-	.photo {
+	.top { display: grid; grid-template-columns: 62pt 1fr; column-gap: 16pt; align-items: center; }
+	.photo { width: 62pt; height: 62pt; border-radius: 50%; overflow: hidden; background: #eee; }
+	.photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+	h1 { font: 300 27pt/1 'Sora', sans-serif; letter-spacing: -0.035em; }
+	h1 b { font-weight: 600; }
+	.role { margin-top: 5pt; font-size: 10.5pt; font-weight: 500; }
+	.role span { color: var(--coral-text); font-weight: 400; }
+	.contact {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 3pt 13pt;
+		margin-top: 9pt;
+		list-style: none;
+		font-size: 8.2pt;
+		color: var(--muted);
+	}
+	.contact li { display: inline-flex; align-items: center; gap: 4pt; white-space: nowrap; }
+	.contact svg { width: 8.5pt; height: 8.5pt; fill: var(--coral); flex: none; }
+	.contact .c-linkedin svg, .contact .c-github svg { fill: var(--ink); }
+
+	/* ---------- Secciones ---------- */
+	section { margin-top: 11pt; }
+	h2 {
+		display: flex;
+		align-items: center;
+		gap: 8pt;
+		margin-bottom: 5pt;
+		font: 600 8pt/1 'Sora', sans-serif;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--coral-text);
+	}
+	h2::after { content: ''; flex: 1; height: 0.75pt; background: var(--rule); }
+	.profile p { font-size: 8.8pt; line-height: 1.48; color: #2a2b31; }
+
+	.dots { list-style: none; }
+	.dots li { position: relative; padding-left: 10pt; margin-top: 1.5pt; }
+	.dots li::before {
+		content: '';
 		position: absolute;
-		left: 26pt;
-		top: 20pt;
-		width: 94pt;
-		height: 94pt;
+		left: 1pt;
+		top: 0.58em;
+		width: 3.5pt;
+		height: 3.5pt;
 		border-radius: 50%;
-		overflow: hidden;
+		background: var(--coral);
 	}
-	.photo img { position: absolute; left: -3pt; top: -24pt; width: 98pt; height: 130pt; }
-	h1 {
-		position: absolute;
-		left: 134pt;
-		top: 9pt;
-		font: 400 45.5pt/1.2 'Open Sans', sans-serif;
+
+	.job + .job { margin-top: 6pt; }
+	.job header, .project header { display: flex; align-items: baseline; gap: 8pt; }
+	.job h3 { font: 600 9.8pt/1.3 'Inter', sans-serif; }
+	.job .at { font-weight: 500; color: var(--muted); }
+	.period { margin-left: auto; font-size: 8.2pt; color: var(--soft); white-space: nowrap; }
+	.clients { margin-top: 4pt; padding-left: 10pt; font-size: 8.2pt; color: var(--muted); }
+	.clients b { color: var(--ink); font-weight: 500; }
+	.clients a { color: var(--ink); border-bottom: 0.6pt solid #e9b4a8; }
+
+	/* Proyectos: rejilla de dos, separados por líneas finas */
+	.projects { display: grid; grid-template-columns: 1fr 1fr; column-gap: 22pt; }
+	.project { padding: 6pt 0 6pt; border-top: 0.75pt solid var(--rule); }
+	.project:nth-child(-n + 2) { border-top: 0; padding-top: 0; }
+	.project h3 { font: 600 10pt/1.3 'Sora', sans-serif; letter-spacing: -0.01em; }
+	.status {
+		padding: 0.5pt 5pt;
+		border: 0.6pt solid #eab3a6;
+		border-radius: 8pt;
+		font-size: 6.6pt;
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		color: var(--coral-text);
 		white-space: nowrap;
 	}
-	.role {
-		position: absolute;
-		left: 129pt;
-		top: 79pt;
-		font-size: 12.6pt;
-		line-height: 15pt;
-		letter-spacing: 2.75pt;
-		color: #8c8d94;
-		white-space: nowrap;
+	.url { margin-left: auto; font-size: 7.6pt; color: var(--soft); white-space: nowrap; }
+	.project .summary { margin-top: 2.5pt; }
+	.project .detail { margin-top: 2pt; color: var(--muted); }
+	.stack { display: flex; flex-wrap: wrap; gap: 3pt; margin-top: 4pt; }
+	.stack span {
+		padding: 1pt 5pt;
+		border-radius: 3pt;
+		background: var(--chip);
+		color: var(--chip-text);
+		font-size: 6.9pt;
+		font-weight: 500;
 	}
-	.contact { position: absolute; left: 468pt; top: 80pt; font-size: 8.7pt; line-height: 11.6pt; }
-	.contact p { display: flex; align-items: center; gap: 3pt; }
-	.contact svg { width: 8pt; height: 8pt; fill: #8e929f; flex: none; }
-	.social { position: absolute; display: block; }
-	.social img { display: block; width: 100%; height: 100%; }
-	.linkedin { left: 534pt; top: 27pt; width: 19pt; height: 19pt; }
-	.github { left: 531pt; top: 56pt; width: 19.5pt; height: 20pt; }
-	.portfolio { left: 560pt; top: 46pt; width: 20pt; height: 19pt; }
-	.rule { position: absolute; left: 31pt; top: 119pt; width: 531pt; height: 2.25pt; background: #000; }
 
-	/* ---------- Cuerpo ---------- */
-	main { position: absolute; left: 30pt; top: 129pt; width: 533pt; }
-	.summary {
-		padding: 5pt 4pt 8pt 4.5pt;
-		background: #8e929f;
-		outline: 1.5pt solid #c3c6d2;
-		outline-offset: -0.75pt;
-		color: #fff;
-		font-size: 12pt;
-		line-height: 16.65pt;
-		letter-spacing: 0.15pt;
-	}
-	.bar {
-		height: 16pt;
-		background: #c3c6d2;
-		outline: 1.5pt solid #8e929f;
-		outline-offset: -0.75pt;
-		font: 700 10pt/16pt 'Open Sans', sans-serif;
-		letter-spacing: 1pt;
-		text-align: center;
-	}
-	.bullet { font-size: 10pt; line-height: 12.1pt; margin-top: 5.6pt; }
-	.date { font-size: 11.1pt; color: #8c8d94; font-weight: 400; font-family: 'Questrial', sans-serif; }
-	h2 { font: 700 14.1pt/19pt 'Open Sans', sans-serif; letter-spacing: 0.5pt; }
-
-	.experience { margin-top: 7pt; }
-	.freelance { position: relative; margin-top: 7pt; }
-	.freelance h2 { text-align: center; padding-right: 30pt; }
-	/* La lista de clientes va al lado sin empujar: el bloque mide lo que mide el texto */
-	.side { position: absolute; right: 0; top: 0; width: 81pt; }
-	.freelance .bullets { margin-top: -3pt; }
-	.freelance .bullet { max-width: 440pt; }
-	.side .bar { margin-top: 1pt; height: 19pt; line-height: 19pt; }
-	.side ul { list-style: none; margin: 4pt 0 0 1pt; padding: 0; }
-	.side li { font: 700 7pt/14.1pt 'Montserrat', sans-serif; color: #1c88c7; letter-spacing: 0.2pt; }
-	.internship { margin-top: 9pt; }
-	.internship h2 { padding-left: 7pt; }
-	.internship .bullet { max-width: 520pt; }
-
-	.own { margin-top: 10pt; }
-	.own .bar { height: 19pt; line-height: 19pt; }
-	.projects { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 23pt; row-gap: 7pt; margin-top: 3pt; }
-	.project h3 { font: 700 13.1pt/18pt 'Open Sans', sans-serif; white-space: nowrap; }
-	.project .link { font: 700 10pt 'Montserrat', sans-serif; color: #1c88c7; margin-left: 2pt; letter-spacing: 0.3pt; }
-	.project .note { font: 400 10pt 'Questrial', sans-serif; color: #8c8d94; letter-spacing: 0; }
-	.project .bullet { margin-top: 4.5pt; padding-right: 4pt; }
-
-	.footer { position: absolute; left: 30pt; right: 32pt; bottom: 14pt; display: grid; grid-template-columns: 1fr 82pt; column-gap: 12pt; }
-	.tech p { font: 400 9.6pt/14.4pt 'Open Sans', sans-serif; }
-	.tech p:first-of-type { margin-top: 5pt; }
-	.tech b { font-weight: 700; }
-	.langs { text-align: center; }
-	.langs .name { font: 700 15.3pt/20pt 'Open Sans', sans-serif; letter-spacing: 1pt; margin-top: 7pt; }
-	.langs .level { font-size: 14.1pt; line-height: 16pt; color: #ff3131; }
+	/* Habilidades a la izquierda; formación, idiomas y lo demás a la derecha */
+	.bottom { display: grid; grid-template-columns: 1.7fr 1fr; column-gap: 22pt; }
+	.skills p { display: grid; grid-template-columns: 92pt 1fr; column-gap: 8pt; padding: 2.2pt 0; border-bottom: 0.6pt solid var(--rule); }
+	.skills p:last-child { border-bottom: 0; }
+	.skills b { font-weight: 600; }
+	.skills span { color: #2f3036; }
+	.degree b { display: block; font-weight: 600; }
+	.degree span { color: var(--muted); }
+	.langs p + p { margin-top: 1.5pt; }
+	.langs span { color: var(--muted); }
+	.other p { color: var(--muted); }
 </style>
 </head>
 <body>
-	<div class="photo"><img src="${asset('foto.jpg')}" alt=""></div>
-	<h1>FÉLIX CORCORAN</h1>
-	<p class="role">${t.role.map(esc).join('<br>')}</p>
-	<div class="contact">
-		<p><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>Málaga</p>
-		<p><svg viewBox="0 0 24 24"><path d="M2 5h20v14H2V5Zm2 2v.5l8 5 8-5V7H4Z"/></svg><a href="mailto:felixxjbk@gmail.com">felixxjbk@gmail.com</a></p>
-		<p><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1L6.6 10.8Z"/></svg><a href="tel:+34673350029">+34 673350029</a></p>
-	</div>
-	<a class="social linkedin" href="${links.linkedin}"><img src="${asset('linkedin.png')}" alt="LinkedIn"></a>
-	<a class="social github" href="${links.github}"><img src="${asset('github.png')}" alt="GitHub"></a>
-	<a class="social portfolio" href="${links.portfolio}"><img src="${asset('portfolio.png')}" alt="Portfolio"></a>
-	<div class="rule"></div>
-
-	<main>
-		<p class="summary">${esc(t.summary)}</p>
-
-		<section class="experience">
-			<h2 class="bar">${t.experience}</h2>
-			<div class="freelance">
-				<div>
-					<h2>${t.freelance.title} <span class="date">${t.freelance.date}</span></h2>
-					<div class="bullets">${bullets(t.freelanceBullets)}</div>
-				</div>
-				<div class="side">
-					<p class="bar">${t.freelance.projects}</p>
-					<ul>${freelance.map(([name, url]) => `<li>${url ? `<a href="${url}">${name}</a>` : name}</li>`).join('')}</ul>
-				</div>
-			</div>
-			<div class="internship">
-				<h2>${esc(t.internship.title)} <span class="date">${t.internship.date}</span></h2>
-				${bullets(t.internshipBullets)}
-			</div>
-		</section>
-
-		<section class="own">
-			<h2 class="bar">${t.ownProjects}</h2>
-			<div class="projects">${t.projects.map(project).join('')}</div>
-		</section>
-	</main>
-
-	<div class="footer">
-		<div class="tech">
-			<h2 class="bar">${esc(t.tech)}</h2>
-			${t.techLines.map(([label, items]) => `<p><b>${esc(label)}:</b> ${esc(items)}</p>`).join('')}
+	<header class="top">
+		<div class="photo"><img src="${photo}" alt=""></div>
+		<div>
+			<h1>Félix <b>Corcoran</b></h1>
+			<p class="role">${esc(persona.role[lang])} <span>· ${esc(persona.focus[lang])}</span></p>
+			<ul class="contact">${contact}</ul>
 		</div>
-		<div class="langs">
-			<h2 class="bar">${t.languages}</h2>
-			${t.langs.map(([name, level]) => `<p class="name">${name}</p><p class="level">${level}</p>`).join('')}
+	</header>
+
+	${section('profile', `<p>${esc(persona.summary[lang])}</p>`, 'profile')}
+	${section('experience', jobs)}
+	${section('projects', `<div class="projects">${work}</div>`)}
+
+	<div class="bottom">
+		${section('skills', skillRows, 'skills')}
+		<div class="side">
+			${section('education', studies)}
+			${section('languages', langs, 'langs')}
+			${otherExperience ? section('other', `<p>${esc(otherExperience[lang])}</p>`, 'other') : ''}
 		</div>
 	</div>
 </body>
@@ -372,6 +286,7 @@ const browsers = [
 	'C:/Program Files/Google/Chrome/Application/chrome.exe',
 	'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
 	'/usr/bin/google-chrome',
+	'/usr/bin/chromium',
 ];
 const browser = process.env.CV_BROWSER ?? browsers.find((b) => existsSync(b));
 if (!browser) throw new Error('No encuentro Edge ni Chrome: indica la ruta en CV_BROWSER');
@@ -381,14 +296,9 @@ mkdirSync(outDir, { recursive: true });
 for (const lang of process.argv.slice(2).length ? process.argv.slice(2) : ['es', 'en']) {
 	const html = join(outDir, `${lang}.html`);
 	writeFileSync(html, page(lang));
-	const pdf = join(here, '..', 'public', data[lang].file);
-	execFileSync(browser, [
-		'--headless=new',
-		'--disable-gpu',
-		'--no-pdf-header-footer',
-		'--virtual-time-budget=8000',
-		`--print-to-pdf=${pdf}`,
-		pathToFileURL(html).href,
-	]);
+	const pdf = join(here, '..', 'public', files[lang]);
+	execFileSync(browser, ['--headless=new', '--disable-gpu', '--no-pdf-header-footer', '--virtual-time-budget=8000', `--print-to-pdf=${pdf}`, pathToFileURL(html).href], {
+		stdio: 'ignore',
+	});
 	console.log(`${lang}: ${pdf}`);
 }
