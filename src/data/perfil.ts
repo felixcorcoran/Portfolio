@@ -56,8 +56,8 @@ export const persona = {
 		web: 'https://felixcorcoran.es',
 	},
 	summary: {
-		es: 'Desarrollador full-stack titulado en DAW. Construyo webs y herramientas que conectan modelos de IA (OpenAI, Claude, Gemini) con procesos reales, y automatizo lo repetitivo con n8n. Trabajo con clientes reales desde la primera conversación hasta la entrega, y decido qué merece la pena construir antes de hacerlo.',
-		en: 'Full-stack developer with a degree in Web Application Development (DAW). I build websites and tools that connect AI models (OpenAI, Claude, Gemini) to real processes, and automate repetitive work with n8n. I work with real clients from the first conversation to delivery, and decide what is worth building before building it.',
+		es: 'Desarrollador full-stack titulado en DAW. Construyo webs y herramientas que conectan modelos de IA con procesos reales, y automatizo lo repetitivo con n8n. Trabajo con clientes reales desde la primera conversación hasta la entrega, y decido qué merece la pena construir antes de hacerlo.',
+		en: 'Full-stack developer with a degree in Web Application Development (DAW). I build websites and tools that connect AI models to real processes, and automate repetitive work with n8n. I work with real clients from the first conversation to delivery, and decide what is worth building before building it.',
 	},
 };
 
@@ -90,9 +90,9 @@ export const experience: {
 		],
 		clients: [
 			{ name: 'Pilar Peluquería', url: 'https://pilarpeluqueria.com' },
-			{ name: 'MBH Builders' },
-			{ name: 'Ávila Secretaría' },
-			{ name: 'Reformas Paola' },
+			{ name: 'MBH Builders', url: 'https://mbhbuilders.es' },
+			{ name: 'Ávila Secretaría', url: 'https://avilasecretariaonline.com' },
+			{ name: 'Reformas Paola', url: 'https://reformasymantenimientospaola.com' },
 			{ name: 'Susana Nails', url: 'https://susanaflorianails.com' },
 			{ name: 'Construcciones Omega', url: 'https://construccionesyserviciosomega.com' },
 		],
@@ -122,10 +122,10 @@ export const experience: {
 ];
 
 export const projects: Project[] = [
+	// Arriba los que se pueden visitar; abajo los que no tienen enlace
 	{
 		name: 'Kalo AI',
 		url: 'https://kaloai.infinityfreeapp.com',
-		status: { es: 'Proyecto final DAW', en: 'DAW final project' },
 		summary: {
 			es: 'Plataforma de nutrición con recetas generadas por IA según calorías, objetivos e intolerancias.',
 			en: 'Nutrition platform with AI-generated recipes based on calories, goals and intolerances.',
@@ -144,6 +144,66 @@ export const projects: Project[] = [
 			url: { es: 'https://kaloai.infinityfreeapp.com/?i=1', en: 'https://kaloai.infinityfreeapp.com/?i=1' },
 			mark: 'AI',
 		},
+	},
+	{
+		name: { es: 'Diagnóstico web', en: 'Website check' },
+		url: 'https://diagnostico.felixcorcoran.es',
+		summary: {
+			es: 'Herramienta pública: escribes una web y dice qué se encuentra un cliente, solo con hechos comprobables.',
+			en: 'Public tool: type a website and it shows what a customer finds, using only verifiable facts.',
+		},
+		highlights: [
+			{
+				es: 'Funciones serverless con protección SSRF; revisa enlaces, contacto, Google y vista previa.',
+				en: 'Serverless functions with SSRF protection; checks links, contact, Google and link previews.',
+			},
+		],
+		stack: ['Astro SSR', 'Node.js', 'TypeScript', 'Vercel'],
+		web: {
+			tag: { es: 'Herramienta pública', en: 'Public tool' },
+			hover: { es: 'Prueba tu web', en: 'Test your website' },
+			action: 'visit',
+			url: { es: 'https://diagnostico.felixcorcoran.es', en: 'https://diagnostico.felixcorcoran.es/en' },
+			mark: '✓',
+		},
+	},
+	{
+		name: 'felixcorcoran.es',
+		url: 'https://felixcorcoran.es',
+		summary: {
+			es: 'Mi web de servicios: narrativa guiada por el scroll y escultura 3D con shaders propios.',
+			en: 'My services website: scroll-driven storytelling and a 3D sculpture with custom shaders.',
+		},
+		highlights: [
+			{
+				es: 'Bilingüe, con SEO técnico y datos estructurados; modo claro y oscuro.',
+				en: 'Bilingual, with technical SEO and structured data; light and dark mode.',
+			},
+		],
+		stack: ['Astro', 'GSAP', 'Three.js', 'GLSL'],
+		web: {
+			tag: { es: 'Web y WebGL', en: 'Web & WebGL' },
+			hover: { es: 'Web de servicios', en: 'Services website' },
+			action: 'visit',
+			url: { es: 'https://felixcorcoran.es', en: 'https://felixcorcoran.es/en' },
+			mark: 'fc',
+		},
+	},
+	{
+		name: 'Portfolio',
+		url: 'https://dev.felixcorcoran.es',
+		summary: {
+			es: 'Portfolio bilingüe con animaciones y contacto serverless; genera este currículum.',
+			en: 'Bilingual portfolio with animations and serverless contact; it generates this resume.',
+		},
+		highlights: [
+			{
+				es: 'Arquitectura de islas para rendimiento y SEO; CV en PDF generado desde los datos.',
+				en: 'Islands architecture for performance and SEO; PDF resume generated from data.',
+			},
+		],
+		stack: ['Astro', 'Tailwind CSS', 'Resend', 'Vercel'],
+		// Sin `web`: no se enseña a sí mismo en Mis trabajos
 	},
 	{
 		name: 'Spain Trading Cards',
@@ -170,50 +230,6 @@ export const projects: Project[] = [
 		},
 	},
 	{
-		name: 'felixcorcoran.es',
-		url: 'https://felixcorcoran.es',
-		summary: {
-			es: 'Mi web de servicios: narrativa guiada por el scroll y escultura 3D con shaders propios.',
-			en: 'My services website: scroll-driven storytelling and a 3D sculpture with custom shaders.',
-		},
-		highlights: [
-			{
-				es: 'Bilingüe, con SEO técnico y datos estructurados; modo claro y oscuro.',
-				en: 'Bilingual, with technical SEO and structured data; light and dark mode.',
-			},
-		],
-		stack: ['Astro', 'GSAP', 'Three.js', 'GLSL'],
-		web: {
-			tag: { es: 'Web y WebGL', en: 'Web & WebGL' },
-			hover: { es: 'Web de servicios', en: 'Services website' },
-			action: 'visit',
-			url: { es: 'https://felixcorcoran.es', en: 'https://felixcorcoran.es/en' },
-			mark: 'fc',
-		},
-	},
-	{
-		name: { es: 'Diagnóstico web', en: 'Website check' },
-		url: 'https://diagnostico.felixcorcoran.es',
-		summary: {
-			es: 'Herramienta pública: escribes una web y dice qué se encuentra un cliente, solo con hechos comprobables.',
-			en: 'Public tool: type a website and it shows what a customer finds, using only verifiable facts.',
-		},
-		highlights: [
-			{
-				es: 'Funciones serverless con protección SSRF; revisa enlaces, contacto, Google y vista previa.',
-				en: 'Serverless functions with SSRF protection; checks links, contact, Google and link previews.',
-			},
-		],
-		stack: ['Astro SSR', 'Node.js', 'TypeScript', 'Vercel'],
-		web: {
-			tag: { es: 'Herramienta pública', en: 'Public tool' },
-			hover: { es: 'Prueba tu web', en: 'Test your website' },
-			action: 'visit',
-			url: { es: 'https://diagnostico.felixcorcoran.es', en: 'https://diagnostico.felixcorcoran.es/en' },
-			mark: '✓',
-		},
-	},
-	{
 		name: { es: 'Radar comercial', en: 'Lead radar' },
 		status: { es: 'Uso interno', en: 'Internal tool' },
 		summary: {
@@ -229,22 +245,6 @@ export const projects: Project[] = [
 		stack: ['Node.js', 'GitHub Actions', 'Places API', 'Gemini API'],
 		// Repositorio privado: sin enlace
 		web: { tag: { es: 'Automatización e IA', en: 'Automation & AI' }, mark: '◎' },
-	},
-	{
-		name: 'Portfolio',
-		url: 'https://dev.felixcorcoran.es',
-		summary: {
-			es: 'Portfolio bilingüe con animaciones y contacto serverless; genera este currículum.',
-			en: 'Bilingual portfolio with animations and serverless contact; it generates this resume.',
-		},
-		highlights: [
-			{
-				es: 'Arquitectura de islas para rendimiento y SEO; CV en PDF generado desde los datos.',
-				en: 'Islands architecture for performance and SEO; PDF resume generated from data.',
-			},
-		],
-		stack: ['Astro', 'Tailwind CSS', 'Resend', 'Vercel'],
-		// Sin `web`: no se enseña a sí mismo en Mis trabajos
 	},
 ];
 
@@ -282,8 +282,8 @@ export const education = [
 ];
 
 export const otherExperience: Text = {
-	es: 'Atención al público y al cliente (2019 – 2023): información turística, comercio, hostelería y reparto.',
-	en: 'Customer-facing roles (2019 – 2023): tourist information, retail, hospitality and delivery.',
+	es: 'Atención al público y al cliente: información turística, comercio, hostelería y reparto.',
+	en: 'Customer-facing roles: tourist information, retail, hospitality and delivery.',
 };
 
 export const languages = [

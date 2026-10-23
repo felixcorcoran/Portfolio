@@ -6,7 +6,7 @@
  *
  * Es HTML impreso a PDF con Edge o Chrome sin cabeceras. Pensado para que lo
  * lea bien un ATS: texto real, una columna de lectura, enlaces escritos tal
- * cual y sin texto dentro de imágenes. El color es el coral de la marca.
+ * cual y sin texto dentro de imágenes. El color es el índigo del portfolio.
  */
 
 import { execFileSync } from 'node:child_process';
@@ -145,10 +145,14 @@ ${fontFaces}
 		--muted: #5c5d66;
 		--soft: #8a8b94;
 		--rule: #e8e3df;
-		--coral: #e8735e;
-		--coral-text: #b4472f;
-		--chip: #fbefeb;
-		--chip-text: #8f3a27;
+		--accent: #4f46e5;
+		--accent-text: #3730a3;
+		--accent-line: #c7c9f3;
+		--chip: #eef0ff;
+		--chip-text: #3b38a0;
+		/* Multiplica los espacios verticales: lo ajusta el script del final
+		   para que el contenido llene la página, ni más ni menos */
+		--fit: 1;
 	}
 	* { box-sizing: border-box; }
 	html, body { margin: 0; padding: 0; }
@@ -167,13 +171,13 @@ ${fontFaces}
 	p, h1, h2, h3, ul { margin: 0; padding: 0; }
 
 	/* ---------- Cabecera ---------- */
-	.top { display: grid; grid-template-columns: 62pt 1fr; column-gap: 16pt; align-items: center; }
-	.photo { width: 62pt; height: 62pt; border-radius: 50%; overflow: hidden; background: #eee; }
+	.top { display: grid; grid-template-columns: 80pt 1fr; column-gap: 18pt; align-items: center; }
+	.photo { width: 80pt; height: 80pt; border-radius: 50%; overflow: hidden; background: #eee; }
 	.photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
 	h1 { font: 300 27pt/1 'Sora', sans-serif; letter-spacing: -0.035em; }
 	h1 b { font-weight: 600; }
 	.role { margin-top: 5pt; font-size: 10.5pt; font-weight: 500; }
-	.role span { color: var(--coral-text); font-weight: 400; }
+	.role span { color: var(--accent-text); font-weight: 400; }
 	.contact {
 		display: flex;
 		flex-wrap: wrap;
@@ -184,57 +188,57 @@ ${fontFaces}
 		color: var(--muted);
 	}
 	.contact li { display: inline-flex; align-items: center; gap: 4pt; white-space: nowrap; }
-	.contact svg { width: 8.5pt; height: 8.5pt; fill: var(--coral); flex: none; }
+	.contact svg { width: 8.5pt; height: 8.5pt; fill: var(--accent); flex: none; }
 	.contact .c-linkedin svg, .contact .c-github svg { fill: var(--ink); }
 
 	/* ---------- Secciones ---------- */
-	section { margin-top: 11pt; }
+	section { margin-top: calc(11pt * var(--fit)); }
 	h2 {
 		display: flex;
 		align-items: center;
 		gap: 8pt;
-		margin-bottom: 5pt;
+		margin-bottom: calc(5pt * var(--fit));
 		font: 600 8pt/1 'Sora', sans-serif;
 		letter-spacing: 0.07em;
 		text-transform: uppercase;
-		color: var(--coral-text);
+		color: var(--accent-text);
 	}
 	h2::after { content: ''; flex: 1; height: 0.75pt; background: var(--rule); }
 	.profile p { font-size: 8.8pt; line-height: 1.48; color: #2a2b31; }
 
 	/* Viñetas de lista de verdad (no dibujadas aparte): el texto se lee en su orden */
 	.dots { padding-left: 10pt; }
-	.dots li { margin-top: 1.5pt; padding-left: 1pt; }
-	.dots li::marker { color: var(--coral); font-size: 0.9em; }
+	.dots li { margin-top: calc(1.5pt * var(--fit)); padding-left: 1pt; }
+	.dots li::marker { color: var(--accent); font-size: 0.9em; }
 
-	.job + .job { margin-top: 6pt; }
+	.job + .job { margin-top: calc(6pt * var(--fit)); }
 	.job header, .project header { display: flex; align-items: baseline; gap: 8pt; }
 	.job h3 { font: 600 9.8pt/1.3 'Inter', sans-serif; }
 	.job .at { font-weight: 500; color: var(--muted); }
 	.period { margin-left: auto; font-size: 8.2pt; color: var(--soft); white-space: nowrap; }
-	.clients { margin-top: 4pt; padding-left: 10pt; font-size: 8.2pt; color: var(--muted); }
+	.clients { margin-top: calc(4pt * var(--fit)); padding-left: 10pt; font-size: 8.2pt; color: var(--muted); }
 	.clients b { color: var(--ink); font-weight: 500; }
-	.clients a { color: var(--ink); border-bottom: 0.6pt solid #e9b4a8; }
+	.clients a { color: var(--ink); border-bottom: 0.6pt solid var(--accent-line); }
 
 	/* Proyectos: rejilla de dos, separados por líneas finas */
 	.projects { display: grid; grid-template-columns: 1fr 1fr; column-gap: 22pt; }
-	.project { padding: 6pt 0 6pt; border-top: 0.75pt solid var(--rule); }
+	.project { padding: calc(6pt * var(--fit)) 0; border-top: 0.75pt solid var(--rule); }
 	.project:nth-child(-n + 2) { border-top: 0; padding-top: 0; }
 	.project h3 { font: 600 10pt/1.3 'Sora', sans-serif; letter-spacing: -0.01em; }
 	.status {
 		padding: 0.5pt 5pt;
-		border: 0.6pt solid #eab3a6;
+		border: 0.6pt solid var(--accent-line);
 		border-radius: 8pt;
 		font-size: 6.6pt;
 		font-weight: 500;
 		letter-spacing: 0.04em;
-		color: var(--coral-text);
+		color: var(--accent-text);
 		white-space: nowrap;
 	}
 	.url { margin-left: auto; font-size: 7.6pt; color: var(--soft); white-space: nowrap; }
 	.project .summary { margin-top: 2.5pt; }
 	.project .detail { margin-top: 2pt; color: var(--muted); }
-	.stack { display: flex; flex-wrap: wrap; gap: 3pt; margin-top: 4pt; }
+	.stack { display: flex; flex-wrap: wrap; gap: 3pt; margin-top: calc(4pt * var(--fit)); }
 	.stack span {
 		padding: 1pt 5pt;
 		border-radius: 3pt;
@@ -246,7 +250,7 @@ ${fontFaces}
 
 	/* Habilidades a la izquierda; formación, idiomas y lo demás a la derecha */
 	.bottom { display: grid; grid-template-columns: 1.7fr 1fr; column-gap: 22pt; }
-	.skills p { display: grid; grid-template-columns: 92pt 1fr; column-gap: 8pt; padding: 2.2pt 0; border-bottom: 0.6pt solid var(--rule); }
+	.skills p { display: grid; grid-template-columns: 92pt 1fr; column-gap: 8pt; padding: calc(2.2pt * var(--fit)) 0; border-bottom: 0.6pt solid var(--rule); }
 	.skills p:last-child { border-bottom: 0; }
 	.skills b { font-weight: 600; }
 	.skills span { color: #2f3036; }
@@ -258,6 +262,7 @@ ${fontFaces}
 </style>
 </head>
 <body>
+<div class="sheet">
 	<header class="top">
 		<div class="photo"><img src="${photo}" alt=""></div>
 		<div>
@@ -279,6 +284,27 @@ ${fontFaces}
 			${otherExperience ? section('other', `<p>${esc(otherExperience[lang])}</p>`, 'other') : ''}
 		</div>
 	</div>
+</div>
+<script>
+	// Reparte el espacio sobrante: busca el mayor --fit con el que la hoja aún
+	// cabe en la página (entre 0.6 y 2). Así no queda hueco abajo ni apretado,
+	// pase lo que pase en perfil.ts.
+	document.fonts.ready.then(() => {
+		const root = document.documentElement;
+		const sheet = document.querySelector('.sheet');
+		const style = getComputedStyle(document.body);
+		const room = document.body.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+		let lo = 0.6;
+		let hi = 2;
+		for (let i = 0; i < 18; i++) {
+			const mid = (lo + hi) / 2;
+			root.style.setProperty('--fit', mid);
+			if (sheet.getBoundingClientRect().height <= room) lo = mid;
+			else hi = mid;
+		}
+		root.style.setProperty('--fit', lo);
+	});
+</script>
 </body>
 </html>`;
 }
