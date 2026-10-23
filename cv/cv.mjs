@@ -18,6 +18,18 @@ import { persona, experience, projects, skills, education, otherExperience, lang
 const here = dirname(fileURLToPath(import.meta.url));
 const photo = `data:image/jpeg;base64,${readFileSync(join(here, 'assets', 'foto.jpg')).toString('base64')}`;
 
+// Fuentes estáticas (no variables): así el PDF las incrusta como TrueType y
+// un ATS lee el texto sin problemas. Las de Google Fonts salen como Type3.
+const font = (pkg, file) => pathToFileURL(join(here, '..', 'node_modules', '@fontsource', pkg, 'files', file)).href;
+const fontFaces = [
+	['Inter', 400], ['Inter', 500], ['Inter', 600], ['Sora', 300], ['Sora', 600],
+]
+	.map(([family, weight]) => {
+		const pkg = family.toLowerCase();
+		return `@font-face { font-family: '${family}'; font-weight: ${weight}; src: url(${font(pkg, `${pkg}-latin-${weight}-normal.woff2`)}) format('woff2'); }`;
+	})
+	.join('\n');
+
 const files = { es: 'cv-felix-corcoran.pdf', en: 'resume-felix-corcoran.pdf' };
 const labels = {
 	es: {
@@ -125,10 +137,8 @@ function page(lang) {
 <head>
 <meta charset="utf-8">
 <title>${esc(l.title)}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@300;600&display=block" rel="stylesheet">
 <style>
+${fontFaces}
 	@page { size: A4; margin: 0; }
 	:root {
 		--ink: #18181b;
@@ -185,25 +195,17 @@ function page(lang) {
 		gap: 8pt;
 		margin-bottom: 5pt;
 		font: 600 8pt/1 'Sora', sans-serif;
-		letter-spacing: 0.16em;
+		letter-spacing: 0.07em;
 		text-transform: uppercase;
 		color: var(--coral-text);
 	}
 	h2::after { content: ''; flex: 1; height: 0.75pt; background: var(--rule); }
 	.profile p { font-size: 8.8pt; line-height: 1.48; color: #2a2b31; }
 
-	.dots { list-style: none; }
-	.dots li { position: relative; padding-left: 10pt; margin-top: 1.5pt; }
-	.dots li::before {
-		content: '';
-		position: absolute;
-		left: 1pt;
-		top: 0.58em;
-		width: 3.5pt;
-		height: 3.5pt;
-		border-radius: 50%;
-		background: var(--coral);
-	}
+	/* Viñetas de lista de verdad (no dibujadas aparte): el texto se lee en su orden */
+	.dots { padding-left: 10pt; }
+	.dots li { margin-top: 1.5pt; padding-left: 1pt; }
+	.dots li::marker { color: var(--coral); font-size: 0.9em; }
 
 	.job + .job { margin-top: 6pt; }
 	.job header, .project header { display: flex; align-items: baseline; gap: 8pt; }
