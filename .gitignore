@@ -23,3 +23,6 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .vercel
+
+# HTML intermedio del currículum (lleva las imágenes en base64)
+cv/out/

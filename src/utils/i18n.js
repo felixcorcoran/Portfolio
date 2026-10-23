@@ -22,7 +22,7 @@ const languages = {
     // Pilares Técnicos
     'stack.tagline.1': 'Ingeniería y',
     'stack.tagline.2': 'automatización inteligente.',
-    'tech.backend': 'Lógica de servidor y bases de datos bien estructuradas: PHP con MVC en producción, Laravel, y Node.js con TypeScript para funciones serverless, scripts e integraciones.',
+    'tech.backend': 'Lógica de servidor y bases de datos bien estructuradas: PHP con MVC en producción, Laravel, Node.js con TypeScript para funciones serverless e integraciones, y Java y Python cuando el proyecto lo pide.',
     'tech.frontend': 'Interfaces fieles al diseño, responsivas y rápidas: de un prototipo estático a una experiencia fluida, con Astro, React, Tailwind CSS, GSAP y 3D en Three.js.',
     'tech.automation': 'Conecto modelos de IA con procesos reales: workflows en n8n, APIs de OpenAI, Claude y Gemini, y APIs de terceros como Shopify, Telegram o Google Places, con JSON como puente.',
     'tech.future': 'Profundizando en Next.js y Supabase para construir productos full stack con renderizado en servidor y datos en tiempo real.',
@@ -114,7 +114,7 @@ const languages = {
     // Pilares Técnicos
     'stack.tagline.1': 'Engineering meets',
     'stack.tagline.2': 'intelligent automation.',
-    'tech.backend': 'Well-structured server logic and databases: PHP with MVC in production, Laravel, and Node.js with TypeScript for serverless functions, scripts and integrations.',
+    'tech.backend': 'Well-structured server logic and databases: PHP with MVC in production, Laravel, Node.js with TypeScript for serverless functions and integrations, and Java and Python when the project calls for it.',
     'tech.frontend': 'Interfaces true to the design, responsive and fast: from a static prototype to a fluid experience, with Astro, React, Tailwind CSS, GSAP and 3D in Three.js.',
     'tech.automation': 'I connect AI models with real processes: n8n workflows, OpenAI, Claude and Gemini APIs, and third-party APIs such as Shopify, Telegram or Google Places, with JSON as the bridge.',
     'tech.future': 'Going deeper into Next.js and Supabase to build full stack products with server-side rendering and real-time data.',
