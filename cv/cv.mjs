@@ -6,7 +6,8 @@
  *
  * Es HTML impreso a PDF con Edge o Chrome sin cabeceras. Pensado para que lo
  * lea bien un ATS: texto real, una columna de lectura, enlaces escritos tal
- * cual y sin texto dentro de imágenes. El color es el índigo del portfolio.
+ * cual y sin texto dentro de imágenes. Color: azul marino apagado y grises,
+ * sobrio, como se espera en un CV (no los colores de las webs).
  */
 
 import { execFileSync } from 'node:child_process';
@@ -145,11 +146,11 @@ ${fontFaces}
 		--muted: #5c5d66;
 		--soft: #8a8b94;
 		--rule: #e8e3df;
-		--accent: #4f46e5;
-		--accent-text: #3730a3;
-		--accent-line: #c7c9f3;
-		--chip: #eef0ff;
-		--chip-text: #3b38a0;
+		--accent: #3d5a7a;
+		--accent-text: #1f3a5a;
+		--accent-line: #c9d3de;
+		--chip: #eef1f5;
+		--chip-text: #2d4258;
 		/* Multiplica los espacios verticales: lo ajusta el script del final
 		   para que el contenido llene la página, ni más ni menos */
 		--fit: 1;
