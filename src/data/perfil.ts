@@ -1,6 +1,8 @@
 /**
  * Todo lo que soy y he hecho, en un solo sitio y en los dos idiomas. De aquí
- * sale el currículum (cv/cv.mjs → PDF) y, poco a poco, la propia web.
+ * salen el currículum (cv/cv.mjs → PDF) y las secciones Stack, Experiencia y
+ * Mis trabajos del portfolio. Al cambiar este archivo, una GitHub Action
+ * vuelve a generar los PDF (.github/workflows/cv.yml).
  *
  * Reglas:
  * - Cada dato tiene que ser verdad y poder enseñarse. Lo que aún no sé se
@@ -12,15 +14,32 @@
 export type Lang = 'es' | 'en';
 export type Text = Record<Lang, string>;
 
+/** Un texto igual en los dos idiomas, o uno por idioma */
+export type Label = string | Text;
+export const pick = (value: Label, lang: Lang) => (typeof value === 'string' ? value : value[lang]);
+
 export interface Project {
-	/** Un texto si se llama igual en los dos idiomas */
-	name: string | Text;
+	name: Label;
 	url?: string;
 	/** Etiqueta corta junto al nombre: «En desarrollo», «Uso interno»… */
 	status?: Text;
 	summary: Text;
 	highlights: Text[];
 	stack: string[];
+	/** Cómo sale en Mis trabajos del portfolio. Sin esto, solo sale en el CV. */
+	web?: {
+		/** Rótulo pequeño encima del nombre */
+		tag: Text;
+		/** Lo que se lee al pasar el ratón, bajo «Visitar web», «Explorar» o «Ver caso» */
+		hover?: Text;
+		action?: 'visit' | 'explore' | 'case';
+		/** Otra dirección para la web (p. ej. con /en, o el caso contado en otra página) */
+		url?: Text;
+		/** Letra o símbolo gigante de fondo */
+		mark: string;
+		/** Tarjeta baja a todo el ancho, al final */
+		wide?: boolean;
+	};
 }
 
 export const persona = {
@@ -42,7 +61,15 @@ export const persona = {
 	},
 };
 
-export const experience = [
+export const experience: {
+	role: Text;
+	company: string;
+	period: Text;
+	highlights: Text[];
+	clients: { name: string; url?: string }[];
+	/** Etiquetas de la línea de tiempo del portfolio */
+	tags: Label[];
+}[] = [
 	{
 		role: { es: 'Desarrollador web freelance', en: 'Freelance web developer' },
 		company: '',
@@ -69,6 +96,7 @@ export const experience = [
 			{ name: 'Susana Nails', url: 'https://susanaflorianails.com' },
 			{ name: 'Construcciones Omega', url: 'https://construccionesyserviciosomega.com' },
 		],
+		tags: ['MVC', { es: 'Reservas online', en: 'Online bookings' }, { es: 'Trato con cliente', en: 'Client-facing' }],
 	},
 	{
 		role: { es: 'Desarrollador web (prácticas)', en: 'Web developer (internship)' },
@@ -89,6 +117,7 @@ export const experience = [
 			},
 		],
 		clients: [],
+		tags: ['n8n', 'Docker', 'React', 'UI/UX'],
 	},
 ];
 
@@ -108,6 +137,13 @@ export const projects: Project[] = [
 			},
 		],
 		stack: ['PHP (MVC)', 'MySQL', 'Gemini API', 'JavaScript'],
+		web: {
+			tag: { es: 'Full Stack e IA', en: 'Full Stack & AI' },
+			hover: { es: 'Plataforma IA', en: 'AI Platform' },
+			action: 'explore',
+			url: { es: 'https://kaloai.infinityfreeapp.com/?i=1', en: 'https://kaloai.infinityfreeapp.com/?i=1' },
+			mark: 'AI',
+		},
 	},
 	{
 		name: 'Spain Trading Cards',
@@ -123,6 +159,15 @@ export const projects: Project[] = [
 			},
 		],
 		stack: ['Shopify Liquid', 'GraphQL', 'n8n', 'Gemini API', 'Telegram'],
+		web: {
+			tag: { es: 'Automatización e IA', en: 'Automation & AI' },
+			hover: { es: 'Del móvil a la tienda', en: 'From phone to store' },
+			action: 'case',
+			// La tienda aún no es pública: lleva al caso contado en felixcorcoran.es
+			url: { es: 'https://felixcorcoran.es/#trabajo', en: 'https://felixcorcoran.es/en#work' },
+			mark: 'TCG',
+			wide: true,
+		},
 	},
 	{
 		name: 'felixcorcoran.es',
@@ -138,6 +183,13 @@ export const projects: Project[] = [
 			},
 		],
 		stack: ['Astro', 'GSAP', 'Three.js', 'GLSL'],
+		web: {
+			tag: { es: 'Web y WebGL', en: 'Web & WebGL' },
+			hover: { es: 'Web de servicios', en: 'Services website' },
+			action: 'visit',
+			url: { es: 'https://felixcorcoran.es', en: 'https://felixcorcoran.es/en' },
+			mark: 'fc',
+		},
 	},
 	{
 		name: { es: 'Diagnóstico web', en: 'Website check' },
@@ -153,6 +205,13 @@ export const projects: Project[] = [
 			},
 		],
 		stack: ['Astro SSR', 'Node.js', 'TypeScript', 'Vercel'],
+		web: {
+			tag: { es: 'Herramienta pública', en: 'Public tool' },
+			hover: { es: 'Prueba tu web', en: 'Test your website' },
+			action: 'visit',
+			url: { es: 'https://diagnostico.felixcorcoran.es', en: 'https://diagnostico.felixcorcoran.es/en' },
+			mark: '✓',
+		},
 	},
 	{
 		name: { es: 'Radar comercial', en: 'Lead radar' },
@@ -168,6 +227,8 @@ export const projects: Project[] = [
 			},
 		],
 		stack: ['Node.js', 'GitHub Actions', 'Places API', 'Gemini API'],
+		// Repositorio privado: sin enlace
+		web: { tag: { es: 'Automatización e IA', en: 'Automation & AI' }, mark: '◎' },
 	},
 	{
 		name: 'Portfolio',
@@ -183,19 +244,30 @@ export const projects: Project[] = [
 			},
 		],
 		stack: ['Astro', 'Tailwind CSS', 'Resend', 'Vercel'],
+		// Sin `web`: no se enseña a sí mismo en Mis trabajos
 	},
 ];
 
-export const skills: { label: Text; items: string[] }[] = [
-	{ label: { es: 'IA y automatización', en: 'AI & automation' }, items: ['n8n', 'OpenAI API', 'Claude API', 'Gemini API', 'JSON', 'REST'] },
-	{ label: { es: 'Backend', en: 'Backend' }, items: ['PHP', 'Laravel', 'Node.js', 'Java', 'Python', 'MySQL'] },
+export type SkillGroup = 'ai' | 'backend' | 'frontend' | 'integrations' | 'tools';
+
+export const skills: { id: SkillGroup; label: Text; items: string[] }[] = [
+	{ id: 'ai', label: { es: 'IA y automatización', en: 'AI & automation' }, items: ['n8n', 'OpenAI API', 'Claude API', 'Gemini API', 'JSON', 'REST'] },
+	{ id: 'backend', label: { es: 'Backend', en: 'Backend' }, items: ['PHP', 'Laravel', 'Node.js', 'Java', 'Python', 'MySQL'] },
 	{
+		id: 'frontend',
 		label: { es: 'Frontend', en: 'Frontend' },
 		items: ['TypeScript', 'JavaScript', 'React', 'Astro', 'Tailwind CSS', 'Three.js', 'GSAP', 'Vite', 'HTML', 'CSS/Sass'],
 	},
-	{ label: { es: 'Integraciones', en: 'Integrations' }, items: ['Shopify (Liquid, GraphQL)', 'Telegram Bot API', 'Google Places API', 'Resend'] },
-	{ label: { es: 'Herramientas', en: 'Tools' }, items: ['Git', 'GitHub Actions', 'Docker', 'Vercel', 'Postman'] },
+	{
+		id: 'integrations',
+		label: { es: 'Integraciones', en: 'Integrations' },
+		items: ['Shopify (Liquid, GraphQL)', 'Telegram Bot API', 'Google Places API', 'Resend'],
+	},
+	{ id: 'tools', label: { es: 'Herramientas', en: 'Tools' }, items: ['Git', 'GitHub Actions', 'Docker', 'Vercel', 'Postman'] },
 ];
+
+/** Lo que estoy aprendiendo: sale en el portfolio (New horizons), no en el CV */
+export const learning = ['Next.js', 'Supabase'];
 
 export const education = [
 	{

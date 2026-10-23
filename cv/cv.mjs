@@ -299,7 +299,9 @@ for (const lang of process.argv.slice(2).length ? process.argv.slice(2) : ['es',
 	const html = join(outDir, `${lang}.html`);
 	writeFileSync(html, page(lang));
 	const pdf = join(here, '..', 'public', files[lang]);
-	execFileSync(browser, ['--headless=new', '--disable-gpu', '--no-pdf-header-footer', '--virtual-time-budget=8000', `--print-to-pdf=${pdf}`, pathToFileURL(html).href], {
+	// En los runners de Ubuntu (GitHub Actions) el sandbox de Chrome no arranca
+	const ci = process.env.CI ? ['--no-sandbox'] : [];
+	execFileSync(browser, [...ci, '--headless=new', '--disable-gpu', '--no-pdf-header-footer', '--virtual-time-budget=8000', `--print-to-pdf=${pdf}`, pathToFileURL(html).href], {
 		stdio: 'ignore',
 	});
 	console.log(`${lang}: ${pdf}`);
