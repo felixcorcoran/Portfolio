@@ -181,7 +181,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                 </p>
 
                                 <div class="flex flex-wrap gap-4 pt-4">
-                                    {['php', 'laravel', 'java', 'python', 'mysql'].map((tech) => (
+                                    {['php', 'laravel', 'nodejs', 'java', 'mysql'].map((tech) => (
                                         <div class="group/tech relative flex flex-col items-center">
                                             <img src={`https://skillicons.dev/icons?i=${tech}`} 
                                                 class="h-14 w-14 transition-all duration-300 grayscale-0 group-hover/section:grayscale group-hover/tech:grayscale-0 group-hover/tech:scale-110" 
@@ -222,7 +222,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                 </p>
                                 
                                 <div class="flex flex-wrap justify-end lg:justify-start gap-4 pt-4 w-full">
-                                    {['astro', 'react', 'ts', 'tailwind', 'js'].map((tech) => (
+                                    {['astro', 'react', 'ts', 'tailwind', 'threejs', 'js', 'vite', 'sass'].map((tech) => (
                                         <div class="group/tech relative flex flex-col items-center">
                                             <img src={`https://skillicons.dev/icons?i=${tech}`} 
                                                 class="h-14 w-14 transition-all duration-300 grayscale-0 group-hover/section:grayscale group-hover/tech:grayscale-0 group-hover/tech:scale-110" 
@@ -262,13 +262,13 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                     <!-- Los proveedores de IA no tienen icono en skillicons: van como etiquetas
                                          (el antiguo icono «ai» era el logo de Adobe Illustrator) -->
                                     <div class="flex flex-wrap gap-2">
-                                        {['n8n', 'OpenAI API', 'Claude API', 'Gemini', 'JSON', 'REST API'].map((tool) => (
+                                        {['n8n', 'OpenAI API', 'Claude API', 'Gemini API', 'Shopify GraphQL API', 'Telegram Bot API', 'Google Places API', 'JSON', 'REST API'].map((tool) => (
                                             <span class="px-4 py-2 rounded-full bg-blue-500/5 border border-blue-400/20 text-xs text-blue-200/80 uppercase font-bold tracking-wider">{tool}</span>
                                         ))}
                                     </div>
 
                                     <div class="flex flex-wrap gap-4 pt-4">
-                                        {['docker', 'git', 'githubactions', 'postman'].map((tech) => (
+                                        {['docker', 'git', 'githubactions', 'vercel', 'postman'].map((tech) => (
                                             <div class="group/tech relative flex flex-col items-center">
                                                 <img src={`https://skillicons.dev/icons?i=${tech}`} 
                                                     class="h-14 w-14 transition-all duration-300 grayscale-0 group-hover/section:grayscale group-hover/tech:grayscale-0 group-hover/tech:scale-110" 
@@ -380,9 +380,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                     <div class="flex flex-wrap gap-4 justify-end w-full">
                                         {[
                                             {id: 'nextjs', name: 'Next.js'},
-                                            {id: 'nodejs', name: 'Node.js'},
-                                            {id: 'supabase', name: 'Supabase'},
-                                            {id: 'threejs', name: 'Three.js'}
+                                            {id: 'supabase', name: 'Supabase'}
                                         ].map((tech) => (
                                             <div class="group/tech relative flex flex-col items-center">
                                                 <img 
@@ -495,7 +493,8 @@ const canonical = lang === 'en' ? urlEn : urlEs;
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                         
-                        <!-- Los dos proyectos que se pueden visitar, a la mitad y con la misma tarjeta -->
+                        <!-- Los proyectos, a la mitad y con la misma tarjeta. El radar es de uso
+                             interno (repositorio privado): sin enlace ni capa al pasar el ratón -->
                         {[
                             {
                                 url: 'https://kaloai.infinityfreeapp.com/?i=1',
@@ -518,11 +517,35 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                 hover: t('projects.fc.hover'),
                                 mark: 'fc',
                             },
-                        ].map((project) => (
-                            <a href={project.url} target="_blank" rel="noopener" class="md:col-span-6 group relative overflow-hidden bg-neutral-900/40 border border-white/5 rounded-[2.5rem] block transition-all duration-700 hover:border-blue-500/50">
-                                <div class="p-8 md:p-14 h-full flex flex-col justify-between gap-10 transition-all duration-700 group-hover:blur-2xl group-hover:scale-95 group-hover:opacity-10">
+                            {
+                                url: 'https://diagnostico.felixcorcoran.es' + (lang === 'en' ? '/en' : ''),
+                                tag: t('projects.diag.tag'),
+                                name: t('projects.diag.name'),
+                                desc: t('projects.diag.desc'),
+                                chips: ['Astro SSR', 'Vercel', 'Node.js', 'TypeScript'],
+                                action: t('btn.visit'),
+                                hover: t('projects.diag.hover'),
+                                mark: '✓',
+                            },
+                            {
+                                url: null,
+                                tag: t('projects.radar.tag'),
+                                status: t('projects.radar.status'),
+                                name: t('projects.radar.name'),
+                                desc: t('projects.radar.desc'),
+                                chips: ['Node.js', 'TypeScript', 'GitHub Actions', 'Google Places API', 'Gemini API'],
+                                mark: '◎',
+                            },
+                        ].map((project) => {
+                            const Card = project.url ? 'a' : 'div';
+                            return (
+                            <Card {...(project.url ? { href: project.url, target: '_blank', rel: 'noopener' } : {})} class:list={['md:col-span-6 group relative overflow-hidden bg-neutral-900/40 border border-white/5 rounded-[2.5rem] block transition-all duration-700', project.url && 'hover:border-blue-500/50']}>
+                                <div class:list={['p-8 md:p-14 h-full flex flex-col justify-between gap-10 transition-all duration-700', project.url && 'group-hover:blur-2xl group-hover:scale-95 group-hover:opacity-10']}>
                                     <div>
-                                        <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-6">{project.tag}</span>
+                                        <div class="flex flex-wrap items-center gap-3 mb-6">
+                                            <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">{project.tag}</span>
+                                            {project.status && <span class="px-2.5 py-1 rounded-full border border-white/15 text-[9px] text-white/50 uppercase font-bold tracking-widest">{project.status}</span>}
+                                        </div>
                                         <h3 class="text-[clamp(1.5rem,7vw,3.25rem)] font-black text-white tracking-tighter uppercase mb-6 leading-[0.9]">{project.name}</h3>
                                         <p class="text-neutral-400 text-lg font-light leading-relaxed">
                                             {project.desc}
@@ -534,15 +557,18 @@ const canonical = lang === 'en' ? urlEn : urlEs;
                                         ))}
                                     </div>
                                 </div>
-                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700">
-                                    <div class="text-center px-6">
-                                        <span class="text-6xl md:text-[5rem] font-black text-white uppercase tracking-tighter block leading-none">{project.action}</span>
-                                        <span class="text-xl font-mono text-blue-500 uppercase tracking-[0.4em]">{project.hover}</span>
+                                {project.url && (
+                                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700">
+                                        <div class="text-center px-6">
+                                            <span class="text-6xl md:text-[5rem] font-black text-white uppercase tracking-tighter block leading-none">{project.action}</span>
+                                            <span class="text-xl font-mono text-blue-500 uppercase tracking-[0.4em]">{project.hover}</span>
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                                 <span class="absolute -bottom-10 -right-6 text-[16rem] font-black text-white/[0.02] select-none pointer-events-none">{project.mark}</span>
-                            </a>
-                        ))}
+                            </Card>
+                            );
+                        })}
 
                         <!-- Spain Trading Cards: en desarrollo (la tienda aún no es pública). Tarjeta baja y
                              discreta; lleva al caso contado en felixcorcoran.es, que sí existe -->
