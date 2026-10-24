@@ -46,6 +46,7 @@ const cards = projects
         chips: p.stack,
         action: actions[p.web.action ?? 'visit'],
         hover: p.web.hover?.[lang],
+        repo: p.repo,
         mark: p.web.mark,
         wide: p.web.wide ?? false,
         image: shot(p.web.image),
@@ -250,11 +251,23 @@ const clientSites = [
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                         
                         <!-- Los proyectos (de perfil.ts), a la mitad y con la misma tarjeta. Sin
-                             enlace (p. ej. el radar, repositorio privado): sin capa al pasar el ratón -->
+                             enlace (p. ej. el radar, repositorio privado): sin capa al pasar el ratón.
+                             Con repositorio público, la tarjeta lleva la web en una capa que la cubre
+                             entera y el enlace «Código» encima (un enlace no puede ir dentro de otro) -->
                         {halfCards.map((project, i) => {
-                            const Card = project.url ? 'a' : 'div';
+                            const Card = project.url && !project.repo ? 'a' : 'div';
                             return (
-                            <Card {...(project.url ? { href: project.url, target: '_blank', rel: 'noopener' } : {})} data-reveal class:list={['project-card md:col-span-6 group relative overflow-hidden bg-neutral-900/40 border border-white/5 rounded-[2.5rem] flex flex-col transition-colors duration-700', project.url && 'hover:border-blue-500/50']}>
+                            <Card {...(Card === 'a' ? { href: project.url, target: '_blank', rel: 'noopener' } : {})} data-reveal class:list={['project-card md:col-span-6 group relative overflow-hidden bg-neutral-900/40 border border-white/5 rounded-[2.5rem] flex flex-col transition-colors duration-700', project.url && 'hover:border-blue-500/50']}>
+                                {project.url && project.repo && (
+                                    <a href={project.url} target="_blank" rel="noopener" class="absolute inset-0 z-20 rounded-[2.5rem] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400" aria-label={`${project.action}: ${project.name.replace('\u200b', '')}`}></a>
+                                )}
+                                <!-- El código, en la esquina de la captura y por encima de la capa del enlace -->
+                                {project.repo && (
+                                    <a href={project.repo} target="_blank" rel="noopener" class="absolute top-5 right-5 z-30 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-black/60 backdrop-blur-md text-[10px] text-blue-200 uppercase font-bold transition-colors hover:border-blue-300/60 hover:bg-blue-500/20 hover:text-white">
+                                        <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.6.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.8-2.8 5.7-5.5 6 .5.4.9 1.1.9 2.3v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3" /></svg>
+                                        {t('btn.code')} ↗
+                                    </a>
+                                )}
                                 {project.image && (
                                     <div class="rv-wipe relative aspect-[16/10] overflow-hidden border-b border-white/5" style={`--i: ${i % 2}`}>
                                         <Image src={project.image} alt={project.name.replace('\u200b', '')} widths={[600, 900, 1200]} sizes="(min-width: 768px) 50vw, 100vw" class="h-full w-full object-cover object-top transition-transform duration-[1400ms] ease-out group-hover:scale-[1.06]" />

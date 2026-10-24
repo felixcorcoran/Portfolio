@@ -21,6 +21,8 @@ export const pick = (value: Label, lang: Lang) => (typeof value === 'string' ? v
 export interface Project {
 	name: Label;
 	url?: string;
+	/** Repositorio público en GitHub, si lo hay */
+	repo?: string;
 	/** Etiqueta corta junto al nombre: «En desarrollo», «Uso interno»… */
 	status?: Text;
 	summary: Text;
@@ -128,6 +130,7 @@ export const projects: Project[] = [
 	{
 		name: 'Kalo AI',
 		url: 'https://kaloai.infinityfreeapp.com',
+		repo: 'https://github.com/felixjbk/kaloAI',
 		summary: {
 			es: 'Plataforma de nutrición con recetas generadas por IA según calorías, objetivos e intolerancias.',
 			en: 'Nutrition platform with AI-generated recipes based on calories, goals and intolerances.',
@@ -151,6 +154,7 @@ export const projects: Project[] = [
 	{
 		name: { es: 'Diagnóstico web', en: 'Website check' },
 		url: 'https://diagnostico.felixcorcoran.es',
+		repo: 'https://github.com/felixjbk/diagnostico',
 		summary: {
 			es: 'Herramienta pública: escribes una web y dice qué se encuentra un cliente, solo con hechos comprobables.',
 			en: 'Public tool: type a website and it shows what a customer finds, using only verifiable facts.',
@@ -197,6 +201,7 @@ export const projects: Project[] = [
 	{
 		name: 'Portfolio',
 		url: 'https://dev.felixcorcoran.es',
+		repo: 'https://github.com/felixjbk/Portfolio',
 		summary: {
 			es: 'Portfolio bilingüe con animaciones y contacto serverless; genera este currículum.',
 			en: 'Bilingual portfolio with animations and serverless contact; it generates this resume.',
