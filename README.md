@@ -1,43 +1,30 @@
-# Astro Starter Kit: Minimal
+# Portfolio · Félix Corcoran
+
+Mi portfolio de desarrollador: [dev.felixcorcoran.es](https://dev.felixcorcoran.es) (en inglés en [/en](https://dev.felixcorcoran.es/en/)).
+
+Proyectos con capturas, experiencia, stack y contacto, con una animación distinta en cada zona. El currículum en PDF sale de los mismos datos que la web.
+
+## Una sola fuente de datos
+
+Todo el contenido (proyectos, experiencia, stack, formación, idiomas) está en [`src/data/perfil.ts`](src/data/perfil.ts), en español e inglés. De ahí salen:
+
+- las secciones de la web (`src/components/HomeContent.astro`), y
+- el currículum: `npm run cv` genera `public/cv-felix-corcoran.pdf` (español) y `public/resume-felix-corcoran.pdf` (inglés) imprimiendo HTML a PDF con Edge o Chrome. Está pensado para que lo lea bien un ATS: texto real, una columna de lectura y enlaces escritos.
+
+Al cambiar `perfil.ts` o `cv/`, una GitHub Action ([`cv.yml`](.github/workflows/cv.yml)) regenera los dos PDF y los sube al repositorio.
+
+## Stack
+
+- **Astro 6** con salida en servidor en **Vercel** (el formulario de contacto es una función que envía el correo con **Resend**).
+- **Tailwind CSS 4** y animaciones propias en CSS y JavaScript, sin librerías: entradas al llegar con `IntersectionObserver`, titulares ligados al scroll y un cambio de idioma animado entre `/` y `/en/`.
+- Capturas optimizadas con `astro:assets` e iconos del stack servidos desde el propio proyecto (Simple Icons).
+
+## En local
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev     # http://localhost:4321
+npm run cv      # regenera los PDF del currículum
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+El formulario necesita la variable `RESEND_API_KEY` (en Vercel o en un `.env` local).
