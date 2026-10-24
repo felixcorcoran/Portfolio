@@ -6,8 +6,8 @@
  *
  * Es HTML impreso a PDF con Edge o Chrome sin cabeceras. Pensado para que lo
  * lea bien un ATS: texto real, una columna de lectura, enlaces escritos tal
- * cual y sin texto dentro de imágenes. Color: azul marino apagado y grises,
- * sobrio, como se espera en un CV (no los colores de las webs).
+ * cual y sin texto dentro de imágenes. Color: verde petróleo, que se
+ * distingue del negro también en el móvil sin dejar de ser sobrio.
  */
 
 import { execFileSync } from 'node:child_process';
@@ -146,11 +146,11 @@ ${fontFaces}
 		--muted: #5c5d66;
 		--soft: #8a8b94;
 		--rule: #e8e3df;
-		--accent: #3d5a7a;
-		--accent-text: #1f3a5a;
-		--accent-line: #c9d3de;
-		--chip: #eef1f5;
-		--chip-text: #2d4258;
+		--accent: #0d9488;
+		--accent-text: #0f766e;
+		--accent-line: #a7ddd6;
+		--chip: #e6f5f2;
+		--chip-text: #115e57;
 		/* Multiplica los espacios verticales: lo ajusta el script del final
 		   para que el contenido llene la página, ni más ni menos */
 		--fit: 1;
@@ -178,7 +178,7 @@ ${fontFaces}
 	h1 { font: 300 27pt/1 'Sora', sans-serif; letter-spacing: -0.035em; }
 	h1 b { font-weight: 600; }
 	.role { margin-top: 5pt; font-size: 10.5pt; font-weight: 500; }
-	.role span { color: var(--accent-text); font-weight: 400; }
+	.role span { color: var(--accent-text); font-weight: 500; }
 	.contact {
 		display: flex;
 		flex-wrap: wrap;
@@ -199,7 +199,7 @@ ${fontFaces}
 		align-items: center;
 		gap: 8pt;
 		margin-bottom: calc(5pt * var(--fit));
-		font: 600 8pt/1 'Sora', sans-serif;
+		font: 600 8.8pt/1 'Sora', sans-serif;
 		letter-spacing: 0.07em;
 		text-transform: uppercase;
 		color: var(--accent-text);
