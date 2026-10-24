@@ -101,7 +101,7 @@ export const experience: {
 		tags: ['MVC', { es: 'Reservas online', en: 'Online bookings' }, { es: 'Trato con cliente', en: 'Client-facing' }],
 	},
 	{
-		role: { es: 'Desarrollador web (prácticas)', en: 'Web developer (internship)' },
+		role: { es: 'Desarrollador web en prácticas', en: 'Web developer intern' },
 		company: 'Simply Trade In',
 		period: { es: '2025 – 2026', en: '2025 – 2026' },
 		highlights: [
@@ -269,7 +269,7 @@ export const skills: { id: SkillGroup; label: Text; items: string[] }[] = [
 		label: { es: 'Integraciones', en: 'Integrations' },
 		items: ['Shopify (Liquid, GraphQL)', 'Telegram Bot API', 'Google Places API', 'Resend'],
 	},
-	{ id: 'tools', label: { es: 'Herramientas', en: 'Tools' }, items: ['Git', 'GitHub Actions', 'Docker', 'Vercel', 'Postman'] },
+	{ id: 'tools', label: { es: 'Herramientas', en: 'Tools' }, items: ['Git', 'GitHub', 'GitHub Actions', 'Docker', 'Vercel', 'Postman'] },
 ];
 
 /** Lo que estoy aprendiendo: sale en el portfolio (New horizons), no en el CV */
