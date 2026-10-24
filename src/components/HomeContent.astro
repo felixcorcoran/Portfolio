@@ -28,9 +28,10 @@ const jobs = experience.map((job) => ({
     tags: job.tags.map((tag) => pick(tag, lang)),
 }));
 
-// Capturas de los proyectos y de las webs de clientes (src/assets/projects/*.jpg)
+// Capturas de los proyectos y de las webs de clientes (src/assets/projects/*.jpg).
+// Si hay una versión en inglés (<nombre>-en.jpg), la página en inglés usa esa
 const shots = import.meta.glob('../assets/projects/*.jpg', { eager: true, import: 'default' });
-const shot = (key) => (key ? shots[`../assets/projects/${key}.jpg`] : undefined);
+const shot = (key) => (key ? shots[`../assets/projects/${key}-${lang}.jpg`] ?? shots[`../assets/projects/${key}.jpg`] : undefined);
 
 const actions = { visit: t('btn.visit'), explore: t('btn.explore'), case: t('btn.case') };
 const cards = projects
@@ -223,7 +224,7 @@ const clientSites = [
                 </div>
             </section>
 
-            <section id="proyectos" class="py-32 px-6 bg-[#050505]">
+            <section id="proyectos" class="pt-32 pb-16 md:pb-24 px-6 bg-[#050505]">
                 <div class="max-w-7xl mx-auto">
                     <div class="flex flex-col mb-24 space-y-4">
                         <!-- «MIS» sube al llegar; el contorno de «TRABAJOS» se rellena con el
@@ -314,7 +315,9 @@ const clientSites = [
                         </a>
                         ))}
 
-                        <div class="md:col-span-12 p-5 pt-10 sm:p-10 md:p-20 bg-neutral-900/20 border border-white/5 rounded-[3rem]">
+                        <!-- Un foco de luz azul sigue al ratón por todo el panel (script) -->
+                        <div id="gallery" class="relative isolate overflow-hidden md:col-span-12 p-5 pt-10 sm:p-10 md:p-20 bg-neutral-900/20 border border-white/5 rounded-[3rem]">
+                            <div class="gallery-glow" aria-hidden="true"></div>
                             
                             <!-- Cabecera: la etiqueta sube, las letras del titular caen girando
                                  como un panel de aeropuerto, el subtítulo aparece y la línea se dibuja -->
@@ -325,7 +328,7 @@ const clientSites = [
                                             {t('projects.freelance.label')}
                                         </span>
                                     </span>
-                                    <h3 class="rv-flap-box text-[clamp(2rem,10vw,3rem)] md:text-6xl font-black text-white uppercase tracking-tighter" aria-label={t('projects.freelance.title')}>
+                                    <h3 class="rv-flap-box text-[clamp(2rem,10vw,3rem)] md:text-6xl leading-[0.95] font-black text-white uppercase tracking-tighter" aria-label={t('projects.freelance.title')}>
                                         {letters(t('projects.freelance.title')).map((word, w, all) => (
                                             <><span class="inline-block whitespace-nowrap" aria-hidden="true">{word.map((ch, k) => (
                                                 <span class="rv-flap inline-block" style={`--k: ${all.slice(0, w).flat().length + k}`}>{ch}</span>
@@ -347,7 +350,7 @@ const clientSites = [
                                         target="_blank"
                                         rel="noopener"
                                         data-reveal
-                                        class="rv-card group relative rounded-[2rem] overflow-hidden border border-white/5 bg-[#080808] block isolate transition-colors duration-700 hover:border-blue-500/40"
+                                        class="rv-card group relative rounded-[2rem] overflow-hidden border border-white/5 bg-[#080808]/80 block isolate transition-colors duration-700 hover:border-blue-500/40"
                                         style={`--i: ${index % 3}`}
                                     >
                                         <div class="relative aspect-[16/10] overflow-hidden">
@@ -417,11 +420,7 @@ const clientSites = [
                                         <span class="block text-white/50 transition-colors duration-500 group-hover:text-white">{job.place}</span>
                                     </div>
                                     <div class="md:col-span-9 space-y-6">
-                                        <!-- El cargo cambia como el botón «Proyectos»: sube y entra en azul -->
-                                        <h3 class="relative overflow-hidden text-3xl md:text-4xl xl:text-5xl font-black tracking-tighter uppercase leading-[0.95] lg:whitespace-nowrap">
-                                            <span class="block text-white transition-transform duration-500 group-hover:-translate-y-full">{job.role}</span>
-                                            <span class="absolute inset-0 block text-blue-400 italic translate-y-full transition-transform duration-500 group-hover:translate-y-0" aria-hidden="true">{job.role}</span>
-                                        </h3>
+                                        <h3 class="text-3xl md:text-4xl xl:text-5xl font-black tracking-tighter uppercase leading-[0.95] text-white lg:whitespace-nowrap">{job.role}</h3>
                                         <p class="text-neutral-300 text-lg md:text-xl font-light leading-relaxed max-w-3xl transition-colors duration-500 group-hover:text-white">
                                             {job.desc}
                                         </p>
@@ -507,17 +506,13 @@ const clientSites = [
                         
                         <!-- El tamaño del titular sale del ancho de su columna (cqw), nunca se sale -->
                         <div class="space-y-12 [container-type:inline-size]">
-                            <h3 id="trigger-build" class="text-[clamp(2.25rem,14.5cqw,6rem)] font-black text-white leading-[0.9] uppercase tracking-tighter">
-                                <div class="overflow-hidden pt-[0.14em] pr-[0.1em] -mt-[0.14em]">
-                                    <span class="reveal-text block translate-y-full opacity-0 transition-all duration-700 ease-out">
-                                        {t('contact.title.1')}
-                                    </span>
-                                </div>
-                                <div class="overflow-hidden pt-[0.14em] pr-[0.1em] -mt-[0.14em]">
-                                    <span class="reveal-text block text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.3)] italic translate-y-full opacity-0 transition-all duration-700 ease-out delay-200">
-                                        {t('contact.title.2')}
-                                    </span>
-                                </div>
+                            <h3 id="contact-title" data-reveal class="text-[clamp(2.25rem,14.5cqw,6rem)] font-black text-white leading-[0.9] uppercase tracking-tighter" aria-label={`${t('contact.title.1')} ${t('contact.title.2')}`}>
+                                <span class="block whitespace-nowrap" aria-hidden="true">{[...t('contact.title.1')].map((ch, k) => (
+                                    <span class="rv-wave inline-block" style={`--k: ${k}`}>{ch}</span>
+                                ))}</span>
+                                <span class="block overflow-hidden pt-[0.14em] pr-[0.1em] -mt-[0.14em]" aria-hidden="true">
+                                    <span class="rv-skew contact-outline block italic" style={`--k: ${[...t('contact.title.1')].length}`}>{t('contact.title.2')}</span>
+                                </span>
                             </h3>
                             
                             <div class="space-y-8">
@@ -923,6 +918,9 @@ const clientSites = [
        aeropuerto (rv-flap).
        Experiencia: la etiqueta se escribe con su cursor (rv-key, rv-caret)
        y la línea se alarga después (rv-grow).
+       Contacto: «¿Hablamos?» sube letra a letra con rebote (rv-wave) y
+       «Escríbeme.» entra de lado inclinado (rv-skew); después un brillo
+       recorre su contorno de vez en cuando.
        Pie: la firma cierra el espaciado de sus letras (rv-track). */
     @keyframes hero-link { from { opacity: 0; transform: translateX(-16px); filter: blur(4px); } }
     .hero-link { animation: hero-link 0.9s cubic-bezier(0.16, 1, 0.3, 1) calc(0.9s + var(--i, 0) * 120ms) both; }
@@ -941,6 +939,44 @@ const clientSites = [
     @keyframes rv-key { from { opacity: 0; } to { opacity: 1; } }
     @keyframes rv-caret { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     @keyframes rv-grow { from { transform: scaleX(0); } }
+    @keyframes rv-wave {
+        0% { opacity: 0; transform: translateY(0.7em) scale(0.6); }
+        55% { opacity: 1; transform: translateY(-0.14em) scale(1.06); }
+        100% { transform: none; }
+    }
+    @keyframes rv-skew { from { opacity: 0; transform: translateX(35%) skewX(-28deg); } }
+    @keyframes contact-shine {
+        0% { background-position: 130% 0; }
+        35%, 100% { background-position: -30% 0; }
+    }
+
+    .contact-outline {
+        color: transparent;
+        -webkit-text-stroke: 1px rgb(255 255 255 / 0.3);
+        background: linear-gradient(105deg, transparent 42%, rgb(147 197 253 / 0.85) 50%, transparent 58%) 130% 0 / 250% 100% no-repeat;
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+
+    .anim [data-reveal]:not(.is-in) :is(.rv-wave, .rv-skew) { opacity: 0; }
+    .anim .is-in .rv-wave { animation: rv-wave 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--k, 0) * 55ms) both; }
+    .anim .is-in .rv-skew {
+        animation:
+            rv-skew 1s cubic-bezier(0.16, 1, 0.3, 1) calc(0.2s + var(--k, 0) * 55ms) both,
+            contact-shine 6s ease-in-out calc(1.2s + var(--k, 0) * 55ms) infinite;
+    }
+
+    /* Foco de la galería: luz azul bajo el ratón, por detrás de las tarjetas */
+    .gallery-glow {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0;
+        background: radial-gradient(600px circle at var(--gx, 50%) var(--gy, 50%), rgb(59 130 246 / 0.3), rgb(99 102 241 / 0.1) 40%, transparent 70%);
+        transition: opacity 0.6s ease;
+    }
+    #gallery.is-lit .gallery-glow { opacity: 1; }
 
     .rv-flap-box { perspective: 600px; }
     .rv-flap { transform-origin: 50% 0; backface-visibility: hidden; }
@@ -977,6 +1013,8 @@ const clientSites = [
         border: 1px solid rgb(255 255 255 / 0.08);
         background: rgb(255 255 255 / 0.03);
         color: var(--c);
+        cursor: default;
+        user-select: none;
         transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
     }
     .tech svg { width: 60%; height: 60%; fill: currentColor; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -1063,24 +1101,6 @@ const clientSites = [
             stackTitle.style.opacity = scrollPercentStack.toString();
         }
     };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                if (entry.target.id === 'trigger-build') {
-                    const spans = entry.target.querySelectorAll('.reveal-text');
-                    spans.forEach(span => {
-                        span.classList.remove('translate-y-full', 'opacity-0');
-                        span.classList.add('translate-y-0', 'opacity-100');
-                    });
-                    observer.unobserve(entry.target);
-                }
-            }
-        });
-    }, { threshold: 0.4 });
-
-    const triggerBuild = document.querySelector('#trigger-build');
-    if (triggerBuild) observer.observe(triggerBuild);
 
     window.addEventListener('scroll', handleScroll);
     handleScroll();
@@ -1174,6 +1194,31 @@ const clientSites = [
         });
     }, { threshold: 0.2 });
     document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+
+    // ---------- Galería: el foco sigue al ratón con algo de inercia ----------
+    const gallery = document.getElementById('gallery');
+    if (gallery && !reduceMotion && matchMedia('(hover: hover)').matches) {
+        let tx = 0, ty = 0, x = 0, y = 0, raf = 0;
+        const step = () => {
+            x += (tx - x) * 0.12;
+            y += (ty - y) * 0.12;
+            gallery.style.setProperty('--gx', `${x}px`);
+            gallery.style.setProperty('--gy', `${y}px`);
+            raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.5 ? requestAnimationFrame(step) : 0;
+        };
+        gallery.addEventListener('pointermove', (e) => {
+            const r = gallery.getBoundingClientRect();
+            tx = e.clientX - r.left;
+            ty = e.clientY - r.top;
+            if (!gallery.classList.contains('is-lit')) {
+                x = tx;
+                y = ty;
+                gallery.classList.add('is-lit');
+            }
+            if (!raf) raf = requestAnimationFrame(step);
+        });
+        gallery.addEventListener('pointerleave', () => gallery.classList.remove('is-lit'));
+    }
 
     // ---------- «TRABAJOS»: el contorno se rellena con el scroll ----------
     // Empieza cuando el titular ya se ve entero y termina cuando llega arriba

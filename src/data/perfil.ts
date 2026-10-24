@@ -273,7 +273,7 @@ export const skills: { id: SkillGroup; label: Text; items: string[] }[] = [
 ];
 
 /** Lo que estoy aprendiendo: sale en el portfolio (New horizons), no en el CV */
-export const learning = ['Next.js', 'Supabase'];
+export const learning = ['Angular', 'Spring Boot', 'Next.js', 'Supabase', 'PostgreSQL'];
 
 export const education = [
 	{
