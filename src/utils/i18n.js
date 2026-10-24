@@ -1,7 +1,7 @@
 const languages = {
   es: {
     // SEO Metas
-    'seo.description': 'Portfolio de Félix Corcoran, desarrollador full stack titulado en DAW: automatización con n8n, integración de IA (OpenAI, Claude, Gemini) y desarrollo web con Astro, React y Laravel.',
+    'seo.description': 'Portfolio de Félix Corcoran, desarrollador full stack titulado en DAW: automatización con n8n, integración de IA y desarrollo web con Astro, React y Laravel.',
 
     // Hero & Intro
     'hero.title.1': 'Desarrollador',
@@ -10,7 +10,7 @@ const languages = {
     'hero.title.4': 'IA',
     'hero.degree': 'Titulado en',
     'hero.degree.short': 'DAW',
-    'hero.desc': 'Conecto APIs de IA (OpenAI, Claude, Gemini) con aplicaciones web y automatizo procesos con n8n. Experiencia en producción con proyectos para clientes reales, sobre arquitecturas MVC y con trato directo con el cliente.',
+    'hero.desc': 'Conecto APIs de IA con aplicaciones web y automatizo procesos con n8n. Experiencia en producción con proyectos para clientes reales, sobre arquitecturas MVC y con trato directo con el cliente.',
 
     // Botones / Acciones comunes
     'btn.projects': 'Proyectos',
@@ -84,7 +84,7 @@ const languages = {
   },
   en: {
     // SEO Metas
-    'seo.description': 'Portfolio of Félix Corcoran, full stack developer: n8n automation, AI integration (OpenAI, Claude, Gemini) and web development with Astro, React and Laravel.',
+    'seo.description': 'Portfolio of Félix Corcoran, full stack developer: n8n automation, AI integration and web development with Astro, React and Laravel.',
 
     // Hero & Intro
     'hero.title.1': 'Full stack',
@@ -93,7 +93,7 @@ const languages = {
     'hero.title.4': 'integration',
     'hero.degree': 'Web Application Development graduate',
     'hero.degree.short': '(DAW)',
-    'hero.desc': 'I connect AI APIs (OpenAI, Claude, Gemini) with web applications and automate processes with n8n. Production experience on real client projects, built on MVC architectures with direct client communication.',
+    'hero.desc': 'I connect AI APIs with web applications and automate processes with n8n. Production experience on real client projects, built on MVC architectures with direct client communication.',
 
     // Botones / Acciones comunes
     'btn.projects': 'Projects',
