@@ -6,8 +6,12 @@
  *
  * Es HTML impreso a PDF con Edge o Chrome sin cabeceras. Pensado para que lo
  * lea bien un ATS: texto real, una columna de lectura, enlaces escritos tal
- * cual y sin texto dentro de imágenes. Color: verde petróleo, que se
- * distingue del negro también en el móvil sin dejar de ser sobrio.
+ * cual y sin texto dentro de imágenes. Color: el coral de felixcorcoran.es
+ * (el de texto, más oscuro, para que se lea bien sobre blanco).
+ *
+ * Falla si la hoja no cabe en una página o si la descripción de un proyecto
+ * pasa de dos líneas (descuadra las dos columnas): mejor eso que subir un CV
+ * roto.
  */
 
 import { execFileSync } from 'node:child_process';
@@ -147,11 +151,11 @@ ${fontFaces}
 		--muted: #5c5d66;
 		--soft: #8a8b94;
 		--rule: #e8e3df;
-		--accent: #0d9488;
-		--accent-text: #0f766e;
-		--accent-line: #a7ddd6;
-		--chip: #e6f5f2;
-		--chip-text: #115e57;
+		--accent: #f28c7a;
+		--accent-text: #c2513c;
+		--accent-line: #f6c3b7;
+		--chip: #fdede8;
+		--chip-text: #9e3f2d;
 		/* Multiplica los espacios verticales: lo ajusta el script del final
 		   para que el contenido llene la página, ni más ni menos */
 		--fit: 1;
@@ -309,6 +313,13 @@ ${fontFaces}
 		root.style.setProperty('--fit', lo);
 		// Ni con el espaciado más apretado: lo marca para que el script falle
 		if (sheet.getBoundingClientRect().height > room) root.dataset.noCabe = '';
+		// Descripciones de proyecto de más de dos líneas, por su nombre
+		const largas = [...document.querySelectorAll('.project')].filter((p) => {
+			const s = p.querySelector('.summary');
+			const linea = parseFloat(getComputedStyle(s).lineHeight) || parseFloat(getComputedStyle(s).fontSize) * 1.4;
+			return Math.round(s.getBoundingClientRect().height / linea) > 2;
+		});
+		if (largas.length) root.dataset.largas = largas.map((p) => p.querySelector('h3').textContent).join(' · ');
 	});
 </script>
 </body>
@@ -338,6 +349,12 @@ for (const lang of process.argv.slice(2).length ? process.argv.slice(2) : ['es',
 	const dom = execFileSync(browser, [...flags, '--dump-dom', pathToFileURL(html).href], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
 	if (dom.includes('data-no-cabe')) {
 		console.error(`${lang}: el CV no cabe en una página. Acorta textos o saca algún proyecto (cv: false en perfil.ts).`);
+		process.exitCode = 1;
+		continue;
+	}
+	const largas = dom.match(/data-largas="([^"]*)"/);
+	if (largas) {
+		console.error(`${lang}: descripción de más de dos líneas en: ${largas[1]}. Acórtala en perfil.ts (summary).`);
 		process.exitCode = 1;
 		continue;
 	}

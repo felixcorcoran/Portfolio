@@ -182,8 +182,8 @@ export const projects: Project[] = [
 		url: 'https://subvenciones.felixcorcoran.es',
 		repo: 'https://github.com/felixcorcoran/subvenciones',
 		summary: {
-			es: 'Cada mañana recoge las ayudas nuevas de toda España para autónomos y pymes y dice a cuáles puede optar cada negocio.',
-			en: 'Every morning it collects new Spanish grants for freelancers and SMEs and shows which ones each business can apply for.',
+			es: 'Recoge cada mañana las ayudas nuevas de toda España y dice a cuáles puede optar cada negocio.',
+			en: 'Collects new Spanish grants every morning and shows which ones each business can apply for.',
 		},
 		highlights: [
 			{
