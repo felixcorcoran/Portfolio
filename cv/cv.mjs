@@ -109,6 +109,7 @@ function page(lang) {
 		.join('');
 
 	const work = projects
+		.filter((p) => p.cv !== false)
 		.map(
 			(p) => `
 		<article class="project">
@@ -306,6 +307,8 @@ ${fontFaces}
 			else hi = mid;
 		}
 		root.style.setProperty('--fit', lo);
+		// Ni con el espaciado más apretado: lo marca para que el script falle
+		if (sheet.getBoundingClientRect().height > room) root.dataset.noCabe = '';
 	});
 </script>
 </body>
@@ -330,7 +333,15 @@ for (const lang of process.argv.slice(2).length ? process.argv.slice(2) : ['es',
 	const pdf = join(here, '..', 'public', files[lang]);
 	// En los runners de Ubuntu (GitHub Actions) el sandbox de Chrome no arranca
 	const ci = process.env.CI ? ['--no-sandbox'] : [];
-	execFileSync(browser, [...ci, '--headless=new', '--disable-gpu', '--no-pdf-header-footer', '--virtual-time-budget=8000', `--print-to-pdf=${pdf}`, pathToFileURL(html).href], {
+	const flags = [...ci, '--headless=new', '--disable-gpu', '--virtual-time-budget=8000'];
+	// Si no cabe en una página, mejor fallar (y que la Action no suba un CV cortado)
+	const dom = execFileSync(browser, [...flags, '--dump-dom', pathToFileURL(html).href], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+	if (dom.includes('data-no-cabe')) {
+		console.error(`${lang}: el CV no cabe en una página. Acorta textos o saca algún proyecto (cv: false en perfil.ts).`);
+		process.exitCode = 1;
+		continue;
+	}
+	execFileSync(browser, [...flags, '--no-pdf-header-footer', `--print-to-pdf=${pdf}`, pathToFileURL(html).href], {
 		stdio: 'ignore',
 	});
 	console.log(`${lang}: ${pdf}`);

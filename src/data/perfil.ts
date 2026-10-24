@@ -23,6 +23,8 @@ export interface Project {
 	url?: string;
 	/** Repositorio público en GitHub, si lo hay */
 	repo?: string;
+	/** false: no sale en el CV (que tiene que caber en una página) */
+	cv?: boolean;
 	/** Etiqueta corta junto al nombre: «En desarrollo», «Uso interno»… */
 	status?: Text;
 	summary: Text;
@@ -225,6 +227,8 @@ export const projects: Project[] = [
 	{
 		name: 'Portfolio',
 		url: 'https://dev.felixcorcoran.es',
+		// El CV ya enlaza el portfolio en la cabecera: aquí se queda fuera del CV
+		cv: false,
 		repo: 'https://github.com/felixcorcoran/Portfolio',
 		summary: {
 			es: 'Portfolio bilingüe con animaciones y contacto serverless; genera este currículum.',
