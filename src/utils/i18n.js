@@ -61,6 +61,22 @@ const languages = {
     'contact.error': 'Error — inténtalo de nuevo',
     'contact.failed': 'Sin conexión — inténtalo de nuevo',
 
+    // Nuevos (portada, stack, contacto, pie)
+    'hero.remote': 'Disponible en remoto',
+    'hero.bilingual': 'Bilingüe ES / EN',
+    'hero.side': 'Lógica • Diseño • Inteligencia • 2026',
+    'stack.backend': 'Backend',
+    'stack.backend.text': 'PHP con MVC en producción, Laravel y Node.js con TypeScript para funciones serverless e integraciones.',
+    'stack.frontend': 'Frontend',
+    'stack.frontend.text': 'Interfaces fieles al diseño, rápidas y responsivas, con animación (GSAP) y 3D (Three.js).',
+    'stack.ai': 'IA y automatización',
+    'stack.ai.text': 'Workflows en n8n y APIs de IA conectadas a procesos reales y a servicios como Shopify o Telegram.',
+    'stack.tools': 'Herramientas',
+    'stack.tools.text': 'Control de versiones, CI/CD con GitHub Actions, contenedores y despliegue en Vercel.',
+    'stack.learning': 'Ahora aprendiendo',
+    'contact.title.1': '¿Hablamos?',
+    'contact.title.2': 'Escríbeme.',
+    'footer.built': 'Hecho con Astro y Tailwind CSS',
     // Footer
     'footer.desc': 'Desarrollador full stack: web, automatización e integración de IA.',
     'footer.business': '¿Tienes un negocio?'
@@ -127,6 +143,22 @@ const languages = {
     'contact.error': 'Error — please try again',
     'contact.failed': 'Connection failed — please try again',
 
+    // New (hero, stack, contact, footer)
+    'hero.remote': 'Remote ready',
+    'hero.bilingual': 'Bilingual ES / EN',
+    'hero.side': 'Logic • Design • Intelligence • 2026',
+    'stack.backend': 'Backend',
+    'stack.backend.text': 'PHP with MVC in production, Laravel and Node.js with TypeScript for serverless functions and integrations.',
+    'stack.frontend': 'Frontend',
+    'stack.frontend.text': 'Interfaces true to the design, fast and responsive, with animation (GSAP) and 3D (Three.js).',
+    'stack.ai': 'AI & automation',
+    'stack.ai.text': 'n8n workflows and AI APIs connected to real processes and to services such as Shopify or Telegram.',
+    'stack.tools': 'Tools',
+    'stack.tools.text': 'Version control, CI/CD with GitHub Actions, containers and deployment on Vercel.',
+    'stack.learning': 'Currently learning',
+    'contact.title.1': 'Let\x27s',
+    'contact.title.2': 'Talk.',
+    'footer.built': 'Built with Astro and Tailwind CSS',
     // Footer
     'footer.desc': 'Full stack developer: web, automation and AI integration.',
     'footer.business': 'Running a business?'

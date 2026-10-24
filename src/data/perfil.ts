@@ -37,6 +37,8 @@ export interface Project {
 		url?: Text;
 		/** Letra o símbolo gigante de fondo */
 		mark: string;
+		/** Captura en src/assets/projects/<image>.jpg */
+		image?: string;
 		/** Tarjeta baja a todo el ancho, al final */
 		wide?: boolean;
 	};
@@ -47,7 +49,7 @@ export const persona = {
 	role: { es: 'Desarrollador Full-Stack', en: 'Full-Stack Developer' },
 	focus: { es: 'Integración de IA y automatización', en: 'AI integration & automation' },
 	location: 'Málaga',
-	email: 'felixxjbk@gmail.com',
+	email: 'contacto@felixcorcoran.es',
 	phone: '+34 673 350 029',
 	links: {
 		portfolio: 'https://dev.felixcorcoran.es',
@@ -143,6 +145,7 @@ export const projects: Project[] = [
 			action: 'explore',
 			url: { es: 'https://kaloai.infinityfreeapp.com/?i=1', en: 'https://kaloai.infinityfreeapp.com/?i=1' },
 			mark: 'AI',
+			image: 'kalo',
 		},
 	},
 	{
@@ -165,6 +168,7 @@ export const projects: Project[] = [
 			action: 'visit',
 			url: { es: 'https://diagnostico.felixcorcoran.es', en: 'https://diagnostico.felixcorcoran.es/en' },
 			mark: '✓',
+			image: 'diagnostico',
 		},
 	},
 	{
@@ -187,6 +191,7 @@ export const projects: Project[] = [
 			action: 'visit',
 			url: { es: 'https://felixcorcoran.es', en: 'https://felixcorcoran.es/en' },
 			mark: 'fc',
+			image: 'felixcorcoran',
 		},
 	},
 	{
@@ -226,6 +231,7 @@ export const projects: Project[] = [
 			// La tienda aún no es pública: lleva al caso contado en felixcorcoran.es
 			url: { es: 'https://felixcorcoran.es/#trabajo', en: 'https://felixcorcoran.es/en#work' },
 			mark: 'TCG',
+			image: 'stc',
 			wide: true,
 		},
 	},
@@ -244,7 +250,7 @@ export const projects: Project[] = [
 		],
 		stack: ['Node.js', 'GitHub Actions', 'Places API', 'Gemini API'],
 		// Repositorio privado: sin enlace
-		web: { tag: { es: 'Automatización e IA', en: 'Automation & AI' }, mark: '◎' },
+		web: { tag: { es: 'Automatización e IA', en: 'Automation & AI' }, mark: '◎', image: 'radar' },
 	},
 ];
 
