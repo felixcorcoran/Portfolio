@@ -56,7 +56,7 @@ export const persona = {
 	links: {
 		portfolio: 'https://dev.felixcorcoran.es',
 		linkedin: 'https://www.linkedin.com/in/felixcorcoran',
-		github: 'https://github.com/felixjbk',
+		github: 'https://github.com/felixcorcoran',
 		web: 'https://felixcorcoran.es',
 	},
 	summary: {
@@ -130,7 +130,7 @@ export const projects: Project[] = [
 	{
 		name: 'Kalo AI',
 		url: 'https://kaloai.infinityfreeapp.com',
-		repo: 'https://github.com/felixjbk/kaloAI',
+		repo: 'https://github.com/felixcorcoran/kaloAI',
 		summary: {
 			es: 'Plataforma de nutrición con recetas generadas por IA según calorías, objetivos e intolerancias.',
 			en: 'Nutrition platform with AI-generated recipes based on calories, goals and intolerances.',
@@ -154,7 +154,7 @@ export const projects: Project[] = [
 	{
 		name: { es: 'Diagnóstico web', en: 'Website check' },
 		url: 'https://diagnostico.felixcorcoran.es',
-		repo: 'https://github.com/felixjbk/diagnostico',
+		repo: 'https://github.com/felixcorcoran/diagnostico',
 		summary: {
 			es: 'Herramienta pública: escribes una web y dice qué se encuentra un cliente, solo con hechos comprobables.',
 			en: 'Public tool: type a website and it shows what a customer finds, using only verifiable facts.',
@@ -201,7 +201,7 @@ export const projects: Project[] = [
 	{
 		name: 'Portfolio',
 		url: 'https://dev.felixcorcoran.es',
-		repo: 'https://github.com/felixjbk/Portfolio',
+		repo: 'https://github.com/felixcorcoran/Portfolio',
 		summary: {
 			es: 'Portfolio bilingüe con animaciones y contacto serverless; genera este currículum.',
 			en: 'Bilingual portfolio with animations and serverless contact; it generates this resume.',
