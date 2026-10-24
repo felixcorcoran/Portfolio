@@ -194,17 +194,19 @@ ${fontFaces}
 
 	/* ---------- Secciones ---------- */
 	section { margin-top: calc(11pt * var(--fit)); }
+	/* Cabecera de sección: una franja suave a todo el ancho con una barra de
+	   color, para encontrar cada sección de un vistazo */
 	h2 {
-		display: flex;
-		align-items: center;
-		gap: 8pt;
-		margin-bottom: calc(5pt * var(--fit));
-		font: 600 8.8pt/1 'Sora', sans-serif;
+		margin-bottom: calc(6pt * var(--fit));
+		padding: 4pt 8pt;
+		border-left: 3pt solid var(--accent);
+		border-radius: 0 2pt 2pt 0;
+		background: var(--chip);
+		font: 600 9.2pt/1.1 'Sora', sans-serif;
 		letter-spacing: 0.07em;
 		text-transform: uppercase;
 		color: var(--accent-text);
 	}
-	h2::after { content: ''; flex: 1; height: 0.75pt; background: var(--rule); }
 	.profile p { font-size: 8.8pt; line-height: 1.48; color: #2a2b31; }
 
 	/* Viñetas de lista de verdad (no dibujadas aparte): el texto se lee en su orden */
