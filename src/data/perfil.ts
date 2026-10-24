@@ -176,6 +176,30 @@ export const projects: Project[] = [
 		},
 	},
 	{
+		name: { es: 'Radar de subvenciones', en: 'Grants radar' },
+		url: 'https://subvenciones.felixcorcoran.es',
+		repo: 'https://github.com/felixcorcoran/subvenciones',
+		summary: {
+			es: 'Cada mañana recoge las ayudas nuevas de toda España para autónomos y pymes y dice a cuáles puede optar cada negocio.',
+			en: 'Every morning it collects new Spanish grants for freelancers and SMEs and shows which ones each business can apply for.',
+		},
+		highlights: [
+			{
+				es: 'API abierta de la BDNS y GitHub Actions; Gemini lee las bases y explica requisitos, importe y plazo en claro.',
+				en: 'Open BDNS API and GitHub Actions; Gemini reads each call and explains requirements, amount and deadline plainly.',
+			},
+		],
+		stack: ['Astro', 'TypeScript', 'Gemini API', 'GitHub Actions'],
+		web: {
+			tag: { es: 'Datos abiertos e IA', en: 'Open data & AI' },
+			hover: { es: 'Busca tus ayudas', en: 'Find your grants' },
+			action: 'visit',
+			mark: '€',
+			image: 'subvenciones',
+			wide: true,
+		},
+	},
+	{
 		name: 'felixcorcoran.es',
 		url: 'https://felixcorcoran.es',
 		summary: {
