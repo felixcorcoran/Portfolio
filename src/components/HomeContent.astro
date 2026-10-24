@@ -383,7 +383,7 @@ const clientSites = [
                 <div class="relative max-w-7xl mx-auto">
                     <!-- La etiqueta se escribe letra a letra con su cursor y la línea se alarga después -->
                     <div data-reveal class="flex items-center gap-6 text-blue-500 font-mono text-xs tracking-[0.3em] uppercase mb-12 md:mb-16">
-                        <span class="rv-type" aria-label={t('exp.label')}>{[...t('exp.label')].map((ch, k) => (
+                        <span class="rv-type"><span class="sr-only">{t('exp.label')}</span>{[...t('exp.label')].map((ch, k) => (
                             <span class="rv-key" style={`--k: ${k}`} aria-hidden="true">{ch}</span>
                         ))}<span class="rv-caret" aria-hidden="true"></span></span>
                         <div class="rv-grow h-px flex-1 bg-blue-500/20" style={`--k: ${t('exp.label').length}`}></div>
@@ -391,7 +391,7 @@ const clientSites = [
 
                     <h2 id="exp-title" class="text-[clamp(2.25rem,11vw,8rem)] font-black text-white tracking-tighter uppercase leading-none mb-16 md:mb-24">
                         <!-- Cada letra sube de su máscara y se endereza a medida que haces scroll (script) -->
-                        <span class="block overflow-hidden pb-[0.06em]" aria-label={t('exp.title')}>
+                        <span class="block overflow-hidden pb-[0.06em]"><span class="sr-only">{t('exp.title')}</span>
                             <span class="block whitespace-nowrap" aria-hidden="true">{[...t('exp.title')].map((ch) => (
                                 <span class="exp-letter inline-block">{ch}</span>
                             ))}</span>
