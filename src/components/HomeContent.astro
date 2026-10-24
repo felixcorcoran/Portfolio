@@ -420,7 +420,8 @@ const clientSites = [
                                         <span class="block text-white/50 transition-colors duration-500 group-hover:text-white">{job.place}</span>
                                     </div>
                                     <div class="md:col-span-9 space-y-6">
-                                        <h3 class="text-3xl md:text-4xl xl:text-5xl font-black tracking-tighter uppercase leading-[0.95] text-white lg:whitespace-nowrap">{job.role}</h3>
+                                        <!-- Al pasar el ratón, el degradado de «CORCORAN» recorre el cargo de izquierda a derecha -->
+                                        <h3 class="role-wipe text-3xl md:text-4xl xl:text-5xl font-black tracking-tighter uppercase leading-[0.95] lg:whitespace-nowrap">{job.role}</h3>
                                         <p class="text-neutral-300 text-lg md:text-xl font-light leading-relaxed max-w-3xl transition-colors duration-500 group-hover:text-white">
                                             {job.desc}
                                         </p>
@@ -862,6 +863,17 @@ const clientSites = [
        El titular sube desde abajo; cada puesto entra desenfocado y se enfoca,
        y su punto en la línea de tiempo se enciende. */
     .exp-letter { transform-origin: left bottom; will-change: transform; }
+
+    .role-wipe {
+        color: transparent;
+        background-image: linear-gradient(90deg, #60a5fa, #6366f1 55%, #c7d2fe), linear-gradient(#fff, #fff);
+        background-size: 0% 100%, 100% 100%;
+        background-repeat: no-repeat;
+        -webkit-background-clip: text;
+        background-clip: text;
+        transition: background-size 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .exp-row:hover .role-wipe { background-size: 100% 100%, 100% 100%; transform: translateX(0.25rem); }
 
     .exp-anim .exp-row {
         opacity: 0;
