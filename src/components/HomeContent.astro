@@ -60,8 +60,15 @@ const stackGroups = [
     { label: t('stack.backend'), text: t('stack.backend.text'), items: group('backend').map(tech) },
     { label: t('stack.frontend'), text: t('stack.frontend.text'), items: group('frontend').map(tech) },
     { label: t('stack.ai'), text: t('stack.ai.text'), items: aiTools.map(tech) },
-    { label: t('stack.tools'), text: t('stack.tools.text'), items: group('tools').map(tech) },
+    { label: t('stack.tools'), text: t('stack.tools.text'), items: group('tools').map(tech), alignEnd: true },
 ];
+// Columna de cada casilla en la fila de cinco. Con alignEnd, la última fila
+// incompleta empieza por la derecha (Herramientas, en espejo con Backend)
+const col = (g, j) => {
+    const rest = g.items.length % 5;
+    const inLastRow = j >= g.items.length - rest;
+    return (j % 5) + 1 + (g.alignEnd && rest && inLastRow ? 5 - rest : 0);
+};
 const learningIcons = learning.map(tech);
 
 // Titulares que entran letra a letra (cada palabra junta, para que no se parta)
@@ -467,7 +474,7 @@ const clientSites = [
                                 <!-- Filas de cinco casillas; el nombre sale en una etiqueta propia al pasar el ratón -->
                                 <ul class="mt-auto grid grid-cols-5 gap-2.5 pt-2">
                                     {g.items.map((item, j) => (
-                                        <li class="tech rv-pop" style={`--i: ${i}; --j: ${j}; --c: ${item.icon?.color ?? '#93c5fd'}`}>
+                                        <li class="tech rv-pop" data-col={col(g, j)} style={`--i: ${i}; --j: ${j}; --c: ${item.icon?.color ?? '#93c5fd'}; grid-column-start: ${col(g, j)}`}>
                                             {item.icon ? (
                                                 <svg viewBox="0 0 24 24" role="img" aria-label={item.name}><path d={item.icon.path} /></svg>
                                             ) : (
@@ -1070,12 +1077,12 @@ const clientSites = [
     }
     .tech:hover .tech-tip { opacity: 1; transform: translate(-50%, 0) scale(1); }
     /* En los bordes de la fila, la etiqueta se alinea hacia dentro */
-    .tech:nth-child(5n + 1) .tech-tip { left: 0; transform: translateY(4px) scale(0.96); transform-origin: left bottom; }
-    .tech:nth-child(5n + 1):hover .tech-tip { transform: none; }
-    .tech:nth-child(5n + 1) .tech-tip::after { left: 1.25rem; }
-    .tech:nth-child(5n) .tech-tip { left: auto; right: 0; transform: translateY(4px) scale(0.96); transform-origin: right bottom; }
-    .tech:nth-child(5n):hover .tech-tip { transform: none; }
-    .tech:nth-child(5n) .tech-tip::after { left: auto; right: 1.25rem; margin-left: 0; margin-right: -5px; }
+    .tech[data-col="1"] .tech-tip { left: 0; transform: translateY(4px) scale(0.96); transform-origin: left bottom; }
+    .tech[data-col="1"]:hover .tech-tip { transform: none; }
+    .tech[data-col="1"] .tech-tip::after { left: 1.25rem; }
+    .tech[data-col="5"] .tech-tip { left: auto; right: 0; transform: translateY(4px) scale(0.96); transform-origin: right bottom; }
+    .tech[data-col="5"]:hover .tech-tip { transform: none; }
+    .tech[data-col="5"] .tech-tip::after { left: auto; right: 1.25rem; margin-left: 0; margin-right: -5px; }
 
     .anim [data-reveal]:not(.is-in) :is(.rv-wipe, .rv-wipe-x) { clip-path: inset(100% 0 0 0); }
     .anim [data-reveal]:not(.is-in) :is(.rv-pop, .rv-track),
