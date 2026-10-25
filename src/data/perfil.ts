@@ -207,6 +207,7 @@ export const projects: Project[] = [
 	{
 		name: 'felixcorcoran.es',
 		url: 'https://felixcorcoran.es',
+		repo: 'https://github.com/felixcorcoran/felixcorcoran-landing',
 		summary: {
 			es: 'Mi web de servicios: narrativa guiada por el scroll y escultura 3D con shaders propios.',
 			en: 'My services website: scroll-driven storytelling and a 3D sculpture with custom shaders.',
