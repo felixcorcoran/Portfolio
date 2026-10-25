@@ -43,6 +43,8 @@ export interface Project {
 		mark: string;
 		/** Captura en src/assets/projects/<image>.jpg */
 		image?: string;
+		/** Qué parte de la captura se ve si hay que recortarla (object-position); por defecto, arriba a la izquierda */
+		imagePos?: string;
 		/** Tarjeta baja a todo el ancho, al final */
 		wide?: boolean;
 	};
@@ -198,6 +200,7 @@ export const projects: Project[] = [
 			action: 'visit',
 			mark: '€',
 			image: 'subvenciones',
+			imagePos: 'center',
 			wide: true,
 		},
 	},
