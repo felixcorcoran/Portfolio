@@ -10,7 +10,7 @@
  * (el de texto, más oscuro, para que se lea bien sobre blanco).
  *
  * Falla si la hoja no cabe en una página o si la descripción de un proyecto
- * pasa de dos líneas (descuadra las dos columnas): mejor eso que subir un CV
+ * pasa de dos líneas, o sus tecnologías de una fila (descuadra las dos columnas): mejor eso que subir un CV
  * roto.
  */
 
@@ -313,12 +313,17 @@ ${fontFaces}
 		root.style.setProperty('--fit', lo);
 		// Ni con el espaciado más apretado: lo marca para que el script falle
 		if (sheet.getBoundingClientRect().height > room) root.dataset.noCabe = '';
-		// Descripciones de proyecto de más de dos líneas, por su nombre
-		const largas = [...document.querySelectorAll('.project')].filter((p) => {
-			const s = p.querySelector('.summary');
-			const linea = parseFloat(getComputedStyle(s).lineHeight) || parseFloat(getComputedStyle(s).fontSize) * 1.4;
-			return Math.round(s.getBoundingClientRect().height / linea) > 2;
-		});
+		// Proyectos que descuadran las dos columnas, por su nombre: resumen o
+		// detalle de más de dos líneas, o tecnologías en más de una
+		const lineas = (el) => {
+			const linea = parseFloat(getComputedStyle(el).lineHeight) || parseFloat(getComputedStyle(el).fontSize) * 1.4;
+			return Math.round(el.getBoundingClientRect().height / linea);
+		};
+		const enUnaFila = (stack) => new Set([...stack.children].map((c) => Math.round(c.getBoundingClientRect().top))).size <= 1;
+		const largas = [...document.querySelectorAll('.project')].filter(
+			(p) =>
+				[...p.querySelectorAll('.summary, .detail')].some((t) => lineas(t) > 2) || !enUnaFila(p.querySelector('.stack')),
+		);
 		if (largas.length) root.dataset.largas = largas.map((p) => p.querySelector('h3').textContent).join(' · ');
 	});
 </script>
@@ -354,7 +359,7 @@ for (const lang of process.argv.slice(2).length ? process.argv.slice(2) : ['es',
 	}
 	const largas = dom.match(/data-largas="([^"]*)"/);
 	if (largas) {
-		console.error(`${lang}: descripción de más de dos líneas en: ${largas[1]}. Acórtala en perfil.ts (summary).`);
+		console.error(`${lang}: textos de más de dos líneas o tecnologías en más de una fila en: ${largas[1]}. Acórtalos en perfil.ts (summary, highlights o stack).`);
 		process.exitCode = 1;
 		continue;
 	}

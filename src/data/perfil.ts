@@ -143,11 +143,11 @@ export const projects: Project[] = [
 		},
 		highlights: [
 			{
-				es: 'Gemini lee las bases; avisos con Spring Boot, Angular y PostgreSQL, y 3.600 casos de prueba para que el correo diga lo mismo que la web.',
-				en: 'Gemini reads each call; alerts built with Spring Boot, Angular and PostgreSQL, with 3,600 test cases so the email matches the website.',
+				es: 'Gemini lee las bases; los avisos, en Spring Boot y Angular, se comprueban con 3.600 casos de prueba.',
+				en: 'Gemini reads each call; the alerts, in Spring Boot and Angular, are checked against 3,600 test cases.',
 			},
 		],
-		stack: ['Java', 'Spring Boot', 'Angular', 'PostgreSQL', 'TypeScript', 'Gemini API'],
+		stack: ['Spring Boot', 'Angular', 'PostgreSQL', 'Gemini API'],
 		web: {
 			tag: { es: 'Datos abiertos e IA', en: 'Open data & AI' },
 			hover: { es: 'Busca tus ayudas', en: 'Find your grants' },
