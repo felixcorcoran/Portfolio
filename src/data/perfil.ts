@@ -49,6 +49,8 @@ export interface Project {
 		wide?: boolean;
 		/** Con wide: la tarjeta va arriba del todo, no al final */
 		first?: boolean;
+		/** Trabajo para un cliente: en móvil va en el carrusel de clientes, no en el de proyectos propios */
+		client?: boolean;
 	};
 }
 
@@ -205,6 +207,7 @@ export const projects: Project[] = [
 			url: { es: 'https://felixcorcoran.es/#trabajo', en: 'https://felixcorcoran.es/en#work' },
 			mark: 'TCG',
 			image: 'stc',
+			client: true,
 			wide: true,
 		},
 	},
