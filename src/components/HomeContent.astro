@@ -570,19 +570,19 @@ const clientSites = [
                 </div>
             </section>
 
-            <section id="contacto" class="py-24 md:py-32 px-6 bg-black border-t border-white/5">
-                <div class="max-w-7xl mx-auto">
+            <section id="contacto" class="max-md:min-h-svh max-md:flex max-md:flex-col max-md:justify-center py-[4svh] [@media(max-height:700px)]:py-[2.5svh] md:py-32 px-6 bg-black border-t border-white/5">
+                <div class="max-w-7xl mx-auto max-md:w-full">
                     
-                    <div class="flex items-center gap-6 text-indigo-500 font-mono text-xs tracking-[0.3em] uppercase mb-16 md:mb-24">
+                    <div class="flex items-center gap-6 text-indigo-500 font-mono text-xs tracking-[0.3em] uppercase mb-[3svh] md:mb-24">
                         <div class="h-px flex-1 bg-indigo-500/20"></div>
                         <span>{t('contact.label')}</span>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-16 lg:gap-24">
+                    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-[3svh] md:gap-16 lg:gap-24">
                         
                         <!-- El tamaño del titular sale del ancho de su columna (cqw), nunca se sale -->
-                        <div class="space-y-12 [container-type:inline-size]">
-                            <h3 id="contact-title" data-reveal class="text-[clamp(2.25rem,14.5cqw,6rem)] font-black text-white leading-[0.9] uppercase tracking-tighter" aria-label={`${t('contact.title.1')} ${t('contact.title.2')}`}>
+                        <div class="space-y-[2.5svh] md:space-y-12 [container-type:inline-size]">
+                            <h3 id="contact-title" data-reveal class="text-[min(14.5cqw,8svh)] md:text-[clamp(2.25rem,14.5cqw,6rem)] font-black text-white leading-[0.9] uppercase tracking-tighter" aria-label={`${t('contact.title.1')} ${t('contact.title.2')}`}>
                                 <span class="block whitespace-nowrap" aria-hidden="true">{[...t('contact.title.1')].map((ch, k) => (
                                     <span class="rv-wave inline-block" style={`--k: ${k}`}>{ch}</span>
                                 ))}</span>
@@ -591,17 +591,17 @@ const clientSites = [
                                 </span>
                             </h3>
                             
-                            <div class="space-y-8">
-                                <p class="text-neutral-300 text-xl font-light leading-relaxed max-w-sm">
+                            <div class="space-y-[2svh] md:space-y-8">
+                                <p class="text-neutral-300 text-[clamp(0.85rem,2.3svh,1.15rem)] md:text-xl font-light leading-snug md:leading-relaxed md:max-w-sm">
                                     {t('contact.available')}
                                 </p>
                                 
-                                <div data-reveal class="space-y-4 font-mono text-[10px] tracking-[0.2em] uppercase">
-                                    <div class="rv-fade flex justify-between border-b border-white/5 pb-2" style="--i: 1">
+                                <div data-reveal class="space-y-[1.2svh] md:space-y-4 font-mono text-[10px] tracking-[0.2em] uppercase">
+                                    <div class="rv-fade flex justify-between border-b border-white/5 pb-1 md:pb-2" style="--i: 1">
                                         <span class="text-white/70">{t('contact.meta.email')}</span>
                                         <a href={`mailto:${persona.email}`} class="text-indigo-400 hover:text-white transition normal-case tracking-[0.1em]">{persona.email}</a>
                                     </div>
-                                    <div class="rv-fade flex justify-between border-b border-white/5 pb-2" style="--i: 2">
+                                    <div class="rv-fade flex justify-between border-b border-white/5 pb-1 md:pb-2" style="--i: 2">
                                         <span class="text-white/70">{t('contact.meta.location')}</span>
                                         <span class="text-white/60">{t('contact.location')}</span>
                                     </div>
@@ -636,7 +636,7 @@ const clientSites = [
                                     <div class="rv-fade group relative border-b border-white/10 focus-within:border-indigo-500 transition-colors duration-500" style={`--i: ${i + 1}`}>
                                         <!-- Al escribir, una línea con degradado se dibuja bajo el campo -->
                                         <span class="pointer-events-none absolute left-0 right-0 -bottom-px h-px origin-left scale-x-0 bg-gradient-to-r from-blue-400 via-indigo-500 to-transparent transition-transform duration-700 group-focus-within:scale-x-100" aria-hidden="true"></span>
-                                        <label class="block text-[10px] font-mono text-white/80 uppercase tracking-[0.3em] pt-8 pb-2 transition-all duration-500 group-focus-within:text-indigo-500 group-focus-within:translate-x-2">
+                                        <label class="block text-[10px] font-mono text-white/80 uppercase tracking-[0.3em] pt-[1.8svh] md:pt-8 pb-1 md:pb-2 transition-all duration-500 group-focus-within:text-indigo-500 group-focus-within:translate-x-2">
                                             {label}
                                         </label>
                                         
@@ -645,7 +645,7 @@ const clientSites = [
                                                 name="proyecto" 
                                                 rows="4" 
                                                 required
-                                                class="w-full bg-transparent py-4 text-white font-mono text-sm outline-none resize-none placeholder:text-white/20" 
+                                                class="w-full bg-transparent max-md:h-[10svh] [@media(max-height:700px)]:h-11 py-[1.2svh] md:py-4 text-white font-mono text-sm outline-none resize-none placeholder:text-white/20" 
                                                 placeholder={placeholder}
                                             ></textarea>
                                         ) : (
@@ -653,7 +653,7 @@ const clientSites = [
                                                 name={key === 'email' ? 'correo' : 'nombre'}
                                                 type={key === 'email' ? 'email' : 'text'} 
                                                 required
-                                                class="w-full bg-transparent py-4 text-white font-mono text-sm outline-none placeholder:text-white/20" 
+                                                class="w-full bg-transparent py-[1.2svh] md:py-4 text-white font-mono text-sm outline-none placeholder:text-white/20" 
                                                 placeholder={placeholder}
                                             />
                                         )}
@@ -661,8 +661,8 @@ const clientSites = [
                                 );
                             })}
                             
-                            <div class="rv-fade pt-16" style="--i: 4">
-                                <button type="submit" id="submit-btn" class="group relative w-full py-6 md:py-8 border border-white/10 hover:border-indigo-500 transition-all duration-700 overflow-hidden">
+                            <div class="rv-fade pt-[2.5svh] md:pt-16" style="--i: 4">
+                                <button type="submit" id="submit-btn" class="group relative w-full py-[2.2svh] md:py-8 border border-white/10 hover:border-indigo-500 transition-all duration-700 overflow-hidden">
                                     <div class="relative z-10 flex items-center justify-center gap-4 md:gap-6 px-4">
                                         <span id="btn-text" class="text-white font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-xs md:text-sm group-hover:text-indigo-400 transition break-words text-center">
                                             {t('contact.send')}
@@ -681,9 +681,9 @@ const clientSites = [
                 </div>
             </section>
 
-            <footer class="py-20 px-6 bg-black border-t border-white/10">
-                <div class="max-w-7xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-16 items-end mb-24">
+            <footer class="max-md:min-h-svh max-md:flex py-[6svh] md:py-20 px-6 bg-black border-t border-white/10">
+                <div class="max-w-7xl mx-auto max-md:w-full max-md:flex max-md:flex-col max-md:justify-between">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-[6svh] md:gap-16 items-end max-md:my-auto md:mb-24">
                         
                         <div class="md:col-span-6 space-y-8">
                             <!-- La firma entra cerrando el espaciado de las letras -->
