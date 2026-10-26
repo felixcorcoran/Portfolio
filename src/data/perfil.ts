@@ -47,6 +47,8 @@ export interface Project {
 		imagePos?: string;
 		/** Tarjeta baja a todo el ancho, al final */
 		wide?: boolean;
+		/** Con wide: la tarjeta va arriba del todo, no al final */
+		first?: boolean;
 	};
 }
 
@@ -130,29 +132,35 @@ export const experience: {
 ];
 
 export const projects: Project[] = [
-	// Arriba los que se pueden visitar; abajo los que no tienen enlace
+	// En este orden salen en el CV y en Mis trabajos (las tarjetas anchas, al final salvo first)
 	{
-		name: 'Kalo AI',
-		url: 'https://kaloai.infinityfreeapp.com',
-		repo: 'https://github.com/felixcorcoran/kaloAI',
+		name: { es: 'Radar de subvenciones', en: 'Grants radar' },
+		url: 'https://subvenciones.felixcorcoran.es',
+		repo: 'https://github.com/felixcorcoran/subvenciones',
 		summary: {
-			es: 'Plataforma de nutrición con recetas generadas por IA según calorías, objetivos e intolerancias.',
-			en: 'Nutrition platform with AI-generated recipes based on calories, goals and intolerances.',
+			es: 'Recoge cada mañana las ayudas nuevas de toda España, dice a cuáles puede optar cada negocio y avisa por email de las que le encajan.',
+			en: 'Collects new Spanish grants every morning, shows which ones each business can apply for and emails the ones that fit.',
 		},
 		highlights: [
 			{
-				es: 'Multi-rol (usuario, nutricionista y administración), plan semanal e inventario con lista de la compra.',
-				en: 'Multi-role (user, nutritionist and admin), weekly plan and inventory with a shopping list.',
+				es: 'API abierta de la BDNS y GitHub Actions; Gemini lee las bases y explica requisitos, importe y plazo en claro.',
+				en: 'Open BDNS API and GitHub Actions; Gemini reads each call and explains requirements, amount and deadline plainly.',
+			},
+			{
+				es: 'Avisos por email en Spring Boot y Angular sobre PostgreSQL: 3.600 casos comprueban que el correo dice lo mismo que la web.',
+				en: 'Email alerts built with Spring Boot and Angular on PostgreSQL: 3,600 test cases check the email says the same as the website.',
 			},
 		],
-		stack: ['PHP (MVC)', 'MySQL', 'Gemini API', 'JavaScript'],
+		stack: ['Java', 'Spring Boot', 'Angular', 'PostgreSQL', 'TypeScript', 'Gemini API'],
 		web: {
-			tag: { es: 'Full Stack e IA', en: 'Full Stack & AI' },
-			hover: { es: 'Plataforma IA', en: 'AI Platform' },
-			action: 'explore',
-			url: { es: 'https://kaloai.infinityfreeapp.com/?i=1', en: 'https://kaloai.infinityfreeapp.com/?i=1' },
-			mark: 'AI',
-			image: 'kalo',
+			tag: { es: 'Datos abiertos e IA', en: 'Open data & AI' },
+			hover: { es: 'Busca tus ayudas', en: 'Find your grants' },
+			action: 'visit',
+			mark: '€',
+			image: 'subvenciones',
+			imagePos: 'center',
+			wide: true,
+			first: true,
 		},
 	},
 	{
@@ -180,28 +188,69 @@ export const projects: Project[] = [
 		},
 	},
 	{
-		name: { es: 'Radar de subvenciones', en: 'Grants radar' },
-		url: 'https://subvenciones.felixcorcoran.es',
-		repo: 'https://github.com/felixcorcoran/subvenciones',
+		name: 'Spain Trading Cards',
+		status: { es: 'En desarrollo', en: 'In progress' },
 		summary: {
-			es: 'Recoge cada mañana las ayudas nuevas de toda España y dice a cuáles puede optar cada negocio.',
-			en: 'Collects new Spanish grants every morning and shows which ones each business can apply for.',
+			es: 'Tienda Shopify de cartas coleccionables diseñada desde cero, con secciones Liquid a medida.',
+			en: 'Shopify store for collectible cards designed from scratch, with custom Liquid sections.',
 		},
 		highlights: [
 			{
-				es: 'API abierta de la BDNS y GitHub Actions; Gemini lee las bases y explica requisitos, importe y plazo en claro.',
-				en: 'Open BDNS API and GitHub Actions; Gemini reads each call and explains requirements, amount and deadline plainly.',
+				es: 'Alta de productos desde Telegram: Gemini interpreta, n8n orquesta y la API de Shopify publica.',
+				en: 'Product onboarding from Telegram: Gemini parses, n8n orchestrates, the Shopify API publishes.',
 			},
 		],
-		stack: ['Astro', 'TypeScript', 'Gemini API', 'GitHub Actions'],
+		stack: ['Shopify Liquid', 'GraphQL', 'n8n', 'Gemini API', 'Telegram'],
 		web: {
-			tag: { es: 'Datos abiertos e IA', en: 'Open data & AI' },
-			hover: { es: 'Busca tus ayudas', en: 'Find your grants' },
-			action: 'visit',
-			mark: '€',
-			image: 'subvenciones',
-			imagePos: 'center',
+			tag: { es: 'Automatización e IA', en: 'Automation & AI' },
+			hover: { es: 'Del móvil a la tienda', en: 'From phone to store' },
+			action: 'case',
+			// La tienda aún no es pública: lleva al caso contado en felixcorcoran.es
+			url: { es: 'https://felixcorcoran.es/#trabajo', en: 'https://felixcorcoran.es/en#work' },
+			mark: 'TCG',
+			image: 'stc',
 			wide: true,
+		},
+	},
+	{
+		name: { es: 'Radar comercial', en: 'Lead radar' },
+		status: { es: 'Uso interno', en: 'Internal tool' },
+		summary: {
+			es: 'Busca cada día negocios locales con un fallo comprobable y prepara a quién contactar.',
+			en: 'Finds local businesses with a verifiable issue every day and prepares who to contact.',
+		},
+		highlights: [
+			{
+				es: 'El código comprueba los hechos; Gemini solo los interpreta. Cuotas de API bajo control.',
+				en: 'Code checks the facts; Gemini only interprets them. API quotas kept under control.',
+			},
+		],
+		stack: ['Node.js', 'GitHub Actions', 'Places API', 'Gemini API'],
+		// Repositorio privado: sin enlace
+		web: { tag: { es: 'Automatización e IA', en: 'Automation & AI' }, mark: '◎', image: 'radar' },
+	},
+	{
+		name: 'Kalo AI',
+		url: 'https://kaloai.infinityfreeapp.com',
+		repo: 'https://github.com/felixcorcoran/kaloAI',
+		summary: {
+			es: 'Plataforma de nutrición con recetas generadas por IA según calorías, objetivos e intolerancias.',
+			en: 'Nutrition platform with AI-generated recipes based on calories, goals and intolerances.',
+		},
+		highlights: [
+			{
+				es: 'Multi-rol (usuario, nutricionista y administración), plan semanal e inventario con lista de la compra.',
+				en: 'Multi-role (user, nutritionist and admin), weekly plan and inventory with a shopping list.',
+			},
+		],
+		stack: ['PHP (MVC)', 'MySQL', 'Gemini API', 'JavaScript'],
+		web: {
+			tag: { es: 'Full Stack e IA', en: 'Full Stack & AI' },
+			hover: { es: 'Plataforma IA', en: 'AI Platform' },
+			action: 'explore',
+			url: { es: 'https://kaloai.infinityfreeapp.com/?i=1', en: 'https://kaloai.infinityfreeapp.com/?i=1' },
+			mark: 'AI',
+			image: 'kalo',
 		},
 	},
 	{
@@ -247,59 +296,17 @@ export const projects: Project[] = [
 		stack: ['Astro', 'Tailwind CSS', 'Resend', 'Vercel'],
 		// Sin `web`: no se enseña a sí mismo en Mis trabajos
 	},
-	{
-		name: 'Spain Trading Cards',
-		status: { es: 'En desarrollo', en: 'In progress' },
-		summary: {
-			es: 'Tienda Shopify de cartas coleccionables diseñada desde cero, con secciones Liquid a medida.',
-			en: 'Shopify store for collectible cards designed from scratch, with custom Liquid sections.',
-		},
-		highlights: [
-			{
-				es: 'Alta de productos desde Telegram: Gemini interpreta, n8n orquesta y la API de Shopify publica.',
-				en: 'Product onboarding from Telegram: Gemini parses, n8n orchestrates, the Shopify API publishes.',
-			},
-		],
-		stack: ['Shopify Liquid', 'GraphQL', 'n8n', 'Gemini API', 'Telegram'],
-		web: {
-			tag: { es: 'Automatización e IA', en: 'Automation & AI' },
-			hover: { es: 'Del móvil a la tienda', en: 'From phone to store' },
-			action: 'case',
-			// La tienda aún no es pública: lleva al caso contado en felixcorcoran.es
-			url: { es: 'https://felixcorcoran.es/#trabajo', en: 'https://felixcorcoran.es/en#work' },
-			mark: 'TCG',
-			image: 'stc',
-			wide: true,
-		},
-	},
-	{
-		name: { es: 'Radar comercial', en: 'Lead radar' },
-		status: { es: 'Uso interno', en: 'Internal tool' },
-		summary: {
-			es: 'Busca cada día negocios locales con un fallo comprobable y prepara a quién contactar.',
-			en: 'Finds local businesses with a verifiable issue every day and prepares who to contact.',
-		},
-		highlights: [
-			{
-				es: 'El código comprueba los hechos; Gemini solo los interpreta. Cuotas de API bajo control.',
-				en: 'Code checks the facts; Gemini only interprets them. API quotas kept under control.',
-			},
-		],
-		stack: ['Node.js', 'GitHub Actions', 'Places API', 'Gemini API'],
-		// Repositorio privado: sin enlace
-		web: { tag: { es: 'Automatización e IA', en: 'Automation & AI' }, mark: '◎', image: 'radar' },
-	},
 ];
 
 export type SkillGroup = 'ai' | 'backend' | 'frontend' | 'integrations' | 'tools';
 
 export const skills: { id: SkillGroup; label: Text; items: string[] }[] = [
 	{ id: 'ai', label: { es: 'IA y automatización', en: 'AI & automation' }, items: ['n8n', 'OpenAI API', 'Claude API', 'Gemini API', 'JSON', 'REST'] },
-	{ id: 'backend', label: { es: 'Backend', en: 'Backend' }, items: ['PHP', 'Laravel', 'Node.js', 'Java', 'Python', 'MySQL'] },
+	{ id: 'backend', label: { es: 'Backend', en: 'Backend' }, items: ['Java', 'Spring Boot', 'Node.js', 'PHP', 'Laravel', 'PostgreSQL', 'MySQL', 'Python'] },
 	{
 		id: 'frontend',
 		label: { es: 'Frontend', en: 'Frontend' },
-		items: ['TypeScript', 'JavaScript', 'React', 'Astro', 'Tailwind CSS', 'Three.js', 'GSAP', 'Vite', 'HTML', 'CSS/Sass'],
+		items: ['TypeScript', 'JavaScript', 'Angular', 'React', 'Astro', 'Tailwind CSS', 'Three.js', 'GSAP', 'Vite', 'HTML', 'CSS/Sass'],
 	},
 	{
 		id: 'integrations',
@@ -310,7 +317,7 @@ export const skills: { id: SkillGroup; label: Text; items: string[] }[] = [
 ];
 
 /** Lo que estoy aprendiendo: sale en el portfolio (New horizons), no en el CV */
-export const learning = ['Angular', 'Spring Boot', 'Next.js', 'Supabase', 'PostgreSQL'];
+export const learning = ['Next.js', 'Supabase'];
 
 export const education = [
 	{

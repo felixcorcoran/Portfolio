@@ -49,6 +49,7 @@ const cards = projects
         repo: p.repo,
         mark: p.web.mark,
         wide: p.web.wide ?? false,
+        first: p.web.first ?? false,
         image: shot(p.web.image),
         imagePos: p.web.imagePos ?? 'left top',
     }));
@@ -304,13 +305,13 @@ const clientSites = [
                             );
                         })}
 
-                        <!-- Tarjetas anchas (wide en perfil.ts): bajas y discretas, al final. Spain
+                        <!-- Tarjetas anchas (wide en perfil.ts): bajas y discretas, al final (con first, arriba del todo). Spain
                              Trading Cards aún no es pública: lleva al caso contado en felixcorcoran.es -->
                         {wideCards.map((project) => {
                             // Como en las de la mitad: con repositorio, la web va en una capa y «Código» encima
                             const Card = project.repo ? 'div' : 'a';
                             return (
-                        <Card {...(Card === 'a' ? { href: project.url, target: '_blank', rel: 'noopener' } : {})} data-reveal class="md:col-span-12 group relative overflow-hidden bg-neutral-900/30 border border-white/5 rounded-[2.5rem] grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] transition-colors duration-700 hover:border-blue-500/50">
+                        <Card {...(Card === 'a' ? { href: project.url, target: '_blank', rel: 'noopener' } : {})} data-reveal class:list={['md:col-span-12 group relative overflow-hidden bg-neutral-900/30 border border-white/5 rounded-[2.5rem] grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] transition-colors duration-700 hover:border-blue-500/50', project.first && 'order-first']}>
                             {project.repo && (
                                 <>
                                     <a href={project.url} target="_blank" rel="noopener" class="absolute inset-0 z-20 rounded-[2.5rem] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400" aria-label={`${project.action}: ${project.name}`}></a>
