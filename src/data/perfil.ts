@@ -138,17 +138,13 @@ export const projects: Project[] = [
 		url: 'https://subvenciones.felixcorcoran.es',
 		repo: 'https://github.com/felixcorcoran/subvenciones',
 		summary: {
-			es: 'Recoge cada mañana las ayudas nuevas de toda España, dice a cuáles puede optar cada negocio y avisa por email de las que le encajan.',
-			en: 'Collects new Spanish grants every morning, shows which ones each business can apply for and emails the ones that fit.',
+			es: 'Recoge cada mañana las ayudas nuevas de toda España, dice a cuáles puede optar cada negocio y le avisa por email.',
+			en: 'Collects new Spanish grants every morning, shows which ones each business can apply for and sends email alerts.',
 		},
 		highlights: [
 			{
-				es: 'API abierta de la BDNS y GitHub Actions; Gemini lee las bases y explica requisitos, importe y plazo en claro.',
-				en: 'Open BDNS API and GitHub Actions; Gemini reads each call and explains requirements, amount and deadline plainly.',
-			},
-			{
-				es: 'Avisos por email en Spring Boot y Angular sobre PostgreSQL: 3.600 casos comprueban que el correo dice lo mismo que la web.',
-				en: 'Email alerts built with Spring Boot and Angular on PostgreSQL: 3,600 test cases check the email says the same as the website.',
+				es: 'Gemini lee las bases; avisos con Spring Boot, Angular y PostgreSQL, y 3.600 casos de prueba para que el correo diga lo mismo que la web.',
+				en: 'Gemini reads each call; alerts built with Spring Boot, Angular and PostgreSQL, with 3,600 test cases so the email matches the website.',
 			},
 		],
 		stack: ['Java', 'Spring Boot', 'Angular', 'PostgreSQL', 'TypeScript', 'Gemini API'],
