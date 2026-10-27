@@ -43,6 +43,7 @@ const cards = projects
         tag: p.web.tag[lang],
         status: p.status?.[lang],
         desc: [p.summary[lang], ...p.highlights.map((h) => h[lang])].join(' '),
+        summary: p.summary[lang],
         chips: p.stack,
         action: actions[p.web.action ?? 'visit'],
         hover: p.web.hover?.[lang],
@@ -88,7 +89,15 @@ const clientSites = [
     { name: 'Ávila Secretaría Online', url: 'https://avilasecretariaonline.com/', cat: { es: 'Servicios', en: 'Services' }, image: 'avila', desc: { es: 'Web bilingüe de un servicio de secretaría online.', en: 'Bilingual website for an online secretarial service.' } },
     { name: 'Susana Floria Nails', url: 'https://susanaflorianails.com/sobrenosotros.html', cat: { es: 'Estética', en: 'Beauty' }, image: 'susana', desc: { es: 'Web de un negocio de estética.', en: 'Website for a beauty business.' } },
     { name: 'Construcciones Omega', url: 'https://construccionesyserviciosomega.com/inicio', cat: { es: 'Construcción', en: 'Construction' }, image: 'omega', desc: { es: 'Web de una empresa de construcción.', en: 'Website for a construction company.' } },
-].map((s) => ({ ...s, cat: s.cat[lang], desc: s.desc[lang], image: shot(s.image) }));
+].map((s) => ({ ...s, cat: s.cat[lang], desc: s.desc[lang], image: shot(s.image), action: t('btn.visit') }));
+
+// La galería con una sola plantilla: delante, los trabajos para clientes que en
+// escritorio van con los proyectos (Spain Trading Cards), con su resumen corto
+// para que mida como las demás
+const gallery = [
+    ...clientCards.map((c) => ({ name: c.name, url: c.url, cat: c.tag, status: c.status, desc: c.summary, image: c.image, imagePos: c.imagePos, action: c.action, mobileOnly: true })),
+    ...clientSites,
+];
 ---
 
 <html lang={lang}>
@@ -390,46 +399,22 @@ const clientSites = [
                             </div>
 
                             <!-- Las tarjetas entran escalonadas al llegar a la galería. En móvil,
-                                 carrusel; delante, los trabajos para clientes que en escritorio van
-                                 con los proyectos (Spain Trading Cards) -->
+                                 carrusel de tarjetas iguales -->
                             <div class="carrusel carrusel--galeria sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-carrusel="clientes">
-                                {clientCards.map((project) => (
-                                    <a
-                                        href={project.url}
-                                        target="_blank"
-                                        rel="noopener"
-                                        data-reveal
-                                        class="carrusel-item md:hidden rv-card group relative rounded-[2rem] overflow-hidden border border-white/5 bg-[#080808]/80 block isolate"
-                                    >
-                                        {project.image && (
-                                            <div class="relative aspect-[16/10] overflow-hidden">
-                                                <Image src={project.image} alt={project.name} widths={[400, 700]} sizes="(min-width: 640px) 45vw, 86vw" loading="eager" class="h-full w-full object-cover" style={`object-position: ${project.imagePos}`} />
-                                                <div class="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#080808] to-transparent"></div>
-                                            </div>
-                                        )}
-                                        <div class="relative p-6">
-                                            <div class="flex flex-wrap items-center gap-3 mb-3">
-                                                <span class="text-[10px] font-bold text-blue-400 uppercase tracking-[0.35em]">{project.tag}</span>
-                                                {project.status && <span class="px-2.5 py-1 rounded-full border border-amber-400/40 text-[10px] text-amber-300/90 uppercase font-bold tracking-widest">{project.status}</span>}
-                                            </div>
-                                            <h4 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-white leading-[0.95]">{project.name}</h4>
-                                            <p class="mt-3 line-clamp-2 text-neutral-300 text-sm leading-relaxed">{project.desc}</p>
-                                            <span class="mt-3 inline-block text-white/70 text-[11px] uppercase tracking-[0.3em] font-mono">{project.action} ↗</span>
-                                        </div>
-                                    </a>
-                                ))}
-                                {clientSites.map((site, index) => (
+                                {gallery.map((site, index) => (
                                     <a
                                         href={site.url}
                                         target="_blank"
                                         rel="noopener"
                                         data-reveal
-                                        class="carrusel-item rv-card group relative rounded-[2rem] overflow-hidden border border-white/5 bg-[#080808]/80 block isolate transition-colors duration-700 hover:border-blue-500/40"
+                                        class:list={['carrusel-item galeria-item rv-card group relative rounded-[2rem] overflow-hidden border border-white/5 bg-[#080808]/80 block isolate transition-colors duration-700 hover:border-blue-500/40', site.mobileOnly && 'md:hidden']}
                                         style={`--i: ${index % 3}`}
                                     >
                                         <div class="relative aspect-[16/10] overflow-hidden">
-                                            <Image src={site.image} alt={site.name} widths={[400, 700]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 86vw" loading="eager" class="h-full w-full object-cover object-top transition-transform duration-[1200ms] ease-out group-hover:scale-[1.07]" />
+                                            <Image src={site.image} alt={site.name} widths={[400, 700]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 86vw" loading="eager" class="h-full w-full object-cover object-top transition-transform duration-[1200ms] ease-out group-hover:scale-[1.07]" style={site.imagePos && `object-position: ${site.imagePos}`} />
                                             <div class="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#080808] to-transparent"></div>
+                                            <!-- El estado («En desarrollo») va sobre la captura: no añade una línea al texto -->
+                                            {site.status && <span class="absolute top-4 left-4 px-2.5 py-1 rounded-full border border-amber-400/40 bg-black/60 backdrop-blur-sm text-[10px] text-amber-300/90 uppercase font-bold tracking-widest">{site.status}</span>}
                                         </div>
                                         <div class="absolute top-0 left-[-100%] w-full h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent group-hover:left-full transition-all duration-1000"></div>
                                         <div class="relative p-6 flex items-end justify-between gap-4">
@@ -437,7 +422,7 @@ const clientSites = [
                                                 <span class="block mb-3 text-[10px] font-bold text-blue-400 uppercase tracking-[0.35em]">{site.cat}</span>
                                                 <h4 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-white leading-[0.95] hyphens-auto [overflow-wrap:anywhere] transition-colors duration-500 group-hover:text-blue-100">{site.name}</h4>
                                                 <p class="mt-3 line-clamp-2 text-neutral-300 text-sm leading-relaxed">{site.desc}</p>
-                                                <span class="mt-3 inline-block text-white/70 text-[11px] uppercase tracking-[0.3em] font-mono transition-colors duration-500 group-hover:text-blue-300">{t('btn.visit')}</span>
+                                                <span class="mt-3 inline-block text-white/70 text-[11px] uppercase tracking-[0.3em] font-mono transition-colors duration-500 group-hover:text-blue-300">{site.action}</span>
                                             </div>
                                             <div class="relative shrink-0 w-12 h-12 rounded-full border border-white/10 bg-white/[0.03] overflow-hidden flex items-center justify-center transition-all duration-700 group-hover:border-blue-400/50 group-hover:rotate-12 group-hover:scale-110">
                                                 <span class="text-white/70 text-lg transition-all duration-700 group-hover:translate-x-8 group-hover:-translate-y-8 group-hover:opacity-0">↗</span>
@@ -1209,6 +1194,21 @@ const clientSites = [
             min-width: 0;
             scroll-snap-align: start;
         }
+        /* Galería: todas las tarjetas con la misma altura y el mismo ritmo.
+           Nombre y descripción reservan dos líneas aunque usen una, y la
+           llamada a la acción queda siempre abajo, a la misma altura */
+        .carrusel--galeria > .galeria-item { display: flex; flex-direction: column; }
+        .carrusel--galeria > .galeria-item > div:last-child { flex: 1; }
+        /* El círculo ↗ baja a la fila de «Visitar web»: el nombre usa todo el ancho */
+        .carrusel--galeria > .galeria-item > div:last-child > div:last-child {
+            position: absolute;
+            right: 1.25rem;
+            bottom: 1rem;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+        .carrusel--galeria > .galeria-item h4 { min-height: 1.9em; }
+        .carrusel--galeria > .galeria-item p { min-height: 2lh; }
     }
     @media (min-width: 40rem) and (max-width: 47.99rem) {
         /* La galería ya es rejilla de dos desde sm */
