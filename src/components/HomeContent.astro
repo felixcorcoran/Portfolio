@@ -82,13 +82,13 @@ const letters = (text) => text.split(' ').map((word) => [...word]);
 
 // Galería freelance: cada web con su captura
 const clientSites = [
-    { name: 'MBH Builders', url: 'https://mbhbuilders.es/inicio.html', cat: { es: 'Construcción', en: 'Construction' }, image: 'mbh' },
-    { name: 'Pilar Peluquería', url: 'https://pilarpeluqueria.com/inicio.html', cat: { es: 'Peluquería', en: 'Hair salon' }, image: 'pilar' },
-    { name: 'Reformas Paola', url: 'https://reformasymantenimientospaola.com/inicio', cat: { es: 'Reformas', en: 'Renovations' }, image: 'paola' },
-    { name: 'Ávila Secretaría Online', url: 'https://avilasecretariaonline.com/', cat: { es: 'Servicios', en: 'Services' }, image: 'avila' },
-    { name: 'Susana Floria Nails', url: 'https://susanaflorianails.com/sobrenosotros.html', cat: { es: 'Estética', en: 'Beauty' }, image: 'susana' },
-    { name: 'Construcciones Omega', url: 'https://construccionesyserviciosomega.com/inicio', cat: { es: 'Construcción', en: 'Construction' }, image: 'omega' },
-].map((s) => ({ ...s, cat: s.cat[lang], image: shot(s.image) }));
+    { name: 'MBH Builders', url: 'https://mbhbuilders.es/inicio.html', cat: { es: 'Construcción', en: 'Construction' }, image: 'mbh', desc: { es: 'Web de una empresa de construcción.', en: 'Website for a construction company.' } },
+    { name: 'Pilar Peluquería', url: 'https://pilarpeluqueria.com/inicio.html', cat: { es: 'Peluquería', en: 'Hair salon' }, image: 'pilar', desc: { es: 'Web bilingüe, servicios y solicitud de citas.', en: 'Bilingual website, services and appointment requests.' } },
+    { name: 'Reformas Paola', url: 'https://reformasymantenimientospaola.com/inicio', cat: { es: 'Reformas', en: 'Renovations' }, image: 'paola', desc: { es: 'Web bilingüe y solicitud de presupuestos.', en: 'Bilingual website and quote requests.' } },
+    { name: 'Ávila Secretaría Online', url: 'https://avilasecretariaonline.com/', cat: { es: 'Servicios', en: 'Services' }, image: 'avila', desc: { es: 'Web bilingüe de un servicio de secretaría online.', en: 'Bilingual website for an online secretarial service.' } },
+    { name: 'Susana Floria Nails', url: 'https://susanaflorianails.com/sobrenosotros.html', cat: { es: 'Estética', en: 'Beauty' }, image: 'susana', desc: { es: 'Web de un negocio de estética.', en: 'Website for a beauty business.' } },
+    { name: 'Construcciones Omega', url: 'https://construccionesyserviciosomega.com/inicio', cat: { es: 'Construcción', en: 'Construction' }, image: 'omega', desc: { es: 'Web de una empresa de construcción.', en: 'Website for a construction company.' } },
+].map((s) => ({ ...s, cat: s.cat[lang], desc: s.desc[lang], image: shot(s.image) }));
 ---
 
 <html lang={lang}>
@@ -282,7 +282,7 @@ const clientSites = [
                                 )}
                                 {project.image && (
                                     <div class="rv-wipe relative aspect-[16/10] overflow-hidden border-b border-white/5" style={`--i: ${i % 2}`}>
-                                        <Image src={project.image} alt={project.name.replace('\u200b', '')} widths={[600, 900, 1200]} sizes="(min-width: 768px) 50vw, 100vw" class="h-full w-full object-cover object-top transition-transform duration-[1400ms] ease-out group-hover:scale-[1.06]" />
+                                        <Image src={project.image} alt={project.name.replace('\u200b', '')} widths={[600, 900, 1200]} sizes="(min-width: 768px) 50vw, 86vw" loading="eager" class="h-full w-full object-cover object-top transition-transform duration-[1400ms] ease-out group-hover:scale-[1.06]" />
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/0 to-black/0 opacity-60 transition-opacity duration-500 group-hover:opacity-100"></div>
                                         {project.url && (
                                             <div class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 md:p-8 translate-y-full transition-transform duration-500 ease-out group-hover:translate-y-0">
@@ -351,8 +351,8 @@ const clientSites = [
                                 </span>
                             </div>
                             {project.image && (
-                                <div class="rv-wipe-x relative min-h-[11rem] md:min-h-[16rem] overflow-hidden order-1 lg:order-2 border-b lg:border-b-0 lg:border-l border-white/5">
-                                    <Image src={project.image} alt={project.name} widths={[600, 900, 1200]} sizes="(min-width: 1024px) 50vw, 100vw" class="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.05]" style={`object-position: ${project.imagePos}`} />
+                                <div class="rv-wipe-x relative max-md:aspect-[16/10] md:min-h-[16rem] overflow-hidden order-1 lg:order-2 border-b lg:border-b-0 lg:border-l border-white/5">
+                                    <Image src={project.image} alt={project.name} widths={[600, 900, 1200]} sizes="(min-width: 1024px) 50vw, 86vw" loading="eager" class="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.05]" style={`object-position: ${project.imagePos}`} />
                                     <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
                                 </div>
                             )}
@@ -403,7 +403,7 @@ const clientSites = [
                                     >
                                         {project.image && (
                                             <div class="relative aspect-[16/10] overflow-hidden">
-                                                <Image src={project.image} alt={project.name} widths={[400, 700]} sizes="(min-width: 640px) 45vw, 100vw" class="h-full w-full object-cover" style={`object-position: ${project.imagePos}`} />
+                                                <Image src={project.image} alt={project.name} widths={[400, 700]} sizes="(min-width: 640px) 45vw, 86vw" loading="eager" class="h-full w-full object-cover" style={`object-position: ${project.imagePos}`} />
                                                 <div class="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#080808] to-transparent"></div>
                                             </div>
                                         )}
@@ -413,7 +413,7 @@ const clientSites = [
                                                 {project.status && <span class="px-2.5 py-1 rounded-full border border-amber-400/40 text-[10px] text-amber-300/90 uppercase font-bold tracking-widest">{project.status}</span>}
                                             </div>
                                             <h4 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-white leading-[0.95]">{project.name}</h4>
-                                            <p class="mt-3 text-neutral-300 text-sm leading-relaxed">{project.desc}</p>
+                                            <p class="mt-3 line-clamp-2 text-neutral-300 text-sm leading-relaxed">{project.desc}</p>
                                             <span class="mt-3 inline-block text-white/70 text-[11px] uppercase tracking-[0.3em] font-mono">{project.action} ↗</span>
                                         </div>
                                     </a>
@@ -428,7 +428,7 @@ const clientSites = [
                                         style={`--i: ${index % 3}`}
                                     >
                                         <div class="relative aspect-[16/10] overflow-hidden">
-                                            <Image src={site.image} alt={site.name} widths={[400, 700]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" class="h-full w-full object-cover object-top transition-transform duration-[1200ms] ease-out group-hover:scale-[1.07]" />
+                                            <Image src={site.image} alt={site.name} widths={[400, 700]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 86vw" loading="eager" class="h-full w-full object-cover object-top transition-transform duration-[1200ms] ease-out group-hover:scale-[1.07]" />
                                             <div class="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#080808] to-transparent"></div>
                                         </div>
                                         <div class="absolute top-0 left-[-100%] w-full h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent group-hover:left-full transition-all duration-1000"></div>
@@ -436,6 +436,7 @@ const clientSites = [
                                             <div class="min-w-0">
                                                 <span class="block mb-3 text-[10px] font-bold text-blue-400 uppercase tracking-[0.35em]">{site.cat}</span>
                                                 <h4 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-white leading-[0.95] hyphens-auto [overflow-wrap:anywhere] transition-colors duration-500 group-hover:text-blue-100">{site.name}</h4>
+                                                <p class="mt-3 line-clamp-2 text-neutral-300 text-sm leading-relaxed">{site.desc}</p>
                                                 <span class="mt-3 inline-block text-white/70 text-[11px] uppercase tracking-[0.3em] font-mono transition-colors duration-500 group-hover:text-blue-300">{t('btn.visit')}</span>
                                             </div>
                                             <div class="relative shrink-0 w-12 h-12 rounded-full border border-white/10 bg-white/[0.03] overflow-hidden flex items-center justify-center transition-all duration-700 group-hover:border-blue-400/50 group-hover:rotate-12 group-hover:scale-110">
@@ -681,7 +682,7 @@ const clientSites = [
                 </div>
             </section>
 
-            <footer class="max-md:min-h-svh max-md:flex py-[6svh] md:py-20 px-6 bg-black border-t border-white/10">
+            <footer class="max-md:min-h-[calc(100svh+8rem)] max-md:flex py-[6svh] md:py-20 px-6 bg-black border-t border-white/10">
                 <div class="max-w-7xl mx-auto max-md:w-full max-md:flex max-md:flex-col max-md:justify-between">
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-[6svh] md:gap-16 items-end max-md:my-auto md:mb-24">
                         
@@ -1199,8 +1200,12 @@ const clientSites = [
             scrollbar-width: none;
         }
         .carrusel::-webkit-scrollbar { display: none; }
+        /* Tarjetas más bajas: descripción recortada y menos relleno */
+        .carrusel > .project-card p.leading-relaxed { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.9375rem; }
+        .carrusel > .project-card > div:last-of-type { padding: 1.25rem; }
+        .carrusel > .carrusel-item > div:last-child:not(.rv-wipe) { padding: 1.25rem; }
         .carrusel > .carrusel-item {
-            flex: 0 0 86%;
+            flex: 0 0 78%;
             min-width: 0;
             scroll-snap-align: start;
         }
@@ -1347,7 +1352,20 @@ const clientSites = [
             revealObserver.unobserve(entry.target);
         });
     }, { threshold: 0.2 });
-    document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+    document.querySelectorAll('[data-reveal]').forEach((el) => {
+        // Los de un carrusel de móvil se descubren con el carrusel: los de más
+        // allá del borde nunca llegarían a verse (y sus imágenes, a mostrarse)
+        if (!el.closest('[data-carrusel]') || !matchMedia('(max-width: 47.99rem)').matches) revealObserver.observe(el);
+    });
+    document.querySelectorAll('[data-carrusel]').forEach((c) => {
+        if (!matchMedia('(max-width: 47.99rem)').matches) return;
+        const o = new IntersectionObserver((es) => {
+            if (!es.some((e) => e.isIntersecting)) return;
+            c.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-in'));
+            o.disconnect();
+        }, { threshold: 0.15 });
+        o.observe(c);
+    });
 
     // ---------- Carruseles de móvil: «2 de 5» y los puntos ----------
     document.querySelectorAll('[data-carrusel]').forEach((carrusel) => {
