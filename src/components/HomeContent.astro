@@ -65,11 +65,14 @@ const clientCards = cards.filter((c) => c.client);
 // en filas de cinco. Sin icono propio (REST), la casilla lleva las siglas
 const tech = (name) => ({ name, icon: techIcon[name] });
 const stackGroups = [
-    { label: t('stack.backend'), text: t('stack.backend.text'), items: group('backend').map(tech) },
-    { label: t('stack.frontend'), text: t('stack.frontend.text'), items: group('frontend').map(tech) },
-    { label: t('stack.ai'), text: t('stack.ai.text'), items: aiTools.map(tech) },
-    { label: t('stack.tools'), text: t('stack.tools.text'), items: group('tools').map(tech), alignEnd: true },
+    { label: t('stack.backend'), text: t('stack.backend.text'), items: group('backend').map(tech), mobile: 3 },
+    { label: t('stack.frontend'), text: t('stack.frontend.text'), items: group('frontend').map(tech), mobile: 2 },
+    { label: t('stack.ai'), text: t('stack.ai.text'), items: aiTools.map(tech), mobile: 1 },
+    { label: t('stack.tools'), text: t('stack.tools.text'), items: group('tools').map(tech), alignEnd: true, mobile: 4 },
 ];
+// En móvil (rejilla de 2×2, filas de cuatro iconos) el orden es otro (mobile):
+// arriba los dos grupos con tres filas, IA y Frontend; abajo Backend y
+// Herramientas, con dos. Cada fila de la rejilla mide lo que su grupo más alto
 // Columna de cada casilla en la fila de cinco. Con alignEnd, la última fila
 // incompleta empieza por la derecha (Herramientas, en espejo con Backend)
 const col = (g, j) => {
@@ -531,9 +534,10 @@ const gallery = [
                     <!-- En móvil, rejilla de 2×2: solo el nombre del grupo y sus iconos -->
                     <div class="stack-grid grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-5">
                         {stackGroups.map((g, i) => (
-                            <article data-reveal class="rv-flip group relative flex flex-col gap-3 md:gap-5 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 bg-neutral-900/40 p-4 md:p-7 transition-colors duration-500 hover:border-blue-500/40" style={`--i: ${i}`}>
+                            <article data-reveal class="rv-flip group relative flex flex-col gap-3 md:gap-5 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 bg-neutral-900/40 p-4 md:p-7 transition-colors duration-500 hover:border-blue-500/40" style={`--i: ${i}; --m: ${g.mobile}`}>
                                 <div class="flex items-center gap-3 font-mono text-[11px] tracking-[0.3em] uppercase text-blue-400">
-                                    <span>0{i + 1}</span>
+                                    <span class="md:hidden">0{g.mobile}</span>
+                                    <span class="max-md:hidden">0{i + 1}</span>
                                     <span class="h-px flex-1 origin-left bg-blue-500/25 transition-transform duration-700 group-hover:scale-x-110"></span>
                                 </div>
                                 <h3 class="text-base md:text-3xl xl:text-2xl font-black uppercase tracking-tighter text-white leading-none hyphens-auto">{g.label}</h3>
@@ -1115,6 +1119,11 @@ const gallery = [
     /* Móvil: filas de cuatro, sin el hueco de alineación a la derecha de las filas de cinco */
     @media (max-width: 47.99rem) {
         .stack-grid .tech { grid-column-start: auto !important; border-radius: 0.6rem; }
+        .stack-grid > article { order: var(--m); }
+        /* El nombre cabe siempre en su tarjeta: «AUTOMATIZACIÓN», la palabra
+           más larga, mide unas 9em */
+        .stack-grid > article { container-type: inline-size; }
+        .stack-grid h3 { font-size: min(1rem, 100cqw / 9.2); }
     }
 
     .tech-tip {
