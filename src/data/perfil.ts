@@ -32,6 +32,8 @@ export interface Project {
 	stack: string[];
 	/** Cómo sale en Mis trabajos del portfolio. Sin esto, solo sale en el CV. */
 	web?: {
+		/** Resumen de dos líneas para la tarjeta pequeña de móvil (si summary no cabe) */
+		short?: Text;
 		/** Rótulo pequeño encima del nombre */
 		tag: Text;
 		/** Lo que se lee al pasar el ratón, bajo «Visitar web», «Explorar» o «Ver caso» */
@@ -205,6 +207,10 @@ export const projects: Project[] = [
 			action: 'case',
 			// La tienda aún no es pública: lleva al caso contado en felixcorcoran.es
 			url: { es: 'https://felixcorcoran.es/#trabajo', en: 'https://felixcorcoran.es/en#work' },
+			short: {
+				es: 'Tienda Shopify de cartas con altas desde el móvil.',
+				en: 'Shopify card store with products added by phone.',
+			},
 			mark: 'TCG',
 			image: 'stc',
 			client: true,

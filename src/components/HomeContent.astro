@@ -44,6 +44,7 @@ const cards = projects
         status: p.status?.[lang],
         desc: [p.summary[lang], ...p.highlights.map((h) => h[lang])].join(' '),
         summary: p.summary[lang],
+        short: p.web.short?.[lang],
         chips: p.stack,
         action: actions[p.web.action ?? 'visit'],
         hover: p.web.hover?.[lang],
@@ -95,7 +96,7 @@ const clientSites = [
 // escritorio van con los proyectos (Spain Trading Cards), con su resumen corto
 // para que mida como las demás
 const gallery = [
-    ...clientCards.map((c) => ({ name: c.name, url: c.url, cat: c.tag, status: c.status, desc: c.summary, image: c.image, imagePos: c.imagePos, action: c.action, mobileOnly: true })),
+    ...clientCards.map((c) => ({ name: c.name, url: c.url, cat: c.tag, status: c.status, desc: c.short ?? c.summary, image: c.image, imagePos: c.imagePos, action: c.action, mobileOnly: true })),
     ...clientSites,
 ];
 ---
@@ -289,6 +290,11 @@ const gallery = [
                                         {t('btn.code')} ↗
                                     </a>
                                 )}
+                                <!-- El estado («Uso interno»), en la misma esquina y con la misma pastilla
+                                     que «Código»: no suma una línea al texto -->
+                                {project.status && !project.repo && (
+                                    <span class="absolute top-5 right-5 z-30 px-3 py-1.5 rounded-full border border-white/15 bg-black/60 backdrop-blur-md text-[10px] text-white/80 uppercase font-bold">{project.status}</span>
+                                )}
                                 {project.image && (
                                     <div class="rv-wipe relative aspect-[16/10] overflow-hidden border-b border-white/5" style={`--i: ${i % 2}`}>
                                         <Image src={project.image} alt={project.name.replace('\u200b', '')} widths={[600, 900, 1200]} sizes="(min-width: 768px) 50vw, 86vw" loading="eager" class="h-full w-full object-cover object-top transition-transform duration-[1400ms] ease-out group-hover:scale-[1.06]" />
@@ -305,14 +311,17 @@ const gallery = [
                                     <div>
                                         <div class="flex flex-wrap items-center gap-3 mb-5">
                                             <span class="text-[11px] font-bold text-blue-400 uppercase tracking-widest">{project.tag}</span>
-                                            {project.status && <span class="px-2.5 py-1 rounded-full border border-white/20 text-[10px] text-white/70 uppercase font-bold tracking-widest">{project.status}</span>}
                                         </div>
                                         <h3 class="text-[clamp(1.75rem,6vw,3rem)] md:text-[clamp(1.75rem,3.2vw,3rem)] font-black text-white tracking-tighter uppercase mb-5 leading-[0.9]">{project.name}</h3>
-                                        <p class="text-neutral-300 text-base md:text-lg leading-relaxed">
+                                        <p class="max-md:hidden text-neutral-300 text-base md:text-lg leading-relaxed">
                                             {project.desc}
                                         </p>
+                                        <!-- En móvil, solo el resumen: entero, sin recortar -->
+                                        <p class="md:hidden text-neutral-300 text-[0.9375rem] leading-relaxed">
+                                            {project.summary}
+                                        </p>
                                     </div>
-                                    <div class="flex flex-wrap gap-2">
+                                    <div class="chips flex flex-wrap gap-2">
                                         {project.chips.map((chip) => (
                                             <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-white/75 uppercase font-bold">{chip}</span>
                                         ))}
@@ -346,15 +355,18 @@ const gallery = [
                                     {project.status && <span class="px-2.5 py-1 rounded-full border border-amber-400/40 text-[10px] text-amber-300/90 uppercase font-bold tracking-widest">{project.status}</span>}
                                 </div>
                                 <h3 class="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-[0.9]">{project.name}</h3>
-                                <p class="text-neutral-300 text-base md:text-lg leading-relaxed">
+                                <p class="max-md:hidden text-neutral-300 text-base md:text-lg leading-relaxed">
                                     {project.desc}
                                 </p>
-                                <div class="flex flex-wrap gap-2">
+                                <p class="md:hidden text-neutral-300 text-[0.9375rem] leading-relaxed">
+                                    {project.summary}
+                                </p>
+                                <div class="chips flex flex-wrap gap-2">
                                     {project.chips.map((tech) => (
                                         <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-white/75 uppercase font-bold">{tech}</span>
                                     ))}
                                 </div>
-                                <span class="inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-blue-300">
+                                <span class="max-md:hidden inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-blue-300">
                                     {project.action}
                                     <span class="transition-transform duration-500 group-hover:translate-x-2">→</span>
                                 </span>
@@ -1185,9 +1197,10 @@ const gallery = [
             scrollbar-width: none;
         }
         .carrusel::-webkit-scrollbar { display: none; }
-        /* Tarjetas más bajas: descripción recortada y menos relleno */
-        .carrusel > .project-card p.leading-relaxed { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.9375rem; }
+        /* Tarjetas más bajas: menos relleno (el texto ya es solo el resumen) */
         .carrusel > .project-card > div:last-of-type { padding: 1.25rem; }
+        /* Las cuatro tecnologías, en dos filas de dos y centradas */
+        .carrusel .chips { display: grid; grid-template-columns: repeat(2, max-content); justify-content: center; }
         .carrusel > .carrusel-item > div:last-child:not(.rv-wipe) { padding: 1.25rem; }
         .carrusel > .carrusel-item {
             flex: 0 0 78%;
