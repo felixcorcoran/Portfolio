@@ -1,0 +1,473 @@
+---
+/**
+ * El portfolio (rediseño). Todo el contenido sale de src/data/perfil.ts y de
+ * src/utils/i18n.js, igual que antes; aquí solo cambia cómo se presenta.
+ * Las animaciones viven en src/scripts/motion.ts (GSAP + Lenis) y los estilos
+ * en src/styles/portfolio.css. Sin JavaScript, o con «reducir movimiento»,
+ * la página se ve entera y estática.
+ */
+import '../styles/global.css';
+import '../styles/portfolio.css';
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '@fontsource-variable/jetbrains-mono';
+import { Image } from 'astro:assets';
+import { useTranslations } from '../utils/i18n';
+import { persona, projects, experience, skills, cvOnly, learning, education, pick } from '../data/perfil';
+import { techIcon } from '../data/iconos';
+
+const { lang = 'es' } = Astro.props;
+const t = useTranslations(lang);
+const title = 'Félix Corcoran | Full Stack & AI Automation';
+
+const site = Astro.site ?? new URL('https://dev.felixcorcoran.es');
+const urlEs = new URL('/', site).href;
+const urlEn = new URL('/en/', site).href;
+const canonical = lang === 'en' ? urlEn : urlEs;
+const cv = lang === 'en'
+    ? { href: '/resume-felix-corcoran.pdf', file: 'Resume-Felix-Corcoran.pdf' }
+    : { href: '/cv-felix-corcoran.pdf', file: 'CV-Felix-Corcoran.pdf' };
+
+// Capturas (src/assets/projects/*.jpg); si hay versión en inglés, la usa
+const shots = import.meta.glob('../assets/projects/*.jpg', { eager: true, import: 'default' });
+const shot = (key) => (key ? shots[`../assets/projects/${key}-${lang}.jpg`] ?? shots[`../assets/projects/${key}.jpg`] : undefined);
+
+// ---------- Proyectos: los que tienen ficha web, en el orden de perfil.ts
+// (los «wide» al final salvo «first», que va el primero) ----------
+const actions = { visit: t('btn.visit'), explore: t('btn.explore'), case: t('btn.case') };
+const withWeb = projects.filter((p) => p.web);
+const ordered = [
+    ...withWeb.filter((p) => p.web.first),
+    ...withWeb.filter((p) => !p.web.wide && !p.web.first),
+    ...withWeb.filter((p) => p.web.wide && !p.web.first),
+];
+const cards = ordered.map((p) => ({
+    // Un dominio puede partirse antes de «.es», nunca a mitad de palabra
+    name: pick(p.name, lang).replace(/\.(?=[a-z]+$)/, '​.'),
+    url: p.web.url?.[lang] ?? p.url ?? null,
+    repo: p.repo,
+    tag: p.web.tag[lang],
+    status: p.status?.[lang],
+    summary: p.summary[lang],
+    highlights: p.highlights.map((h) => h[lang]).join(' '),
+    chips: p.stack,
+    action: actions[p.web.action ?? 'visit'],
+    hover: p.web.hover?.[lang],
+    client: p.web.client ?? false,
+    image: shot(p.web.image),
+    imagePos: p.web.imagePos ?? 'left top',
+}));
+
+// ---------- Galería: webs de clientes ----------
+const clientSites = [
+    { name: 'MBH Builders', url: 'https://mbhbuilders.es/inicio.html', cat: { es: 'Construcción', en: 'Construction' }, image: 'mbh', desc: { es: 'Web de una empresa de construcción.', en: 'Website for a construction company.' } },
+    { name: 'Pilar Peluquería', url: 'https://pilarpeluqueria.com/inicio.html', cat: { es: 'Peluquería', en: 'Hair salon' }, image: 'pilar', desc: { es: 'Web bilingüe, servicios y solicitud de citas.', en: 'Bilingual website, services and appointment requests.' } },
+    { name: 'Reformas Paola', url: 'https://reformasymantenimientospaola.com/inicio', cat: { es: 'Reformas', en: 'Renovations' }, image: 'paola', desc: { es: 'Web bilingüe y solicitud de presupuestos.', en: 'Bilingual website and quote requests.' } },
+    { name: 'Ávila Secretaría Online', url: 'https://avilasecretariaonline.com/', cat: { es: 'Servicios', en: 'Services' }, image: 'avila', desc: { es: 'Web bilingüe de un servicio de secretaría online.', en: 'Bilingual website for an online secretarial service.' } },
+    { name: 'Susana Floria Nails', url: 'https://susanaflorianails.com/sobrenosotros.html', cat: { es: 'Estética', en: 'Beauty' }, image: 'susana', desc: { es: 'Web de un negocio de estética.', en: 'Website for a beauty business.' } },
+    { name: 'Construcciones Omega', url: 'https://construccionesyserviciosomega.com/inicio', cat: { es: 'Construcción', en: 'Construction' }, image: 'omega', desc: { es: 'Web de una empresa de construcción.', en: 'Website for a construction company.' } },
+].map((s) => ({ ...s, cat: s.cat[lang], desc: s.desc[lang], image: shot(s.image) }));
+
+// ---------- Experiencia + formación ----------
+const jobs = [
+    ...experience.map((job) => ({
+        role: job.role[lang],
+        place: job.company || 'Freelance',
+        period: job.period[lang],
+        desc: job.highlights.map((h) => h[lang]).join(' '),
+        tags: job.tags.map((tag) => pick(tag, lang)),
+    })),
+    ...education.map((e) => ({
+        role: e.title[lang],
+        place: `${t('exp.education')} · ${e.center}`,
+        period: e.period,
+        desc: '',
+        tags: [],
+    })),
+];
+
+// ---------- Stack: cuatro grupos (sin lo de cvOnly) ----------
+const group = (id) => (skills.find((s) => s.id === id)?.items ?? []).filter((item) => !cvOnly.includes(item));
+const tech = (name) => ({ name, icon: techIcon[name] });
+const stackGroups = [
+    { label: t('stack.backend'), text: t('stack.backend.text'), items: group('backend').map(tech) },
+    { label: t('stack.frontend'), text: t('stack.frontend.text'), items: group('frontend').map(tech) },
+    { label: t('stack.ai'), text: t('stack.ai.text'), items: [...group('ai'), ...group('integrations')].map(tech) },
+    { label: t('stack.tools'), text: t('stack.tools.text'), items: group('tools').map(tech) },
+];
+const learningIcons = learning.map(tech);
+
+// El texto del enfoque, palabra a palabra (se ilumina con el scroll)
+const focusWords = persona.summary[lang].split(' ');
+const pad = (n) => String(n).padStart(2, '0');
+const links = [
+    { label: 'LinkedIn', href: persona.links.linkedin },
+    { label: 'GitHub', href: persona.links.github },
+];
+// Las dos bandas de la cinta: lo que hago y con qué
+const marquee = lang === 'en'
+    ? ['Full stack', 'AI integration', 'Automation', 'Custom websites', 'APIs']
+    : ['Full stack', 'Integración de IA', 'Automatización', 'Webs a medida', 'APIs'];
+const marquee2 = ['n8n', 'Astro', 'TypeScript', 'React', 'Angular', 'Spring Boot', 'PHP', 'Docker'];
+const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.6.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.8-2.8 5.7-5.5 6 .5.4.9 1.1.9 2.3v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3';
+---
+
+<html lang={lang}>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="description" content={t('seo.description')} />
+        <meta name="theme-color" content="#0a0a0b" />
+        <title>{title}</title>
+        <link rel="canonical" href={canonical} />
+        <link rel="alternate" hreflang="es" href={urlEs} />
+        <link rel="alternate" hreflang="en" href={urlEn} />
+        <link rel="alternate" hreflang="x-default" href={urlEs} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={t('seo.description')} />
+        <meta property="og:locale" content={lang === 'en' ? 'en_GB' : 'es_ES'} />
+        <meta property="og:image" content={new URL('/og.png', site).href} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <!-- Con movimiento, la portada empieza oculta para entrar animada. Si el
+             script no llega en 2,5 s, se enseña igual (nunca se queda en blanco) -->
+        <script is:inline>
+            if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.documentElement.classList.add('motion');
+                setTimeout(() => document.documentElement.classList.add('motion-ready'), 2500);
+            }
+        </script>
+    </head>
+    <body class="pf">
+        <a class="skip" href="#proyectos">{t('nav.projects')}</a>
+
+        <!-- Barra flotante: se esconde al bajar y vuelve al subir -->
+        <header class="nav" data-nav>
+            <a class="nav-logo" href="#top" aria-label="Félix Corcoran">FC<span>.</span></a>
+            <nav class="nav-links" aria-label={t('nav.menu')}>
+                <a href="#proyectos">{t('nav.projects')}</a>
+                <a href="#experiencia">{t('nav.experience')}</a>
+                <a href="#stack">{t('nav.stack')}</a>
+                <a href="#contacto">{t('nav.contact')}</a>
+            </nav>
+            <div class="nav-end">
+                <div class="nav-lang">
+                    <a href="/" hreflang="es" aria-current={lang === 'es' ? 'page' : undefined}>ES</a>
+                    <a href="/en/" hreflang="en" aria-current={lang === 'en' ? 'page' : undefined}>EN</a>
+                </div>
+                <a class="nav-cv" href={cv.href} download={cv.file}>{t('btn.cv')} <span aria-hidden="true">↓</span></a>
+            </div>
+        </header>
+
+        <main id="top">
+            <!-- ================= PORTADA ================= -->
+            <section class="hero" id="portada">
+                <p class="hero-meta" data-intro>
+                    <span class="dot" aria-hidden="true"></span>
+                    <span>{t('hero.remote')}</span>
+                    <span class="sep" aria-hidden="true">/</span>
+                    <span>{t('hero.bilingual')}</span>
+                </p>
+
+                <h1 class="hero-name" aria-label="Felix Corcoran">
+                    <span class="line" aria-hidden="true"><span class="word">Felix</span></span>
+                    <span class="line" aria-hidden="true"><span class="word">Corcoran</span></span>
+                </h1>
+
+                <div class="hero-foot">
+                    <p class="hero-role" data-intro>
+                        {lang === 'es' ? (
+                            <>{t('hero.title.1')}{' '}<em>{t('hero.title.2')}</em>{' '}&amp;<br />{t('hero.title.3')}{' '}<em>{t('hero.title.4')}</em>.</>
+                        ) : (
+                            <><em>{t('hero.title.1')}</em>{' '}{t('hero.title.2')}{' '}&amp;<br /><em>{t('hero.title.3')}</em>{' '}{t('hero.title.4')}.</>
+                        )}
+                    </p>
+                    <div class="hero-side">
+                        <p class="hero-desc" data-intro>
+                            {t('hero.degree')} <strong>{t('hero.degree.short')}</strong>. {t('hero.desc')}
+                        </p>
+                        <div class="hero-actions" data-intro>
+                            <a class="btn btn-solid" href="#proyectos"><span>{t('btn.projects')}</span><span aria-hidden="true">↓</span></a>
+                            <a class="btn" href={cv.href} download={cv.file}><span>{t('btn.cv')}</span><span aria-hidden="true">↓</span></a>
+                        </div>
+                        <ul class="hero-links" data-intro>
+                            {links.map((l) => <li><a href={l.href} target="_blank" rel="noopener">{l.label} <span aria-hidden="true">↗</span></a></li>)}
+                            <li><a href={`mailto:${persona.email}`}>{persona.email}</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ================= ENFOQUE: el texto se ilumina con el scroll ================= -->
+            <section class="focus" id="enfoque" aria-labelledby="focus-label">
+                <div class="focus-sticky">
+                    <div class="wrap">
+                        <p class="label" id="focus-label">{t('focus.label')}</p>
+                        <p class="focus-text">
+                            {focusWords.map((w) => <><span class="fw">{w}</span>{' '}</>)}
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= CINTA: dos bandas cruzadas que corren con el scroll ================= -->
+            <div class="ribbons" aria-hidden="true">
+                <div class="ribbon ribbon-a">
+                    <div class="marquee-row" data-dir="-1">
+                        {[...marquee, ...marquee, ...marquee].map((w) => <span>{w}<i>✦</i></span>)}
+                    </div>
+                </div>
+                <div class="ribbon ribbon-b">
+                    <div class="marquee-row" data-dir="1">
+                        {[...marquee2, ...marquee2, ...marquee2].map((w) => <span>{w}<i>✦</i></span>)}
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= PROYECTOS: tarjetas que se apilan ================= -->
+            <section class="work" id="proyectos" aria-labelledby="work-title">
+                <div class="wrap">
+                    <header class="sec-head">
+                        <p class="label">{t('projects.own.label')}</p>
+                        <h2 class="sec-title" id="work-title" data-split>
+                            <span class="line"><span>{t('projects.section.title')}</span></span>
+                            <span class="line"><em>{t('projects.section.subtitle')}</em></span>
+                        </h2>
+                        <p class="work-counter" aria-hidden="true"><span data-work-current>01</span> / {pad(cards.length)}</p>
+                    </header>
+
+                    <ol class="pcards">
+                        {cards.map((c, i) => (
+                            <li class="pcard" style={`--i: ${i}`} data-pcard>
+                                <article class="pcard-inner">
+                                    <div class="pcard-media">
+                                        {c.image && (
+                                            <div class="pcard-shot">
+                                                <Image src={c.image} alt="" widths={[640, 960, 1280]} sizes="(min-width: 900px) 48vw, 92vw" loading={i < 2 ? 'eager' : 'lazy'} style={`object-position: ${c.imagePos}`} />
+                                            </div>
+                                        )}
+                                        {c.status && <span class="pill pill-status">{c.status}</span>}
+                                    </div>
+                                    <div class="pcard-body">
+                                        <div class="pcard-top">
+                                            <span class="pcard-num">{pad(i + 1)}</span>
+                                            <span class="pcard-tag">{c.tag}</span>
+                                        </div>
+                                        <h3 class="pcard-name">{c.name}</h3>
+                                        <p class="pcard-summary">{c.summary}</p>
+                                        <p class="pcard-more">{c.highlights}</p>
+                                        <ul class="chips">{c.chips.map((chip) => <li>{chip}</li>)}</ul>
+                                        <div class="pcard-actions">
+                                            {c.url && (
+                                                <a class="btn btn-solid" href={c.url} target="_blank" rel="noopener">
+                                                    <span>{c.action}</span><span aria-hidden="true">↗</span>
+                                                </a>
+                                            )}
+                                            {c.repo && (
+                                                <a class="btn" href={c.repo} target="_blank" rel="noopener">
+                                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d={githubPath} /></svg>
+                                                    <span>{t('btn.code')}</span>
+                                                </a>
+                                            )}
+                                            {c.hover && c.url && <span class="pcard-hint">{c.hover}</span>}
+                                        </div>
+                                    </div>
+                                </article>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+            </section>
+
+            <!-- ================= WEBS PARA NEGOCIOS: galería horizontal ================= -->
+            <section class="gallery" id="webs" aria-labelledby="gallery-title">
+                <div class="gallery-pin">
+                    <div class="wrap gallery-head">
+                        <div>
+                            <p class="label">{t('projects.freelance.label')}</p>
+                            <h2 class="sec-title sm" id="gallery-title" data-split>
+                                <span class="line"><span>{t('projects.freelance.title')}</span></span>
+                            </h2>
+                        </div>
+                        <p class="gallery-sub">{t('projects.freelance.sub')}<span class="gallery-hint"> · {t('gallery.hint')}</span></p>
+                    </div>
+                    <div class="gallery-viewport">
+                        <ul class="gallery-track" data-track>
+                            {clientSites.map((s, i) => (
+                                <li class="gcard">
+                                    <a href={s.url} target="_blank" rel="noopener">
+                                        <div class="gcard-media">
+                                            <Image src={s.image} alt="" widths={[480, 800]} sizes="(min-width: 900px) 34vw, 80vw" loading="lazy" />
+                                        </div>
+                                        <div class="gcard-body">
+                                            <span class="gcard-num">{pad(i + 1)}</span>
+                                            <div class="gcard-text">
+                                                <span class="gcard-cat">{s.cat}</span>
+                                                <h3>{s.name}</h3>
+                                                <p>{s.desc}</p>
+                                            </div>
+                                            <span class="gcard-go" aria-hidden="true">↗</span>
+                                        </div>
+                                        <span class="sr-only">{t('btn.visit')}</span>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= EXPERIENCIA ================= -->
+            <section class="exp" id="experiencia" aria-labelledby="exp-title">
+                <div class="wrap">
+                    <header class="sec-head">
+                        <p class="label">{t('exp.label')}</p>
+                        <h2 class="sec-title" id="exp-title" data-split>
+                            <span class="line"><span>{t('exp.title')}</span></span>
+                        </h2>
+                    </header>
+                    <ol class="exp-list">
+                        <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
+                        {jobs.map((job) => (
+                            <li class="exp-item" data-reveal>
+                                <span class="exp-dot" aria-hidden="true"></span>
+                                <div class="exp-meta">
+                                    <span class="exp-period">{job.period}</span>
+                                    <span class="exp-place">{job.place}</span>
+                                </div>
+                                <div class="exp-main">
+                                    <h3>{job.role}</h3>
+                                    {job.desc && <p>{job.desc}</p>}
+                                    {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
+                                </div>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+            </section>
+
+            <!-- ================= STACK: cuatro filas ================= -->
+            <section class="skills" id="stack" aria-labelledby="stack-title">
+                <div class="wrap">
+                    <header class="sec-head">
+                        <p class="label">{t('stack.tagline.1')} {t('stack.tagline.2')}</p>
+                        <h2 class="sec-title" id="stack-title" data-split>
+                            <span class="line"><span>Stack</span></span>
+                        </h2>
+                    </header>
+                    <div class="skill-rows">
+                        {stackGroups.map((g, i) => (
+                            <article class="skill-row" data-reveal>
+                                <span class="skill-num">{pad(i + 1)}</span>
+                                <div class="skill-head">
+                                    <h3>{g.label}</h3>
+                                    <p>{g.text}</p>
+                                </div>
+                                <ul class="skill-icons">
+                                    {g.items.map((item) => (
+                                        <li style={`--c: ${item.icon?.color ?? '#9fb4ff'}`} title={item.name}>
+                                            {item.icon ? (
+                                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon.path} /></svg>
+                                            ) : (
+                                                <b aria-hidden="true">{item.name.slice(0, 3)}</b>
+                                            )}
+                                            <span>{item.name}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </article>
+                        ))}
+                    </div>
+                    <p class="learning" data-reveal>
+                        <span class="label">{t('stack.learning')}</span>
+                        {learningIcons.map((item) => (
+                            <span class="learning-item" style={`--c: ${item.icon?.color ?? '#9fb4ff'}`}>
+                                {item.icon && <svg viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon.path} /></svg>}
+                                {item.name}
+                            </span>
+                        ))}
+                    </p>
+                </div>
+            </section>
+
+            <!-- ================= CONTACTO: el panel se abre hasta llenar la pantalla ================= -->
+            <section class="contact" id="contacto" aria-labelledby="contact-title">
+                <div class="contact-panel" data-contact-panel>
+                    <div class="wrap contact-grid">
+                        <div class="contact-intro">
+                            <p class="label">{t('contact.label')}</p>
+                            <h2 class="contact-title" id="contact-title" data-split>
+                                <span class="line"><span>{t('contact.title.1')}</span></span>
+                                <span class="line"><em>{t('contact.title.2')}</em></span>
+                            </h2>
+                            <p class="contact-text">{t('contact.available')}</p>
+                            <dl class="contact-meta">
+                                <div><dt>{t('contact.meta.email')}</dt><dd><a href={`mailto:${persona.email}`}>{persona.email}</a></dd></div>
+                                <div><dt>{t('contact.meta.location')}</dt><dd>{t('contact.location')}</dd></div>
+                                <div><dt>{t('contact.meta.status')}</dt><dd class="ok"><span class="dot" aria-hidden="true"></span>{t('contact.status')}</dd></div>
+                            </dl>
+                        </div>
+
+                        <form
+                            action="/api/send-email"
+                            method="POST"
+                            id="contact-form"
+                            class="contact-form"
+                            data-send={t('contact.send')}
+                            data-sending={t('contact.sending')}
+                            data-sent={t('contact.sent')}
+                            data-error={t('contact.error')}
+                            data-failed={t('contact.failed')}
+                        >
+                            {['name', 'email', 'project'].map((key) => (
+                                <div class="field">
+                                    <label for={`f-${key}`}>{t(`contact.label.${key}`)}</label>
+                                    {key === 'project' ? (
+                                        <textarea id="f-project" name="proyecto" rows="4" required placeholder={t('contact.placeholder.project')}></textarea>
+                                    ) : (
+                                        <input id={`f-${key}`} name={key === 'email' ? 'correo' : 'nombre'} type={key === 'email' ? 'email' : 'text'} autocomplete={key === 'email' ? 'email' : 'name'} required placeholder={t(`contact.placeholder.${key}`)} />
+                                    )}
+                                </div>
+                            ))}
+                            <button type="submit" id="submit-btn" class="btn btn-solid btn-wide">
+                                <span id="btn-text">{t('contact.send')}</span><span aria-hidden="true">→</span>
+                            </button>
+                            <p id="success-msg" role="status" class="form-ok" hidden>{t('contact.success')}</p>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Pie: el nombre sobre un horizonte azul, con los enlaces dentro -->
+        <footer class="foot">
+            <p class="foot-name" aria-label="Felix Corcoran">Felix Corcoran<span aria-hidden="true">●</span></p>
+            <div class="foot-arc" aria-hidden="true"></div>
+            <div class="foot-inner">
+                <p class="foot-desc">{t('footer.desc')}</p>
+                <nav class="foot-links" aria-label="Enlaces">
+                    {links.map((l) => <a href={l.href} target="_blank" rel="noopener">{l.label} <span aria-hidden="true">↗</span></a>)}
+                    <a href={`mailto:${persona.email}`}>{persona.email}</a>
+                    <a href="https://felixcorcoran.es" target="_blank" rel="noopener">{t('footer.business')} felixcorcoran.es <span aria-hidden="true">↗</span></a>
+                </nav>
+                <div class="foot-bottom">
+                    <span>© {new Date().getFullYear()} · Félix Corcoran</span>
+                    <span>{t('footer.built')}</span>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            import '../scripts/motion';
+            import '../scripts/contacto';
+        </script>
+    </body>
+</html>

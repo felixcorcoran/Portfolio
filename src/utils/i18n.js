@@ -78,10 +78,30 @@ const languages = {
     'stack.learning': 'Ahora aprendiendo',
     'contact.title.1': '¿Hablamos?',
     'contact.title.2': 'Escríbeme.',
-    'footer.built': 'Hecho con Astro y Tailwind CSS',
+    'footer.built': 'Hecho con Astro, GSAP y Lenis',
     // Footer
     'footer.desc': 'Desarrollador full stack: web, automatización e integración de IA.',
-    'footer.business': '¿Tienes un negocio?'
+    'footer.business': '¿Tienes un negocio?',
+
+    // Rediseño: menú, enfoque, cifras y rótulos
+    'nav.projects': 'Proyectos',
+    'nav.experience': 'Experiencia',
+    'nav.stack': 'Stack',
+    'nav.contact': 'Contacto',
+    'nav.menu': 'Secciones',
+    'focus.label': 'Enfoque',
+    'stats.label': 'En cifras',
+    'stats.own': 'proyectos propios publicados',
+    'stats.clients': 'webs de clientes en producción',
+    'stats.since': 'trabajando con clientes desde',
+    'stats.tech': 'tecnologías en uso',
+    'marquee.1': 'Full stack',
+    'marquee.2': 'IA',
+    'marquee.3': 'Automatización',
+    'scroll.hint': 'Desliza',
+    'projects.count': 'Proyecto',
+    'exp.education': 'Formación',
+    'gallery.hint': 'Desliza para ver más'
   },
   en: {
     // SEO Metas
@@ -162,10 +182,30 @@ const languages = {
     'stack.learning': 'Currently learning',
     'contact.title.1': 'Let\x27s',
     'contact.title.2': 'Talk.',
-    'footer.built': 'Built with Astro and Tailwind CSS',
+    'footer.built': 'Built with Astro, GSAP and Lenis',
     // Footer
     'footer.desc': 'Full stack developer: web, automation and AI integration.',
-    'footer.business': 'Running a business?'
+    'footer.business': 'Running a business?',
+
+    // Redesign: menu, focus, numbers and labels
+    'nav.projects': 'Projects',
+    'nav.experience': 'Experience',
+    'nav.stack': 'Stack',
+    'nav.contact': 'Contact',
+    'nav.menu': 'Sections',
+    'focus.label': 'Focus',
+    'stats.label': 'In numbers',
+    'stats.own': 'own projects published',
+    'stats.clients': 'client websites live',
+    'stats.since': 'working with clients since',
+    'stats.tech': 'technologies in use',
+    'marquee.1': 'Full stack',
+    'marquee.2': 'AI',
+    'marquee.3': 'Automation',
+    'scroll.hint': 'Scroll',
+    'projects.count': 'Project',
+    'exp.education': 'Education',
+    'gallery.hint': 'Swipe to see more'
   }
 };
 
