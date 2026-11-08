@@ -335,16 +335,17 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                  gira con el scroll y cada una pasa por arriba, recta. En móvil (o sin
                  animación), la línea de tiempo de siempre. Mismo marcado para las dos -->
             <section class="exp" id="experiencia" aria-labelledby="exp-title">
-                <div class="wrap">
-                    <header class="sec-head">
-                        <p class="label">{t('exp.label')}</p>
-                        <h2 class="sec-title" id="exp-title" data-split>
-                            <span class="line"><span>{t('exp.title')}<i class="dot-end">.</i></span></span>
-                        </h2>
-                    </header>
-                </div>
                 <div class="exp-scroller">
                     <div class="exp-stage">
+                        <!-- El titular va dentro de la escena: se sigue viendo mientras gira la rueda -->
+                        <div class="wrap exp-head">
+                            <header class="sec-head">
+                                <p class="label">{t('exp.label')}</p>
+                                <h2 class="sec-title" id="exp-title" data-split>
+                                    <span class="line"><span>{t('exp.title')}<i class="dot-end">.</i></span></span>
+                                </h2>
+                            </header>
+                        </div>
                         <p class="exp-count" aria-hidden="true"><span data-exp-n>01</span> / {pad(jobs.length)}</p>
                         <div class="wrap exp-track">
                             <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>

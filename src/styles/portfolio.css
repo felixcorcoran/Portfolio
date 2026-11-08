@@ -362,14 +362,24 @@ html { background: var(--bg); overflow-x: clip; }
 .exp-count { display: none; }
 .exp.is-wheel { padding-bottom: 0; }
 .exp.is-wheel .exp-scroller { height: 260vh; }
-.exp.is-wheel .exp-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.exp.is-wheel .exp-stage {
+  --title: clamp(2.4rem, min(6vw, 9svh), 5.5rem);
+  /* Alto del titular (rótulo + hueco + titular) y dónde empiezan las tarjetas */
+  --head: calc(1.1rem + .75rem + var(--title) * .9);
+  --card-top: calc(var(--nav-h) + 1rem + var(--head) + clamp(1rem, 3vh, 2rem));
+  position: sticky; top: 0; height: 100svh; overflow: hidden;
+}
+/* El titular, arriba y más compacto mientras gira la rueda */
+.exp.is-wheel .exp-head { position: absolute; z-index: 20; left: 0; right: 0; top: calc(var(--nav-h) + 1rem); }
+.exp.is-wheel .exp-head .sec-head { margin: 0; gap: .75rem; }
+.exp.is-wheel .exp-head .sec-title { font-size: var(--title); }
 .exp.is-wheel .exp-track { width: 100%; max-width: none; height: 100%; padding: 0; margin: 0; }
 .exp.is-wheel .exp-line, .exp.is-wheel .exp-dot { display: none; }
 .exp.is-wheel .exp-list { position: relative; height: 100%; }
 .exp.is-wheel .exp-item,
 .exp.is-wheel .exp-item:first-of-type {
   --w: min(40rem, 46vw);
-  position: absolute; left: 50%; top: calc(var(--nav-h) + clamp(2rem, 7vh, 4rem)); width: var(--w); margin-left: calc(var(--w) / -2);
+  position: absolute; left: 50%; top: var(--card-top); width: var(--w); margin-left: calc(var(--w) / -2);
   grid-template-columns: minmax(0, 1fr); gap: 1.1rem;
   padding: clamp(1.75rem, 2.6vw, 2.5rem); border: 1px solid var(--line); border-radius: clamp(1.25rem, 2vw, 2rem);
   background: var(--panel); box-shadow: 0 40px 80px -40px rgb(0 0 0 / .9);
