@@ -95,10 +95,13 @@ function start() {
     }
 
     // ---------- Entradas genéricas ----------
+    // Se reproducen una vez con toggleActions, no con once: un disparador con
+    // once se borra solo y, si eso pasa mientras se crea otro (al recargar a
+    // media página), ScrollTrigger falla y el resto de animaciones no se monta
     gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
         gsap.from(el, {
             y: 40, opacity: 0, duration: 1.1, ease: 'expo.out',
-            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
         });
     });
 
@@ -106,7 +109,7 @@ function start() {
     gsap.utils.toArray<HTMLElement>('[data-split]').forEach((title) => {
         gsap.from(title.querySelectorAll('.line > *'), {
             yPercent: 110, duration: 1.2, ease: 'expo.out', stagger: 0.09,
-            scrollTrigger: { trigger: title, start: 'top 85%', once: true },
+            scrollTrigger: { trigger: title, start: 'top 85%', toggleActions: 'play none none none' },
         });
     });
 
@@ -185,7 +188,7 @@ function start() {
         });
     }
 
-    // El puesto que pasa por la mitad de la pantalla se enciende; a la
+    // El puesto que se está leyendo se enciende; a la
     // izquierda, su periodo sale por arriba y entra el nuevo por abajo
     const jobs = gsap.utils.toArray<HTMLElement>('[data-exp-item]');
     const yearEl = document.querySelector<HTMLElement>('[data-exp-year]');
@@ -201,6 +204,8 @@ function start() {
         if (!yearEl) return;
         swap?.kill();
         const parts = [yearEl, whereEl].filter(Boolean);
+        // Una transición cortada a medias no deja el texto oculto
+        gsap.set(parts, { clearProps: 'transform,opacity' });
         swap = gsap.timeline()
             .to(parts, { yPercent: -110, opacity: 0, duration: 0.28, ease: 'power2.in' })
             .add(() => {
@@ -209,10 +214,14 @@ function start() {
             })
             .fromTo(parts, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: 'expo.out', stagger: 0.06 });
     };
+    // Activo = el último puesto cuya parte de arriba ya pasó la línea del 45 %
+    // de la pantalla (el primero si aún no ha pasado ninguno). Así, al volver
+    // a subir, se recupera el anterior y nunca se queda uno viejo encendido
     jobs.forEach((job, i) => {
         ScrollTrigger.create({
-            trigger: job, start: 'top 60%', end: 'bottom 60%',
-            onToggle: (self) => { if (self.isActive) setJob(i); },
+            trigger: job, start: 'top 45%',
+            onEnter: () => setJob(i),
+            onLeaveBack: () => setJob(Math.max(i - 1, 0)),
         });
     });
 
@@ -225,7 +234,7 @@ function start() {
         });
     }
     gsap.utils.toArray<HTMLElement>('[data-skill-row]').forEach((row) => {
-        gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 85%', once: true } })
+        gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 85%', toggleActions: 'play none none none' } })
             .from(row.querySelector('.skill-rule'), { scaleX: 0, duration: 1.1, ease: 'expo.inOut' })
             .from(row.querySelector('.skill-num'), { opacity: 0, x: -12, duration: 0.5 }, 0.35)
             .from(row.querySelector('.skill-head h3 .mask > span'), { yPercent: 110, duration: 0.9, ease: 'expo.out' }, 0.4)

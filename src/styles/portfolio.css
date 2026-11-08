@@ -282,7 +282,7 @@ html { background: var(--bg); overflow-x: clip; }
 /* ---------- Experiencia: periodo fijo a la izquierda, puestos a la derecha ---------- */
 .exp { background: var(--bg); padding-block: clamp(5rem, 14vh, 10rem); border-top: 1px solid var(--line); }
 .exp-layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.6fr); gap: clamp(2rem, 5vw, 5rem); }
-.exp-sticky { position: sticky; top: 30vh; display: grid; gap: 1rem; }
+.exp-sticky { position: sticky; top: calc(45vh - 1.75rem); display: grid; gap: 1rem; }
 .exp-count { margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; color: var(--muted); font-variant-numeric: tabular-nums; }
 .exp-count span { color: var(--text); }
 .exp-year { margin: 0; overflow: hidden; padding-bottom: .08em; }
@@ -302,11 +302,11 @@ html { background: var(--bg); overflow-x: clip; }
 .motion .exp-item { opacity: .28; }
 .motion .exp-item.is-active { opacity: 1; }
 .exp-dot {
-  position: absolute; left: calc(-1 * clamp(1.75rem, 4vw, 3.5rem)); top: calc(clamp(2.5rem, 7vh, 4.5rem) + .55rem); translate: -50% 0;
+  position: absolute; left: calc(-1 * clamp(1.75rem, 4vw, 3.5rem)); top: calc(clamp(2.5rem, 7vh, 4.5rem) + clamp(.55rem, 1.45vw, 1.05rem)); translate: -50% 0;
   width: 11px; height: 11px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line-2);
   transition: background .4s, border-color .4s, box-shadow .4s;
 }
-.exp-item:first-of-type .exp-dot { top: .55rem; }
+.exp-item:first-of-type .exp-dot { top: clamp(.55rem, 1.45vw, 1.05rem); }
 .exp-item.is-active .exp-dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 6px rgb(122 149 255 / .18); }
 /* En escritorio el periodo y el sitio van en la columna fija; aquí solo en móvil */
 .exp-meta { display: none; gap: .5rem; align-content: start; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
@@ -436,6 +436,9 @@ html { background: var(--bg); overflow-x: clip; }
   .exp-layout { grid-template-columns: minmax(0, 1fr); }
   .exp-aside { display: none; }
   .exp-meta { display: grid; }
+  /* En móvil la primera línea es el periodo (mono pequeña): el punto va con ella */
+  .exp-dot { top: calc(clamp(2.5rem, 7vh, 4.5rem) + .2rem); }
+  .exp-item:first-of-type .exp-dot { top: .2rem; }
   .nav-links { display: none; }
   .hero-foot { grid-template-columns: minmax(0, 1fr); }
   .skill-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
