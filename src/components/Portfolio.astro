@@ -335,35 +335,26 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             <span class="line"><span>{t('exp.title')}</span></span>
                         </h2>
                     </header>
-                    <!-- A la izquierda, fijo, el periodo del puesto que se está leyendo;
-                         a la derecha, los puestos: el activo se enciende y los demás se apagan -->
-                    <div class="exp-layout">
-                        <div class="exp-aside" aria-hidden="true">
-                            <div class="exp-sticky">
-                                <p class="exp-count"><span data-exp-n>01</span> / {pad(jobs.length)}</p>
-                                <p class="exp-year"><span data-exp-year>{jobs[0].period}</span></p>
-                                <p class="exp-where" data-exp-where>{jobs[0].place}</p>
-                            </div>
-                        </div>
+                    <!-- Cada puesto: su periodo en grande a la izquierda, que pasa de
+                         contorno a relleno al llegar; la línea de tiempo se dibuja -->
                     <div class="exp-track">
-                    <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
-                    <ol class="exp-list">
-                        {jobs.map((job, i) => (
-                            <li class:list={['exp-item', i === 0 && 'is-active']} data-exp-item data-period={job.period} data-place={job.place}>
-                                <span class="exp-dot" aria-hidden="true"></span>
-                                <div class="exp-meta">
-                                    <span class="exp-period">{job.period}</span>
-                                    <span class="exp-place">{job.place}</span>
-                                </div>
-                                <div class="exp-main">
-                                    <h3>{job.role}</h3>
-                                    {job.desc && <p>{job.desc}</p>}
-                                    {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
-                                </div>
-                            </li>
-                        ))}
-                    </ol>
-                    </div>
+                        <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
+                        <ol class="exp-list">
+                            {jobs.map((job) => (
+                                <li class="exp-item" data-exp-item>
+                                    <span class="exp-dot" aria-hidden="true"></span>
+                                    <div class="exp-when">
+                                        <p class="exp-big"><span class="exp-o">{job.period}</span><span class="exp-f" aria-hidden="true">{job.period}</span></p>
+                                        <p class="exp-place">{job.place}</p>
+                                    </div>
+                                    <div class="exp-main">
+                                        <h3>{job.role}</h3>
+                                        {job.desc && <p>{job.desc}</p>}
+                                        {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
+                                    </div>
+                                </li>
+                            ))}
+                        </ol>
                     </div>
                 </div>
             </section>

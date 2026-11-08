@@ -188,40 +188,26 @@ function start() {
         });
     }
 
-    // El puesto que se está leyendo se enciende; a la
-    // izquierda, su periodo sale por arriba y entra el nuevo por abajo
-    const jobs = gsap.utils.toArray<HTMLElement>('[data-exp-item]');
-    const yearEl = document.querySelector<HTMLElement>('[data-exp-year]');
-    const nEl = document.querySelector<HTMLElement>('[data-exp-n]');
-    const whereEl = document.querySelector<HTMLElement>('[data-exp-where]');
-    let current = 0;
-    let swap: gsap.core.Timeline | null = null;
-    const setJob = (i: number) => {
-        if (i === current) return;
-        current = i;
-        jobs.forEach((job, k) => job.classList.toggle('is-active', k === i));
-        if (nEl) nEl.textContent = String(i + 1).padStart(2, '0');
-        if (!yearEl) return;
-        swap?.kill();
-        const parts = [yearEl, whereEl].filter(Boolean);
-        // Una transición cortada a medias no deja el texto oculto
-        gsap.set(parts, { clearProps: 'transform,opacity' });
-        swap = gsap.timeline()
-            .to(parts, { yPercent: -110, opacity: 0, duration: 0.28, ease: 'power2.in' })
-            .add(() => {
-                yearEl.textContent = jobs[i].dataset.period ?? '';
-                if (whereEl) whereEl.textContent = jobs[i].dataset.place ?? '';
-            })
-            .fromTo(parts, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: 'expo.out', stagger: 0.06 });
-    };
-    // Activo = el último puesto cuya parte de arriba ya pasó la línea del 45 %
-    // de la pantalla (el primero si aún no ha pasado ninguno). Así, al volver
-    // a subir, se recupera el anterior y nunca se queda uno viejo encendido
-    jobs.forEach((job, i) => {
+    // Cada puesto: su periodo pasa de contorno a relleno mientras entra, el
+    // punto de la línea se enciende al pasar el 55 % de la pantalla y el
+    // contenido sube. Todo va ligado a cada puesto, sin estado compartido
+    gsap.utils.toArray<HTMLElement>('[data-exp-item]').forEach((job) => {
+        const fill = job.querySelector('.exp-f');
+        if (fill) {
+            gsap.fromTo(fill, { clipPath: 'inset(0 100% 0 0)' }, {
+                clipPath: 'inset(0 0% 0 0)', ease: 'none',
+                scrollTrigger: { trigger: job, start: 'top 85%', end: 'top 40%', scrub: 0.4 },
+            });
+        }
+        // Encendido desde que pasa la línea; se apaga solo si vuelves a subir por encima
         ScrollTrigger.create({
-            trigger: job, start: 'top 45%',
-            onEnter: () => setJob(i),
-            onLeaveBack: () => setJob(Math.max(i - 1, 0)),
+            trigger: job, start: 'top 55%',
+            onEnter: () => job.classList.add('is-on'),
+            onLeaveBack: () => job.classList.remove('is-on'),
+        });
+        gsap.from(job.querySelectorAll('.exp-place, .exp-main > *'), {
+            opacity: 0, y: 24, duration: 0.9, ease: 'expo.out', stagger: 0.07,
+            scrollTrigger: { trigger: job, start: 'top 80%', toggleActions: 'play none none none' },
         });
     });
 
