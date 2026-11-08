@@ -20,8 +20,8 @@ const languages = {
     'btn.explore': 'Explorar',
 
     // Pilares Técnicos
-    'stack.tagline.1': 'Ingeniería y',
-    'stack.tagline.2': 'automatización inteligente.',
+    'stack.tagline.1': 'Con lo que',
+    'stack.tagline.2': 'construyo mis proyectos.',
     'tech.backend': 'Lógica de servidor y bases de datos bien estructuradas: PHP con MVC en producción, Laravel, Node.js con TypeScript para funciones serverless e integraciones, y Java y Python cuando el proyecto lo pide.',
     'tech.frontend': 'Interfaces fieles al diseño, responsivas y rápidas: de un prototipo estático a una experiencia fluida, con Astro, React, Tailwind CSS, GSAP y 3D en Three.js.',
     'tech.automation': 'Conecto modelos de IA con procesos reales: workflows en n8n, APIs de OpenAI, Claude y Gemini, y APIs de terceros como Shopify, Telegram o Google Places, con JSON como puente.',
@@ -67,7 +67,6 @@ const languages = {
     // Nuevos (portada, stack, contacto, pie)
     'hero.remote': 'Disponible en remoto',
     'hero.bilingual': 'Bilingüe ES / EN',
-    'hero.side': 'Lógica • Diseño • Inteligencia • 2026',
     'stack.backend': 'Backend',
     'stack.backend.text': 'PHP con MVC en producción, Laravel y Node.js con TypeScript para funciones serverless e integraciones.',
     'stack.frontend': 'Frontend',
@@ -105,8 +104,8 @@ const languages = {
     'btn.explore': 'Explore',
 
     // Pilares Técnicos
-    'stack.tagline.1': 'Engineering meets',
-    'stack.tagline.2': 'intelligent automation.',
+    'stack.tagline.1': 'What I build',
+    'stack.tagline.2': 'my projects with.',
     'tech.backend': 'Well-structured server logic and databases: PHP with MVC in production, Laravel, Node.js with TypeScript for serverless functions and integrations, and Java and Python when the project calls for it.',
     'tech.frontend': 'Interfaces true to the design, responsive and fast: from a static prototype to a fluid experience, with Astro, React, Tailwind CSS, GSAP and 3D in Three.js.',
     'tech.automation': 'I connect AI models with real processes: n8n workflows, OpenAI, Claude and Gemini APIs, and third-party APIs such as Shopify, Telegram or Google Places, with JSON as the bridge.',
@@ -152,7 +151,6 @@ const languages = {
     // New (hero, stack, contact, footer)
     'hero.remote': 'Remote ready',
     'hero.bilingual': 'Bilingual ES / EN',
-    'hero.side': 'Logic • Design • Intelligence • 2026',
     'stack.backend': 'Backend',
     'stack.backend.text': 'PHP with MVC in production, Laravel and Node.js with TypeScript for serverless functions and integrations.',
     'stack.frontend': 'Frontend',

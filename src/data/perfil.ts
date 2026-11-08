@@ -321,6 +321,13 @@ export const skills: { id: SkillGroup; label: Text; items: string[] }[] = [
 	{ id: 'tools', label: { es: 'Herramientas', en: 'Tools' }, items: ['Git', 'GitHub', 'GitHub Actions', 'Docker', 'Vercel', 'Postman'] },
 ];
 
+/**
+ * Van en el CV (palabras clave para los ATS) pero no en el Stack de la web:
+ * lo obvio (HTML, JSON, REST…) o lo que ningún proyecto respalda, para que la
+ * web enseñe solo lo que se ve en Mis trabajos
+ */
+export const cvOnly = ['JSON', 'REST', 'Python', 'Vite', 'HTML', 'CSS/Sass', 'GitHub', 'Postman'];
+
 /** Lo que estoy aprendiendo: sale en el portfolio (New horizons), no en el CV */
 export const learning = ['Next.js', 'Supabase'];
 

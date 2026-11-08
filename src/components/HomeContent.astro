@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import { useTranslations } from '../utils/i18n';
 import { Image } from 'astro:assets';
-import { persona, projects, experience, skills, learning, pick } from '../data/perfil';
+import { persona, projects, experience, skills, cvOnly, learning, pick } from '../data/perfil';
 import { techIcon } from '../data/iconos';
 
 const title = "Félix Corcoran | Full Stack & AI Automation";
@@ -17,7 +17,7 @@ const canonical = lang === 'en' ? urlEn : urlEs;
 
 // Stack, Experiencia y Mis trabajos salen de src/data/perfil.ts, lo mismo que
 // el currículum: se actualiza allí y cambian las dos cosas
-const group = (id) => skills.find((s) => s.id === id)?.items ?? [];
+const group = (id) => (skills.find((s) => s.id === id)?.items ?? []).filter((item) => !cvOnly.includes(item));
 const aiTools = [...group('ai'), ...group('integrations')];
 
 const jobs = experience.map((job) => ({
@@ -62,7 +62,7 @@ const wideCards = cards.filter((c) => c.wide);
 const clientCards = cards.filter((c) => c.client);
 
 // Stack en una pantalla: cuatro grupos (de perfil.ts) con su frase y sus iconos,
-// en filas de cinco. Sin icono propio (REST), la casilla lleva las siglas
+// en filas de cinco (sin lo de cvOnly). Sin icono propio, la casilla lleva las siglas
 const tech = (name) => ({ name, icon: techIcon[name] });
 const stackGroups = [
     { label: t('stack.backend'), text: t('stack.backend.text'), items: group('backend').map(tech), mobile: 3 },
@@ -71,8 +71,8 @@ const stackGroups = [
     { label: t('stack.tools'), text: t('stack.tools.text'), items: group('tools').map(tech), alignEnd: true, mobile: 4 },
 ];
 // En móvil (rejilla de 2×2, filas de cuatro iconos) el orden es otro (mobile):
-// arriba los dos grupos con tres filas, IA y Frontend; abajo Backend y
-// Herramientas, con dos. Cada fila de la rejilla mide lo que su grupo más alto
+// arriba IA y Frontend, con dos filas; abajo Backend (dos) y Herramientas
+// (una). Cada fila de la rejilla mide lo que su grupo más alto
 // Columna de cada casilla en la fila de cinco. Con alignEnd, la última fila
 // incompleta empieza por la derecha (Herramientas, en espejo con Backend)
 const col = (g, j) => {
@@ -153,12 +153,6 @@ const gallery = [
                     <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/15 blur-[120px] animate-pulse"></div>
                     <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-600/15 blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30%] h-[30%] rounded-full bg-blue-400/5 blur-[100px]"></div>
-                    
-                    <div class="absolute left-10 top-1/2 -translate-y-1/2 hidden lg:block">
-                        <span class="text-[10px] font-mono uppercase tracking-[1em] text-neutral-800 [writing-mode:vertical-lr]">
-                            {t('hero.side')}
-                        </span>
-                    </div>
                 </div>
 
                 <div class="max-w-7xl w-full">
