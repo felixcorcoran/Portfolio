@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
+import { createGlobe } from './globe';
 
 const root = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -272,20 +273,23 @@ function start() {
         const orbitEl = document.querySelector<HTMLElement>('.orbit');
         const prog = document.querySelector<SVGCircleElement>('[data-orbit-prog]');
         const nodes = gsap.utils.toArray<HTMLElement>('[data-orbit-node]');
-        const groups = gsap.utils.toArray<HTMLElement>('[data-orbit-group]');
+        const globeCanvas = document.querySelector<HTMLCanvasElement>('[data-globe]');
         const rows = gsap.utils.toArray<HTMLElement>('[data-skill-row]');
-        if (!section || !orbitEl || !prog || !groups.length) return;
+        if (!section || !orbitEl || !prog || !rows.length) return;
         section.classList.add('is-ring');
-        const n = groups.length;
+        const n = rows.length;
+        const globe = globeCanvas ? createGlobe(globeCanvas) : null;
+        if (import.meta.env.DEV) Object.assign(window, { __globe: globe });
         // Todo sale del progreso: la línea, el punto que viaja, los puntos
-        // encendidos y el grupo activo (el último cuyo punto ya se alcanzó)
+        // encendidos y el grupo activo (el último cuyo punto ya se alcanzó),
+        // que se ilumina en la lista y en la esfera
         const place = (p: number) => {
             const k = clamp01((p - 0.04) / 0.92);
             prog.style.strokeDashoffset = String(1 - k);
             orbitEl.style.setProperty('--a', `${k * 360}deg`);
             const active = Math.min(n - 1, Math.floor(k * n + 0.0001));
             nodes.forEach((node, i) => node.classList.toggle('is-lit', k >= i / n - 0.0001));
-            groups.forEach((g, i) => g.classList.toggle('is-on', i === active));
+            globe?.setActive(active);
             rows.forEach((r, i) => r.classList.toggle('is-on', i === active));
         };
         const proxy = { p: 0 };
@@ -296,6 +300,7 @@ function start() {
         });
         return () => {
             section.classList.remove('is-ring');
+            globe?.destroy();
             prog.style.strokeDashoffset = '';
             orbitEl.style.removeProperty('--a');
         };

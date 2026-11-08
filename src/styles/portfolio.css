@@ -387,7 +387,8 @@ html { background: var(--bg); overflow-x: clip; }
 
 /* ---------- Stack en círculo (escritorio, con movimiento) ----------
    El script pone .is-ring: la línea recorre el círculo con el scroll, cada
-   punto se enciende y en el centro salen los iconos del grupo activo */
+   punto se enciende y, en la esfera de dentro (globe.ts), se iluminan las
+   tecnologías del grupo activo */
 .orbit { display: none; }
 .skills.is-ring { padding-bottom: clamp(3rem, 8vh, 5rem); }
 .skills.is-ring .skills-scroller { height: 300vh; }
@@ -418,18 +419,9 @@ html { background: var(--bg); overflow-x: clip; }
 }
 .orbit-node.is-lit { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 6px rgb(122 149 255 / .18); }
 .orbit-dot { --rot: var(--a, 0deg); width: 24px; height: 24px; margin: -12px; border: 1.5px solid var(--accent); background: rgb(10 10 11 / .7); }
-.orbit-center { position: absolute; inset: 16%; }
-.orbit-group {
-  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1.1rem;
-  opacity: 0; transform: scale(.9); transition: opacity .45s var(--ease), transform .7s var(--ease);
-}
-.orbit-group.is-on { opacity: 1; transform: none; }
-.orbit-num { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; color: var(--accent); }
-.orbit-icons { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; max-width: calc(var(--size) * .56); }
-.orbit-icons li { width: 2.9rem; height: 2.9rem; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); }
-.orbit-icons svg { width: 1.3rem; height: 1.3rem; fill: var(--c); }
-.orbit-icons b { font-family: var(--mono); font-size: 9px; color: var(--c); }
-
+.orbit-center { position: absolute; inset: 6%; }
+.orbit-globe { display: block; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
+.orbit-globe.is-drag { cursor: grabbing; }
 /* ---------- Contacto ---------- */
 .contact { background: var(--bg); padding-top: var(--contact-gap); }
 .contact-panel {

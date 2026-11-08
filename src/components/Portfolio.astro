@@ -96,6 +96,8 @@ const stackGroups = [
     { label: t('stack.tools'), text: t('stack.tools.text'), items: group('tools').map(tech) },
 ];
 const learningIcons = learning.map(tech);
+// La esfera del Stack: cada tecnología con su icono, su color y su grupo
+const globeItems = stackGroups.flatMap((g, gi) => g.items.map((it) => ({ n: it.name, p: it.icon?.path ?? '', c: it.icon?.color ?? '#9fb4ff', g: gi })));
 
 // El texto del enfoque, palabra a palabra (se ilumina con el scroll)
 const focusWords = t('focus.text').split(' ');
@@ -368,9 +370,10 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
             </section>
 
             <!-- ================= STACK =================
-                 En escritorio, un círculo con los cuatro grupos: al bajar, la línea
-                 recorre el círculo, cada punto se enciende y en el centro aparecen los
-                 iconos del grupo activo. En móvil (o sin animación), cuatro filas -->
+                 En escritorio, un círculo con los cuatro grupos y, dentro, una esfera
+                 con todas las tecnologías: al bajar, la línea recorre el círculo, cada
+                 punto se enciende y en la esfera se iluminan las del grupo activo. En
+                 móvil (o sin animación), cuatro filas -->
             <section class="skills" id="stack" aria-labelledby="stack-title">
                 <div class="wrap">
                     <header class="sec-head">
@@ -387,19 +390,10 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                 <svg viewBox="0 0 100 100"><circle class="orbit-base" cx="50" cy="50" r="46" /><circle class="orbit-prog" cx="50" cy="50" r="46" pathLength="1" data-orbit-prog /></svg>
                                 {stackGroups.map((_, i) => <span class="orbit-node" style={`--i: ${i}`} data-orbit-node></span>)}
                                 <span class="orbit-dot" data-orbit-dot></span>
+                                <!-- Esfera con todas las tecnologías (src/scripts/globe.ts): se
+                                     encienden las del grupo activo; se puede arrastrar -->
                                 <div class="orbit-center">
-                                    {stackGroups.map((g, i) => (
-                                        <div class:list={['orbit-group', i === 0 && 'is-on']} data-orbit-group>
-                                            <span class="orbit-num">{pad(i + 1)}</span>
-                                            <ul class="orbit-icons">
-                                                {g.items.map((item) => (
-                                                    <li style={`--c: ${item.icon?.color ?? '#9fb4ff'}`} title={item.name}>
-                                                        {item.icon ? <svg viewBox="0 0 24 24"><path d={item.icon.path} /></svg> : <b>{item.name.slice(0, 3)}</b>}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    ))}
+                                    <canvas class="orbit-globe" data-globe data-items={JSON.stringify(globeItems)}></canvas>
                                 </div>
                             </div>
                             <div class="skill-rows">
