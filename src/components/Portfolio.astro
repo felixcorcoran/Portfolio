@@ -98,7 +98,7 @@ const stackGroups = [
 const learningIcons = learning.map(tech);
 
 // El texto del enfoque, palabra a palabra (se ilumina con el scroll)
-const focusWords = persona.summary[lang].split(' ');
+const focusWords = t('focus.text').split(' ');
 const pad = (n) => String(n).padStart(2, '0');
 const links = [
     { label: 'LinkedIn', href: persona.links.linkedin },

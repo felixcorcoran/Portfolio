@@ -163,7 +163,7 @@ html { background: var(--bg); overflow-x: clip; }
 .motion:not(.motion-ready) [data-intro] { opacity: 0; }
 
 /* ---------- Enfoque ---------- */
-.focus { position: relative; height: 260vh; }
+.focus { position: relative; height: 170vh; }
 .focus-sticky {
   position: sticky; top: 0; height: 100svh; display: flex; align-items: center;
   transform-origin: center top;
