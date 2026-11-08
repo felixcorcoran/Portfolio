@@ -325,6 +325,8 @@ html { background: var(--bg); overflow-x: clip; }
   padding-block: clamp(8rem, 24vh, 14rem) clamp(3rem, 6vh, 4.5rem);
   min-height: 100svh; display: flex; align-items: center;
   transform-origin: center top; will-change: transform;
+  /* Abajo, siempre redondeado: el pie asoma por debajo de una curva */
+  border-radius: 0 0 clamp(2rem, 4vw, 3.5rem) clamp(2rem, 4vw, 3.5rem);
 }
 .contact-panel .label { color: rgb(10 10 11 / .6); }
 .contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem clamp(3rem, 7vw, 7rem); align-items: start; }
@@ -357,7 +359,7 @@ html { background: var(--bg); overflow-x: clip; }
   --name: clamp(1.6rem, 7.8vw, 9.5rem);
   --top: clamp(5rem, 14vh, 9rem);
   position: relative; overflow: hidden; isolation: isolate;
-  background: var(--bg); padding-top: var(--top); min-height: min(90svh, 46rem);
+  background: var(--bg); padding-top: var(--top); min-height: 100svh;
   display: flex; flex-direction: column; align-items: center; text-align: center;
 }
 /* Resplandor detrás del nombre, donde el arco toca */

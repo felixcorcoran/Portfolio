@@ -192,9 +192,10 @@ function start() {
             // Empieza como una tarjeta pequeña y llena la pantalla justo cuando
             // el panel llega arriba (el titular ya está centrado)
             // (se escala entero, así el texto nunca queda cortado)
-            { scale: 0.62, borderRadius: '3rem' },
+            // Arriba pierde el redondeo al llenar la pantalla; abajo lo mantiene
+            { scale: 0.62, borderRadius: '3rem 3rem 3rem 3rem' },
             {
-                scale: 1, borderRadius: '0rem', ease: 'none',
+                scale: 1, borderRadius: '0rem 0rem 3rem 3rem', ease: 'none',
                 scrollTrigger: { trigger: '.contact-panel', start: 'top bottom', end: 'top top', scrub: true },
             });
     }
