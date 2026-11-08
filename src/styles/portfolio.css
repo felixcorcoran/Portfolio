@@ -353,6 +353,83 @@ html { background: var(--bg); overflow-x: clip; }
 .learning-item { display: inline-flex; align-items: center; gap: .5rem; font-size: .95rem; }
 .learning-item svg { width: 1.1rem; height: 1.1rem; fill: var(--c); }
 
+/* ---------- Punto azul al final de los titulares ---------- */
+.dot-end { font-style: normal; color: var(--accent); -webkit-text-stroke: 0; }
+
+/* ---------- Experiencia en rueda (escritorio, con movimiento) ----------
+   El script pone .is-wheel: las tarjetas giran alrededor de un centro muy
+   por debajo de la pantalla y cada una pasa recta por arriba */
+.exp-count { display: none; }
+.exp.is-wheel { padding-bottom: 0; }
+.exp.is-wheel .exp-scroller { height: 260vh; }
+.exp.is-wheel .exp-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.exp.is-wheel .exp-track { width: 100%; max-width: none; height: 100%; padding: 0; margin: 0; }
+.exp.is-wheel .exp-line, .exp.is-wheel .exp-dot { display: none; }
+.exp.is-wheel .exp-list { position: relative; height: 100%; }
+.exp.is-wheel .exp-item,
+.exp.is-wheel .exp-item:first-of-type {
+  --w: min(40rem, 46vw);
+  position: absolute; left: 50%; top: calc(var(--nav-h) + clamp(2rem, 7vh, 4rem)); width: var(--w); margin-left: calc(var(--w) / -2);
+  grid-template-columns: minmax(0, 1fr); gap: 1.1rem;
+  padding: clamp(1.75rem, 2.6vw, 2.5rem); border: 1px solid var(--line); border-radius: clamp(1.25rem, 2vw, 2rem);
+  background: var(--panel); box-shadow: 0 40px 80px -40px rgb(0 0 0 / .9);
+  transform-origin: 50% 1500px; will-change: transform, opacity;
+}
+.exp.is-wheel .exp-f { clip-path: none; }
+.exp.is-wheel .exp-big { font-size: clamp(2rem, 3vw, 3.2rem); }
+.exp.is-wheel .exp-main p { font-size: 1rem; margin-bottom: 1rem; }
+.exp.is-wheel .exp-count {
+  /* A la izquierda, a media altura: no choca con tarjetas altas */
+  display: block; position: absolute; left: var(--gutter); top: 50%; translate: 0 -50%; margin: 0;
+  font-family: var(--mono); font-size: 13px; letter-spacing: .14em; color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.exp.is-wheel .exp-count span { color: var(--text); }
+
+/* ---------- Stack en círculo (escritorio, con movimiento) ----------
+   El script pone .is-ring: la línea recorre el círculo con el scroll, cada
+   punto se enciende y en el centro salen los iconos del grupo activo */
+.orbit { display: none; }
+.skills.is-ring { padding-bottom: clamp(3rem, 8vh, 5rem); }
+.skills.is-ring .skills-scroller { height: 300vh; }
+.skills.is-ring .skills-stage { position: sticky; top: 0; height: 100svh; display: flex; align-items: center; }
+.skills.is-ring .skills-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+.skills.is-ring .skill-rows { border: 0; }
+.skills.is-ring .skill-row {
+  grid-template-columns: 3rem minmax(0, 1fr); padding-block: clamp(.9rem, 2.4vh, 1.5rem);
+  border-top: 1px solid var(--line); opacity: .28; transition: opacity .5s var(--ease);
+}
+.skills.is-ring .skill-row:last-child { border-bottom: 1px solid var(--line); }
+.skills.is-ring .skill-row.is-on { opacity: 1; }
+.skills.is-ring .skill-row.is-on .skill-head h3 { color: var(--text); }
+.skills.is-ring .skill-rule, .skills.is-ring .skill-icons { display: none; }
+.skills.is-ring .orbit { display: block; }
+
+.orbit { --size: min(34vw, 30rem, 68svh); position: relative; width: var(--size); aspect-ratio: 1; justify-self: center; }
+.orbit > svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.orbit-base { fill: none; stroke: var(--line-2); stroke-width: .35; }
+.orbit-prog { fill: none; stroke: var(--accent); stroke-width: .7; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.orbit-node, .orbit-dot {
+  position: absolute; left: 50%; top: 50%; border-radius: 50%;
+  transform: rotate(var(--rot)) translateY(calc(var(--size) * -.46));
+}
+.orbit-node {
+  --rot: calc(var(--i) * 90deg); width: 14px; height: 14px; margin: -7px;
+  background: var(--bg); border: 1.5px solid var(--line-2); transition: background .4s, border-color .4s, box-shadow .4s;
+}
+.orbit-node.is-lit { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 6px rgb(122 149 255 / .18); }
+.orbit-dot { --rot: var(--a, 0deg); width: 24px; height: 24px; margin: -12px; border: 1.5px solid var(--accent); background: rgb(10 10 11 / .7); }
+.orbit-center { position: absolute; inset: 16%; }
+.orbit-group {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1.1rem;
+  opacity: 0; transform: scale(.9); transition: opacity .45s var(--ease), transform .7s var(--ease);
+}
+.orbit-group.is-on { opacity: 1; transform: none; }
+.orbit-num { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; color: var(--accent); }
+.orbit-icons { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; max-width: calc(var(--size) * .56); }
+.orbit-icons li { width: 2.9rem; height: 2.9rem; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); }
+.orbit-icons svg { width: 1.3rem; height: 1.3rem; fill: var(--c); }
+.orbit-icons b { font-family: var(--mono); font-size: 9px; color: var(--c); }
+
 /* ---------- Contacto ---------- */
 .contact { background: var(--bg); padding-top: var(--contact-gap); }
 .contact-panel {

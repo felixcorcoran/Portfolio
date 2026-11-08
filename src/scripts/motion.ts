@@ -179,36 +179,72 @@ function start() {
         });
     });
 
-    // ---------- Experiencia: la línea se dibuja con el scroll ----------
-    const progress = document.querySelector('[data-exp-progress]');
-    if (progress) {
-        gsap.fromTo(progress, { scaleY: 0 }, {
-            scaleY: 1, ease: 'none',
-            scrollTrigger: { trigger: '.exp-list', start: 'top 60%', end: 'bottom 60%', scrub: true },
-        });
-    }
+    // ---------- Experiencia ----------
+    // Escritorio con altura suficiente: rueda de tarjetas. Si no: línea de tiempo
+    const big = '(min-width: 1001px) and (min-height: 601px)';
+    const smallOrShort = '(max-width: 1000px), (max-height: 600px)';
+    const pad2 = (n: number) => String(n).padStart(2, '0');
+    const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
 
-    // Cada puesto: su periodo pasa de contorno a relleno mientras entra, el
-    // punto de la línea se enciende al pasar el 55 % de la pantalla y el
-    // contenido sube. Todo va ligado a cada puesto, sin estado compartido
-    gsap.utils.toArray<HTMLElement>('[data-exp-item]').forEach((job) => {
-        const fill = job.querySelector('.exp-f');
-        if (fill) {
-            gsap.fromTo(fill, { clipPath: 'inset(0 100% 0 0)' }, {
-                clipPath: 'inset(0 0% 0 0)', ease: 'none',
-                scrollTrigger: { trigger: job, start: 'top 85%', end: 'top 40%', scrub: 0.4 },
+    mm.add(smallOrShort, () => {
+        // La línea se dibuja con el scroll
+        const progress = document.querySelector('[data-exp-progress]');
+        if (progress) {
+            gsap.fromTo(progress, { scaleY: 0 }, {
+                scaleY: 1, ease: 'none',
+                scrollTrigger: { trigger: '.exp-list', start: 'top 60%', end: 'bottom 60%', scrub: true },
             });
         }
-        // Encendido desde que pasa la línea; se apaga solo si vuelves a subir por encima
-        ScrollTrigger.create({
-            trigger: job, start: 'top 55%',
-            onEnter: () => job.classList.add('is-on'),
-            onLeaveBack: () => job.classList.remove('is-on'),
+        // Cada puesto: el periodo pasa de contorno a relleno, el punto se
+        // enciende al pasar el 55 % y el contenido sube
+        gsap.utils.toArray<HTMLElement>('[data-exp-item]').forEach((job) => {
+            const fill = job.querySelector('.exp-f');
+            if (fill) {
+                gsap.fromTo(fill, { clipPath: 'inset(0 100% 0 0)' }, {
+                    clipPath: 'inset(0 0% 0 0)', ease: 'none',
+                    scrollTrigger: { trigger: job, start: 'top 85%', end: 'top 40%', scrub: 0.4 },
+                });
+            }
+            ScrollTrigger.create({
+                trigger: job, start: 'top 55%',
+                onEnter: () => job.classList.add('is-on'),
+                onLeaveBack: () => job.classList.remove('is-on'),
+            });
+            gsap.from(job.querySelectorAll('.exp-place, .exp-main > *'), {
+                opacity: 0, y: 24, duration: 0.9, ease: 'expo.out', stagger: 0.07,
+                scrollTrigger: { trigger: job, start: 'top 80%', toggleActions: 'play none none none' },
+            });
         });
-        gsap.from(job.querySelectorAll('.exp-place, .exp-main > *'), {
-            opacity: 0, y: 24, duration: 0.9, ease: 'expo.out', stagger: 0.07,
-            scrollTrigger: { trigger: job, start: 'top 80%', toggleActions: 'play none none none' },
+        return () => document.querySelectorAll('[data-exp-item]').forEach((job) => job.classList.remove('is-on'));
+    });
+
+    mm.add(big, () => {
+        const section = document.querySelector<HTMLElement>('.exp');
+        const cards = gsap.utils.toArray<HTMLElement>('[data-exp-item]');
+        const counter = document.querySelector<HTMLElement>('[data-exp-n]');
+        if (!section || cards.length < 2) return;
+        section.classList.add('is-wheel');
+        const step = 24;
+        // La posición de la rueda sale solo del progreso del scroll: sin estado
+        const place = (p: number) => {
+            const pos = clamp01((p - 0.06) / 0.88) * (cards.length - 1);
+            cards.forEach((card, i) => {
+                const d = i - pos;
+                const far = Math.abs(d);
+                gsap.set(card, { zIndex: 10 - Math.round(far * 2), rotation: d * step, opacity: far <= 1 ? 1 - far * 0.55 : Math.max(0, 0.45 - (far - 1) * 0.9) });
+            });
+            if (counter) counter.textContent = pad2(Math.round(pos) + 1);
+        };
+        const proxy = { p: 0 };
+        place(0);
+        gsap.to(proxy, {
+            p: 1, ease: 'none', onUpdate: () => place(proxy.p),
+            scrollTrigger: { trigger: '.exp-scroller', start: 'top top', end: 'bottom bottom', scrub: 0.6 },
         });
+        return () => {
+            section.classList.remove('is-wheel');
+            gsap.set(cards, { clearProps: 'transform,opacity' });
+        };
     });
 
     // ---------- Stack: el titular se rellena y cada fila se monta ----------
@@ -230,6 +266,41 @@ function start() {
             }, 0.6);
     });
 
+    // ---------- Stack en círculo (escritorio con altura suficiente) ----------
+    mm.add(big, () => {
+        const section = document.querySelector<HTMLElement>('.skills');
+        const orbitEl = document.querySelector<HTMLElement>('.orbit');
+        const prog = document.querySelector<SVGCircleElement>('[data-orbit-prog]');
+        const nodes = gsap.utils.toArray<HTMLElement>('[data-orbit-node]');
+        const groups = gsap.utils.toArray<HTMLElement>('[data-orbit-group]');
+        const rows = gsap.utils.toArray<HTMLElement>('[data-skill-row]');
+        if (!section || !orbitEl || !prog || !groups.length) return;
+        section.classList.add('is-ring');
+        const n = groups.length;
+        // Todo sale del progreso: la línea, el punto que viaja, los puntos
+        // encendidos y el grupo activo (el último cuyo punto ya se alcanzó)
+        const place = (p: number) => {
+            const k = clamp01((p - 0.04) / 0.92);
+            prog.style.strokeDashoffset = String(1 - k);
+            orbitEl.style.setProperty('--a', `${k * 360}deg`);
+            const active = Math.min(n - 1, Math.floor(k * n + 0.0001));
+            nodes.forEach((node, i) => node.classList.toggle('is-lit', k >= i / n - 0.0001));
+            groups.forEach((g, i) => g.classList.toggle('is-on', i === active));
+            rows.forEach((r, i) => r.classList.toggle('is-on', i === active));
+        };
+        const proxy = { p: 0 };
+        place(0);
+        gsap.to(proxy, {
+            p: 1, ease: 'none', onUpdate: () => place(proxy.p),
+            scrollTrigger: { trigger: '.skills-scroller', start: 'top top', end: 'bottom bottom', scrub: 0.5 },
+        });
+        return () => {
+            section.classList.remove('is-ring');
+            prog.style.strokeDashoffset = '';
+            orbitEl.style.removeProperty('--a');
+        };
+    });
+
     // ---------- Contacto: el panel crece desde una tarjeta pequeña ----------
     const panel = document.querySelector('[data-contact-panel]');
     if (panel) {
@@ -243,6 +314,14 @@ function start() {
                 scrollTrigger: { trigger: '.contact-panel', start: 'top bottom', end: 'center center', scrub: true },
             });
     }
+
+    // Los disparadores se crean en otro orden que el de la página (los del
+    // menú y las entradas, antes que la galería fijada): ScrollTrigger los
+    // calcula en orden de creación y los de debajo de la galería no contarían
+    // su espacio. sort() los pone en el orden de la página y refresh() los
+    // recalcula, también tras montar la rueda y el círculo
+    ScrollTrigger.sort();
+    ScrollTrigger.refresh();
 
     // Las alturas cambian al cargar fuentes e imágenes: recalcula
     document.fonts?.ready.then(() => ScrollTrigger.refresh());

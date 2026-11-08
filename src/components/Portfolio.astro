@@ -297,7 +297,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                         <div>
                             <p class="label">{t('projects.freelance.label')}</p>
                             <h2 class="sec-title sm" id="gallery-title" data-split>
-                                <span class="line"><span>{t('projects.freelance.title')}</span></span>
+                                <span class="line"><span>{t('projects.freelance.title')}<i class="dot-end">.</i></span></span>
                             </h2>
                         </div>
                         <p class="gallery-sub">{t('projects.freelance.sub')}<span class="gallery-hint"> · {t('gallery.hint')}</span></p>
@@ -328,73 +328,108 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                 </div>
             </section>
 
-            <!-- ================= EXPERIENCIA ================= -->
+            <!-- ================= EXPERIENCIA =================
+                 En escritorio, una rueda: los puestos son tarjetas sobre un arco que
+                 gira con el scroll y cada una pasa por arriba, recta. En móvil (o sin
+                 animación), la línea de tiempo de siempre. Mismo marcado para las dos -->
             <section class="exp" id="experiencia" aria-labelledby="exp-title">
                 <div class="wrap">
                     <header class="sec-head">
                         <p class="label">{t('exp.label')}</p>
                         <h2 class="sec-title" id="exp-title" data-split>
-                            <span class="line"><span>{t('exp.title')}</span></span>
+                            <span class="line"><span>{t('exp.title')}<i class="dot-end">.</i></span></span>
                         </h2>
                     </header>
-                    <!-- Cada puesto: su periodo en grande a la izquierda, que pasa de
-                         contorno a relleno al llegar; la línea de tiempo se dibuja -->
-                    <div class="exp-track">
-                        <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
-                        <ol class="exp-list">
-                            {jobs.map((job) => (
-                                <li class="exp-item" data-exp-item>
-                                    <span class="exp-dot" aria-hidden="true"></span>
-                                    <div class="exp-when">
-                                        <p class="exp-big"><span class="exp-o">{job.period}</span><span class="exp-f" aria-hidden="true">{job.period}</span></p>
-                                        <p class="exp-place">{job.place}</p>
-                                    </div>
-                                    <div class="exp-main">
-                                        <h3>{job.role}</h3>
-                                        {job.desc && <p>{job.desc}</p>}
-                                        {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
-                                    </div>
-                                </li>
-                            ))}
-                        </ol>
+                </div>
+                <div class="exp-scroller">
+                    <div class="exp-stage">
+                        <p class="exp-count" aria-hidden="true"><span data-exp-n>01</span> / {pad(jobs.length)}</p>
+                        <div class="wrap exp-track">
+                            <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
+                            <ol class="exp-list">
+                                {jobs.map((job) => (
+                                    <li class="exp-item" data-exp-item>
+                                        <span class="exp-dot" aria-hidden="true"></span>
+                                        <div class="exp-when">
+                                            <p class="exp-big"><span class="exp-o">{job.period}</span><span class="exp-f" aria-hidden="true">{job.period}</span></p>
+                                            <p class="exp-place">{job.place}</p>
+                                        </div>
+                                        <div class="exp-main">
+                                            <h3>{job.role}</h3>
+                                            {job.desc && <p>{job.desc}</p>}
+                                            {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
+                                        </div>
+                                    </li>
+                                ))}
+                            </ol>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ================= STACK: el titular se rellena con el scroll y cada
-                 fila se monta al llegar (línea, nombre, texto e iconos) ================= -->
+            <!-- ================= STACK =================
+                 En escritorio, un círculo con los cuatro grupos: al bajar, la línea
+                 recorre el círculo, cada punto se enciende y en el centro aparecen los
+                 iconos del grupo activo. En móvil (o sin animación), cuatro filas -->
             <section class="skills" id="stack" aria-labelledby="stack-title">
                 <div class="wrap">
                     <header class="sec-head">
                         <p class="label">{t('stack.tagline.1')} {t('stack.tagline.2')}</p>
                         <h2 class="sec-title stack-title" id="stack-title" data-split>
-                            <span class="line"><span class="fillable">Stack<span class="fill" aria-hidden="true" data-stack-fill>Stack</span></span></span>
+                            <span class="line"><span><span class="fillable">Stack<span class="fill" aria-hidden="true" data-stack-fill>Stack</span></span><i class="dot-end">.</i></span></span>
                         </h2>
                     </header>
-                    <div class="skill-rows">
-                        {stackGroups.map((g, i) => (
-                            <article class="skill-row" data-skill-row>
-                                <span class="skill-rule" aria-hidden="true"></span>
-                                <span class="skill-num">{pad(i + 1)}</span>
-                                <div class="skill-head">
-                                    <h3><span class="mask"><span>{g.label}</span></span></h3>
-                                    <p>{g.text}</p>
-                                </div>
-                                <ul class="skill-icons">
-                                    {g.items.map((item) => (
-                                        <li style={`--c: ${item.icon?.color ?? '#9fb4ff'}`} title={item.name}>
-                                            {item.icon ? (
-                                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon.path} /></svg>
-                                            ) : (
-                                                <b aria-hidden="true">{item.name.slice(0, 3)}</b>
-                                            )}
-                                            <span>{item.name}</span>
-                                        </li>
+                </div>
+                <div class="skills-scroller">
+                    <div class="skills-stage">
+                        <div class="wrap skills-layout">
+                            <div class="orbit" aria-hidden="true">
+                                <svg viewBox="0 0 100 100"><circle class="orbit-base" cx="50" cy="50" r="46" /><circle class="orbit-prog" cx="50" cy="50" r="46" pathLength="1" data-orbit-prog /></svg>
+                                {stackGroups.map((_, i) => <span class="orbit-node" style={`--i: ${i}`} data-orbit-node></span>)}
+                                <span class="orbit-dot" data-orbit-dot></span>
+                                <div class="orbit-center">
+                                    {stackGroups.map((g, i) => (
+                                        <div class:list={['orbit-group', i === 0 && 'is-on']} data-orbit-group>
+                                            <span class="orbit-num">{pad(i + 1)}</span>
+                                            <ul class="orbit-icons">
+                                                {g.items.map((item) => (
+                                                    <li style={`--c: ${item.icon?.color ?? '#9fb4ff'}`} title={item.name}>
+                                                        {item.icon ? <svg viewBox="0 0 24 24"><path d={item.icon.path} /></svg> : <b>{item.name.slice(0, 3)}</b>}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     ))}
-                                </ul>
-                            </article>
-                        ))}
+                                </div>
+                            </div>
+                            <div class="skill-rows">
+                                {stackGroups.map((g, i) => (
+                                    <article class:list={['skill-row', i === 0 && 'is-on']} data-skill-row>
+                                        <span class="skill-rule" aria-hidden="true"></span>
+                                        <span class="skill-num">{pad(i + 1)}</span>
+                                        <div class="skill-head">
+                                            <h3><span class="mask"><span>{g.label}</span></span></h3>
+                                            <p>{g.text}</p>
+                                        </div>
+                                        <ul class="skill-icons">
+                                            {g.items.map((item) => (
+                                                <li style={`--c: ${item.icon?.color ?? '#9fb4ff'}`} title={item.name}>
+                                                    {item.icon ? (
+                                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon.path} /></svg>
+                                                    ) : (
+                                                        <b aria-hidden="true">{item.name.slice(0, 3)}</b>
+                                                    )}
+                                                    <span>{item.name}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="wrap">
                     <p class="learning" data-reveal>
                         <span class="label">{t('stack.learning')}</span>
                         {learningIcons.map((item) => (
