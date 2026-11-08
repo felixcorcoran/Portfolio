@@ -135,9 +135,11 @@ function start() {
             if (!next || !inner) return;
             // Se oscurece (no transparenta: debajo hay otras tarjetas)
             gsap.to(inner, {
-                // Empieza cuando la siguiente ya va por media pantalla, no antes
-                scale: 0.92, filter: 'brightness(0.4)', ease: 'none',
-                scrollTrigger: { trigger: next, start: 'top 55%', end: 'top 12%', scrub: true },
+                // Gradual: empieza suave cuando asoma la siguiente (power2.in apenas
+                // la toca al principio) y nunca llega a negro; el scrub con
+                // retardo suaviza los tirones de la rueda
+                scale: 0.94, filter: 'brightness(0.55)', ease: 'power2.in',
+                scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 12%', scrub: 0.6 },
             });
         });
         // La captura se mueve un poco dentro de su marco (paralaje)
