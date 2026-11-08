@@ -322,11 +322,13 @@ html { background: var(--bg); overflow-x: clip; }
 .contact { background: var(--bg); padding-top: clamp(2rem, 6vh, 4rem); }
 .contact-panel {
   background: var(--text); color: var(--bg);
-  padding-block: clamp(6rem, 14vh, 9rem) clamp(2rem, 5vh, 3.5rem);
-  min-height: 100svh; display: flex; align-items: flex-end;
+  /* Mide lo que su contenido más el mismo aire arriba y abajo: el formulario
+     queda centrado y, al final de la página, cabe con el pie debajo */
+  padding-block: clamp(2.25rem, 5.5vh, 4.5rem);
+  display: flex; align-items: center;
   transform-origin: center top; will-change: transform;
-  /* Abajo, siempre redondeado: el pie asoma por debajo de una curva */
-  border-radius: 0 0 clamp(2rem, 4vw, 3.5rem) clamp(2rem, 4vw, 3.5rem);
+  /* Redondeado por los cuatro lados: una tarjeta grande */
+  border-radius: clamp(2rem, 4vw, 3.5rem);
 }
 .contact-panel .label { color: rgb(10 10 11 / .6); }
 .contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem clamp(3rem, 7vw, 7rem); align-items: start; }
@@ -357,7 +359,7 @@ html { background: var(--bg); overflow-x: clip; }
 /* ---------- Pie: el nombre sobre un horizonte azul, con tres iconos ---------- */
 .foot {
   --name: clamp(1.6rem, 7.8vw, 7rem);
-  --top: clamp(2.5rem, 6vh, 3.5rem);
+  --top: clamp(2rem, 4.5vh, 3rem);
   position: relative; overflow: hidden; isolation: isolate;
   background: var(--bg); padding-block: var(--top) clamp(1.75rem, 4.5vh, 2.75rem);
   display: flex; flex-direction: column; align-items: center; text-align: center;
@@ -385,7 +387,7 @@ html { background: var(--bg); overflow-x: clip; }
   background: radial-gradient(60% 18% at 50% 0%, rgb(122 149 255 / .16), transparent 70%), #0d0e12;
   box-shadow: 0 -2px 30px -4px rgb(122 149 255 / .7), inset 0 18px 50px -24px rgb(122 149 255 / .55);
 }
-.foot-links { position: relative; z-index: 2; display: flex; justify-content: center; gap: .9rem; margin-top: clamp(1.5rem, 4vh, 2.25rem); }
+.foot-links { position: relative; z-index: 2; display: flex; justify-content: center; gap: .9rem; margin-top: clamp(1.25rem, 3vh, 2rem); }
 .foot-links a {
   width: 3.25rem; height: 3.25rem; display: grid; place-items: center; border-radius: 50%;
   border: 1px solid var(--line-2); background: rgb(10 10 11 / .55); color: var(--text);

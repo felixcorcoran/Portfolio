@@ -185,18 +185,17 @@ function start() {
         });
     }
 
-    // ---------- Contacto: el panel se abre hasta llenar la pantalla ----------
+    // ---------- Contacto: el panel crece desde una tarjeta pequeña ----------
     const panel = document.querySelector('[data-contact-panel]');
     if (panel) {
         gsap.fromTo(panel,
-            // Empieza como una tarjeta pequeña y llena la pantalla justo cuando
-            // el panel llega arriba (el titular ya está centrado)
-            // (se escala entero, así el texto nunca queda cortado)
-            // Arriba pierde el redondeo al llenar la pantalla; abajo lo mantiene
-            { scale: 0.62, borderRadius: '3rem 3rem 3rem 3rem' },
+            // Empieza como una tarjeta pequeña y crece hasta su tamaño cuando
+            // queda centrada en la pantalla. Se escala entera, así el texto
+            // nunca queda cortado; el redondeo lo pone el CSS
+            { scale: 0.62 },
             {
-                scale: 1, borderRadius: '0rem 0rem 3rem 3rem', ease: 'none',
-                scrollTrigger: { trigger: '.contact-panel', start: 'top bottom', end: 'top top', scrub: true },
+                scale: 1, ease: 'none',
+                scrollTrigger: { trigger: '.contact-panel', start: 'top bottom', end: 'center center', scrub: true },
             });
     }
 
