@@ -335,10 +335,21 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             <span class="line"><span>{t('exp.title')}</span></span>
                         </h2>
                     </header>
+                    <!-- A la izquierda, fijo, el periodo del puesto que se está leyendo;
+                         a la derecha, los puestos: el activo se enciende y los demás se apagan -->
+                    <div class="exp-layout">
+                        <div class="exp-aside" aria-hidden="true">
+                            <div class="exp-sticky">
+                                <p class="exp-count"><span data-exp-n>01</span> / {pad(jobs.length)}</p>
+                                <p class="exp-year"><span data-exp-year>{jobs[0].period}</span></p>
+                                <p class="exp-where" data-exp-where>{jobs[0].place}</p>
+                            </div>
+                        </div>
+                    <div class="exp-track">
+                    <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
                     <ol class="exp-list">
-                        <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
-                        {jobs.map((job) => (
-                            <li class="exp-item" data-reveal>
+                        {jobs.map((job, i) => (
+                            <li class:list={['exp-item', i === 0 && 'is-active']} data-exp-item data-period={job.period} data-place={job.place}>
                                 <span class="exp-dot" aria-hidden="true"></span>
                                 <div class="exp-meta">
                                     <span class="exp-period">{job.period}</span>
@@ -352,24 +363,28 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             </li>
                         ))}
                     </ol>
+                    </div>
+                    </div>
                 </div>
             </section>
 
-            <!-- ================= STACK: cuatro filas ================= -->
+            <!-- ================= STACK: el titular se rellena con el scroll y cada
+                 fila se monta al llegar (línea, nombre, texto e iconos) ================= -->
             <section class="skills" id="stack" aria-labelledby="stack-title">
                 <div class="wrap">
                     <header class="sec-head">
                         <p class="label">{t('stack.tagline.1')} {t('stack.tagline.2')}</p>
-                        <h2 class="sec-title" id="stack-title" data-split>
-                            <span class="line"><span>Stack</span></span>
+                        <h2 class="sec-title stack-title" id="stack-title" data-split>
+                            <span class="line"><span class="fillable">Stack<span class="fill" aria-hidden="true" data-stack-fill>Stack</span></span></span>
                         </h2>
                     </header>
                     <div class="skill-rows">
                         {stackGroups.map((g, i) => (
-                            <article class="skill-row" data-reveal>
+                            <article class="skill-row" data-skill-row>
+                                <span class="skill-rule" aria-hidden="true"></span>
                                 <span class="skill-num">{pad(i + 1)}</span>
                                 <div class="skill-head">
-                                    <h3>{g.label}</h3>
+                                    <h3><span class="mask"><span>{g.label}</span></span></h3>
                                     <p>{g.text}</p>
                                 </div>
                                 <ul class="skill-icons">

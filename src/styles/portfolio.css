@@ -279,29 +279,57 @@ html { background: var(--bg); overflow-x: clip; }
 .gcard a:hover .gcard-go { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(45deg); }
 .gallery-hint { display: none; }
 
-/* ---------- Experiencia ---------- */
+/* ---------- Experiencia: periodo fijo a la izquierda, puestos a la derecha ---------- */
 .exp { background: var(--bg); padding-block: clamp(5rem, 14vh, 10rem); border-top: 1px solid var(--line); }
-.exp-list { position: relative; list-style: none; margin: 0; padding: 0 0 0 clamp(1.75rem, 4vw, 3.5rem); }
+.exp-layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.6fr); gap: clamp(2rem, 5vw, 5rem); }
+.exp-sticky { position: sticky; top: 30vh; display: grid; gap: 1rem; }
+.exp-count { margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.exp-count span { color: var(--text); }
+.exp-year { margin: 0; overflow: hidden; padding-bottom: .08em; }
+.exp-year span {
+  display: inline-block; font-weight: 800; text-transform: uppercase; font-variation-settings: "wdth" 118;
+  font-size: clamp(2.2rem, 4.2vw, 4.4rem); line-height: .95; letter-spacing: -.04em; text-wrap: balance;
+}
+.exp-where { margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.exp-track { position: relative; padding-left: clamp(1.75rem, 4vw, 3.5rem); }
+.exp-list { list-style: none; margin: 0; padding: 0; }
 .exp-line { position: absolute; left: 0; top: .6rem; bottom: .6rem; width: 1px; background: var(--line); }
 .exp-line span { position: absolute; inset: 0; background: var(--accent); transform-origin: top; }
 .motion .exp-line span { transform: scaleY(0); }
-.exp-item { position: relative; display: grid; grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); gap: 1rem 3rem; padding-block: clamp(2rem, 5vh, 3.25rem); border-bottom: 1px solid var(--line); }
+.exp-item { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; padding-block: clamp(2.5rem, 7vh, 4.5rem); border-bottom: 1px solid var(--line); transition: opacity .6s var(--ease); }
 .exp-item:first-of-type { padding-top: 0; }
-.exp-dot { position: absolute; left: calc(-1 * clamp(1.75rem, 4vw, 3.5rem)); top: clamp(2.6rem, 5.6vh, 3.9rem); translate: -50% 0; width: 11px; height: 11px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line-2); }
+/* El puesto que se lee, encendido; los demás, apagados (solo con movimiento) */
+.motion .exp-item { opacity: .28; }
+.motion .exp-item.is-active { opacity: 1; }
+.exp-dot {
+  position: absolute; left: calc(-1 * clamp(1.75rem, 4vw, 3.5rem)); top: calc(clamp(2.5rem, 7vh, 4.5rem) + .55rem); translate: -50% 0;
+  width: 11px; height: 11px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line-2);
+  transition: background .4s, border-color .4s, box-shadow .4s;
+}
 .exp-item:first-of-type .exp-dot { top: .55rem; }
-.exp-meta { display: grid; gap: .5rem; align-content: start; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+.exp-item.is-active .exp-dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 6px rgb(122 149 255 / .18); }
+/* En escritorio el periodo y el sitio van en la columna fija; aquí solo en móvil */
+.exp-meta { display: none; gap: .5rem; align-content: start; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
 .exp-period { color: var(--accent); }
 .exp-place { color: var(--muted); }
-.exp-main h3 { margin: 0 0 1rem; font-weight: 800; text-transform: uppercase; font-variation-settings: "wdth" 115; font-size: clamp(1.6rem, 3.2vw, 3rem); line-height: .95; letter-spacing: -.03em; }
+.exp-main h3 { margin: 0 0 1rem; font-weight: 800; text-transform: uppercase; font-variation-settings: "wdth" 115; font-size: clamp(1.6rem, 3vw, 2.9rem); line-height: .95; letter-spacing: -.03em; text-wrap: balance; }
 .exp-main p { margin: 0 0 1.25rem; color: var(--muted); font-size: 1.05rem; line-height: 1.65; max-width: 62ch; }
 
 /* ---------- Stack ---------- */
 .skills { background: var(--bg); padding-block: clamp(5rem, 14vh, 10rem); border-top: 1px solid var(--line); }
 .skills .sec-head .label { text-transform: none; letter-spacing: .04em; font-size: 13px; }
-.skill-rows { border-top: 1px solid var(--line); }
+.skill-rows { border-bottom: 1px solid var(--line); }
+/* Titular «Stack»: contorno que se rellena con el scroll */
+.stack-title .fillable { position: relative; display: inline-block; color: transparent; -webkit-text-stroke: 1.5px rgb(241 239 234 / .45); }
+.stack-title .fill { position: absolute; inset: 0; color: var(--text); -webkit-text-stroke: 0; }
+.motion .stack-title .fill { clip-path: inset(0 100% 0 0); }
+/* Cada fila se monta: su línea de arriba se dibuja, el nombre sube de su máscara */
+.skill-rule { position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: linear-gradient(90deg, var(--accent), var(--line-2) 45%, var(--line)); transform-origin: left; }
+.skill-head h3 .mask { display: block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
+.skill-head h3 .mask > span { display: inline-block; }
 .skill-row {
   position: relative; display: grid; grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1.15fr); gap: 1.25rem 2.5rem; align-items: center;
-  padding-block: clamp(1.75rem, 4vh, 2.75rem); border-bottom: 1px solid var(--line);
+  padding-block: clamp(1.75rem, 4vh, 2.75rem);
 }
 .skill-row::before { content: ""; position: absolute; inset: 0 calc(-1 * var(--gutter)); background: var(--panel); opacity: 0; transition: opacity .4s var(--ease); z-index: -1; }
 .skill-row:hover::before { opacity: 1; }
@@ -405,6 +433,9 @@ html { background: var(--bg); overflow-x: clip; }
 
 /* ---------- Tablet y móvil ---------- */
 @media (max-width: 1000px) {
+  .exp-layout { grid-template-columns: minmax(0, 1fr); }
+  .exp-aside { display: none; }
+  .exp-meta { display: grid; }
   .nav-links { display: none; }
   .hero-foot { grid-template-columns: minmax(0, 1fr); }
   .skill-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
@@ -431,7 +462,6 @@ html { background: var(--bg); overflow-x: clip; }
   .gallery-viewport::-webkit-scrollbar { display: none; }
   .gcard { width: 82vw; scroll-snap-align: center; }
   .gallery-hint { display: inline; }
-  .exp-item { grid-template-columns: minmax(0, 1fr); }
   .skill-row { grid-template-columns: minmax(0, 1fr); }
   .skill-num { display: none; }
   .skill-icons { grid-column: 1; }

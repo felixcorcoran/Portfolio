@@ -181,9 +181,59 @@ function start() {
     if (progress) {
         gsap.fromTo(progress, { scaleY: 0 }, {
             scaleY: 1, ease: 'none',
-            scrollTrigger: { trigger: '.exp-list', start: 'top 70%', end: 'bottom 60%', scrub: true },
+            scrollTrigger: { trigger: '.exp-list', start: 'top 60%', end: 'bottom 60%', scrub: true },
         });
     }
+
+    // El puesto que pasa por la mitad de la pantalla se enciende; a la
+    // izquierda, su periodo sale por arriba y entra el nuevo por abajo
+    const jobs = gsap.utils.toArray<HTMLElement>('[data-exp-item]');
+    const yearEl = document.querySelector<HTMLElement>('[data-exp-year]');
+    const nEl = document.querySelector<HTMLElement>('[data-exp-n]');
+    const whereEl = document.querySelector<HTMLElement>('[data-exp-where]');
+    let current = 0;
+    let swap: gsap.core.Timeline | null = null;
+    const setJob = (i: number) => {
+        if (i === current) return;
+        current = i;
+        jobs.forEach((job, k) => job.classList.toggle('is-active', k === i));
+        if (nEl) nEl.textContent = String(i + 1).padStart(2, '0');
+        if (!yearEl) return;
+        swap?.kill();
+        const parts = [yearEl, whereEl].filter(Boolean);
+        swap = gsap.timeline()
+            .to(parts, { yPercent: -110, opacity: 0, duration: 0.28, ease: 'power2.in' })
+            .add(() => {
+                yearEl.textContent = jobs[i].dataset.period ?? '';
+                if (whereEl) whereEl.textContent = jobs[i].dataset.place ?? '';
+            })
+            .fromTo(parts, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: 'expo.out', stagger: 0.06 });
+    };
+    jobs.forEach((job, i) => {
+        ScrollTrigger.create({
+            trigger: job, start: 'top 60%', end: 'bottom 60%',
+            onToggle: (self) => { if (self.isActive) setJob(i); },
+        });
+    });
+
+    // ---------- Stack: el titular se rellena y cada fila se monta ----------
+    const stackFill = document.querySelector('[data-stack-fill]');
+    if (stackFill) {
+        gsap.fromTo(stackFill, { clipPath: 'inset(0 100% 0 0)' }, {
+            clipPath: 'inset(0 0% 0 0)', ease: 'none',
+            scrollTrigger: { trigger: '.stack-title', start: 'top 85%', end: 'top 30%', scrub: true },
+        });
+    }
+    gsap.utils.toArray<HTMLElement>('[data-skill-row]').forEach((row) => {
+        gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 85%', once: true } })
+            .from(row.querySelector('.skill-rule'), { scaleX: 0, duration: 1.1, ease: 'expo.inOut' })
+            .from(row.querySelector('.skill-num'), { opacity: 0, x: -12, duration: 0.5 }, 0.35)
+            .from(row.querySelector('.skill-head h3 .mask > span'), { yPercent: 110, duration: 0.9, ease: 'expo.out' }, 0.4)
+            .from(row.querySelector('.skill-head p'), { opacity: 0, y: 16, duration: 0.7, ease: 'power2.out' }, 0.55)
+            .from(row.querySelectorAll('.skill-icons li'), {
+                opacity: 0, scale: 0.6, y: 10, duration: 0.55, ease: 'back.out(2)', stagger: 0.035,
+            }, 0.6);
+    });
 
     // ---------- Contacto: el panel crece desde una tarjeta pequeña ----------
     const panel = document.querySelector('[data-contact-panel]');
