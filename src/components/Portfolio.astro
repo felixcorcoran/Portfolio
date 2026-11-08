@@ -374,17 +374,17 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                  se va iluminando y se encienden las del grupo activo, que también se
                  ilumina en la lista. En móvil (o sin animación), cuatro filas -->
             <section class="skills" id="stack" aria-labelledby="stack-title">
-                <div class="wrap">
-                    <header class="sec-head">
-                        <p class="label">{t('stack.tagline.1')} {t('stack.tagline.2')}</p>
-                        <h2 class="sec-title stack-title" id="stack-title" data-split>
-                            <span class="line"><span><span class="fillable">Stack<span class="fill" aria-hidden="true" data-stack-fill>Stack</span></span><i class="dot-end">.</i></span></span>
-                        </h2>
-                    </header>
-                </div>
                 <div class="skills-scroller">
                     <div class="skills-stage">
                         <div class="wrap skills-layout">
+                            <!-- El titular va dentro de la escena: se sigue viendo mientras el
+                                 globo está fijo -->
+                            <header class="sec-head">
+                                <p class="label">{t('stack.tagline.1')} {t('stack.tagline.2')}</p>
+                                <h2 class="sec-title stack-title" id="stack-title" data-split>
+                                    <span class="line"><span><span class="fillable">Stack<span class="fill" aria-hidden="true" data-stack-fill>Stack</span></span><i class="dot-end">.</i></span></span>
+                                </h2>
+                            </header>
                             <!-- Globo con red de paralelos y meridianos y las tecnologías encima
                                  (src/scripts/globe.ts): su borde se ilumina con el scroll y se
                                  encienden las del grupo activo; se puede arrastrar -->
