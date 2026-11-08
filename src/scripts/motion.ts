@@ -133,13 +133,21 @@ function start() {
             });
             const next = cards[i + 1];
             if (!next || !inner) return;
-            // Se oscurece (no transparenta: debajo hay otras tarjetas)
-            gsap.to(inner, {
-                // Gradual: empieza suave cuando asoma la siguiente (power2.in apenas
-                // la toca al principio) y nunca llega a negro; el scrub con
-                // retardo suaviza los tirones de la rueda
-                scale: 0.94, filter: 'brightness(0.55)', ease: 'power2.in',
-                scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 12%', scrub: 0.6 },
+            // Se oscurece SOLO mientras la siguiente le pasa por encima: empieza
+            // cuando el borde de arriba de la siguiente llega al borde de abajo
+            // de esta (ya fija) y termina cuando la siguiente se fija. Antes de
+            // eso, la tarjeta que se está leyendo se ve entera. Sin transparencia:
+            // debajo hay otras tarjetas
+            const stickyTop = () => parseFloat(getComputedStyle(card).top) || 0;
+            gsap.fromTo(inner, { scale: 1, filter: 'brightness(1)' }, {
+                scale: 0.94, filter: 'brightness(0.55)', ease: 'none',
+                scrollTrigger: {
+                    trigger: next,
+                    start: () => `top ${Math.min(stickyTop() + (inner as HTMLElement).offsetHeight, innerHeight)}px`,
+                    end: () => `top ${parseFloat(getComputedStyle(next).top) || 0}px`,
+                    scrub: 0.5,
+                    invalidateOnRefresh: true,
+                },
             });
         });
         // La captura se mueve un poco dentro de su marco (paralaje)
