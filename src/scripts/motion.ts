@@ -73,41 +73,26 @@ function start() {
     });
 
     // ---------- Enfoque: las palabras se encienden con el scroll ----------
+    // El texto se queda fijo mientras la sección pasa; se enciende entero al
+    // 80 % del recorrido, así nunca se va a medias
     const focus = document.querySelector<HTMLElement>('.focus');
     const words = [...document.querySelectorAll<HTMLElement>('.focus-text .fw')];
     if (focus && words.length) {
         ScrollTrigger.create({
             trigger: focus,
-            start: 'top 35%',
-            // Termina antes de que suba la cortina de cifras (último 100vh)
-            end: () => `+=${Math.max(focus.offsetHeight - innerHeight * 1.35, innerHeight * 0.6)}`,
+            start: 'top 20%',
+            end: 'bottom bottom',
             onUpdate: (self) => {
-                const lit = Math.round(self.progress * words.length);
+                const lit = Math.ceil(Math.min(self.progress / 0.8, 1) * words.length);
                 words.forEach((w, i) => w.classList.toggle('on', i < lit));
             },
         });
-        // Cuando sube la cortina, el texto se aleja
+        // Al final, el texto se aleja mientras entra la cinta
         gsap.to('.focus-sticky .wrap', {
-            scale: 0.92, opacity: 0.25, ease: 'none',
-            scrollTrigger: { trigger: '.stats', start: 'top bottom', end: 'top top', scrub: true },
+            scale: 0.94, opacity: 0.3, ease: 'none',
+            scrollTrigger: { trigger: '.ribbons', start: 'top bottom', end: 'top 30%', scrub: true },
         });
     }
-
-    // ---------- Cifras: cuentan al llegar ----------
-    document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
-        const to = Number(el.dataset.count);
-        const state = { v: 0 };
-        el.textContent = '0';
-        ScrollTrigger.create({
-            trigger: el,
-            start: 'top 85%',
-            once: true,
-            onEnter: () => gsap.to(state, {
-                v: to, duration: 1.6, ease: 'power3.out',
-                onUpdate: () => { el.textContent = String(Math.round(state.v)); },
-            }),
-        });
-    });
 
     // ---------- Entradas genéricas ----------
     gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
@@ -128,9 +113,9 @@ function start() {
     // ---------- Cinta: las dos filas cruzan en sentidos opuestos ----------
     gsap.utils.toArray<HTMLElement>('.marquee-row').forEach((row) => {
         const dir = Number(row.dataset.dir) || -1;
-        gsap.fromTo(row, { xPercent: dir < 0 ? 0 : -25 }, {
-            xPercent: dir < 0 ? -25 : 0, ease: 'none',
-            scrollTrigger: { trigger: '.marquee', start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+        gsap.fromTo(row, { xPercent: dir < 0 ? -5 : -30 }, {
+            xPercent: dir < 0 ? -30 : -5, ease: 'none',
+            scrollTrigger: { trigger: '.ribbons', start: 'top bottom', end: 'bottom top', scrub: 0.6 },
         });
     });
 
@@ -150,16 +135,17 @@ function start() {
             if (!next || !inner) return;
             // Se oscurece (no transparenta: debajo hay otras tarjetas)
             gsap.to(inner, {
-                scale: 0.9, filter: 'brightness(0.35)', ease: 'none',
-                scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true },
+                // Empieza cuando la siguiente ya va por media pantalla, no antes
+                scale: 0.92, filter: 'brightness(0.4)', ease: 'none',
+                scrollTrigger: { trigger: next, start: 'top 55%', end: 'top 12%', scrub: true },
             });
         });
         // La captura se mueve un poco dentro de su marco (paralaje)
         cards.forEach((card) => {
-            const img = card.querySelector('.pcard-media img');
+            const img = card.querySelector('.pcard-shot img');
             if (!img) return;
-            gsap.fromTo(img, { yPercent: -4, scale: 1.08 }, {
-                yPercent: 4, ease: 'none',
+            gsap.fromTo(img, { yPercent: -2, scale: 1.05 }, {
+                yPercent: 2, ease: 'none',
                 scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true },
             });
         });
@@ -193,10 +179,13 @@ function start() {
     const panel = document.querySelector('[data-contact-panel]');
     if (panel) {
         gsap.fromTo(panel,
-            { clipPath: 'inset(0% 6% 0% 6% round 2.5rem)' },
+            // Empieza como una tarjeta pequeña y llena la pantalla justo cuando
+            // el panel llega arriba (el titular ya está centrado)
+            // (se escala entero, así el texto nunca queda cortado)
+            { scale: 0.62, borderRadius: '3rem' },
             {
-                clipPath: 'inset(0% 0% 0% 0% round 0rem)', ease: 'none',
-                scrollTrigger: { trigger: '.contact', start: 'top bottom', end: 'top 10%', scrub: true },
+                scale: 1, borderRadius: '0rem', ease: 'none',
+                scrollTrigger: { trigger: '.contact-panel', start: 'top bottom', end: 'top top', scrub: true },
             });
     }
 

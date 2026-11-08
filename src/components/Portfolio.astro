@@ -96,15 +96,6 @@ const stackGroups = [
 ];
 const learningIcons = learning.map(tech);
 
-// ---------- Cifras: todas salen de los datos de arriba ----------
-const firstYear = Math.min(...experience.map((j) => parseInt(j.period.es, 10)).filter(Boolean));
-const stats = [
-    { value: cards.filter((c) => !c.client).length, label: t('stats.own') },
-    { value: clientSites.length, label: t('stats.clients') },
-    { value: firstYear, label: t('stats.since'), plain: true },
-    { value: stackGroups.reduce((n, g) => n + g.items.length, 0), label: t('stats.tech') },
-];
-
 // El texto del enfoque, palabra a palabra (se ilumina con el scroll)
 const focusWords = persona.summary[lang].split(' ');
 const pad = (n) => String(n).padStart(2, '0');
@@ -112,7 +103,11 @@ const links = [
     { label: 'LinkedIn', href: persona.links.linkedin },
     { label: 'GitHub', href: persona.links.github },
 ];
-const marquee = [t('marquee.1'), t('marquee.2'), t('marquee.3'), 'n8n', 'Gemini', 'Astro', 'Spring Boot'];
+// Las dos bandas de la cinta: lo que hago y con qué
+const marquee = lang === 'en'
+    ? ['Full stack', 'AI integration', 'Automation', 'Custom websites', 'APIs']
+    : ['Full stack', 'Integración de IA', 'Automatización', 'Webs a medida', 'APIs'];
+const marquee2 = ['n8n', 'Astro', 'TypeScript', 'React', 'Angular', 'Spring Boot', 'PHP', 'Docker'];
 const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.6.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.8-2.8 5.7-5.5 6 .5.4.9 1.1.9 2.3v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3';
 ---
 
@@ -178,7 +173,6 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                     <span>{t('hero.remote')}</span>
                     <span class="sep" aria-hidden="true">/</span>
                     <span>{t('hero.bilingual')}</span>
-                    <span class="scroll-cue" aria-hidden="true"><span>{t('scroll.hint')}</span><i></i></span>
                 </p>
 
                 <h1 class="hero-name" aria-label="Felix Corcoran">
@@ -223,28 +217,17 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                 </div>
             </section>
 
-            <!-- ================= CIFRAS: suben como una cortina sobre el enfoque ================= -->
-            <section class="stats" aria-labelledby="stats-label">
-                <div class="wrap">
-                    <p class="label" id="stats-label">{t('stats.label')}</p>
-                    <ul class="stats-grid">
-                        {stats.map((s) => (
-                            <li class="stat" data-reveal>
-                                <span class="stat-value" data-count={s.plain ? undefined : s.value}>{s.value}</span>
-                                <span class="stat-label">{s.label}</span>
-                            </li>
-                        ))}
-                    </ul>
+            <!-- ================= CINTA: dos bandas cruzadas que corren con el scroll ================= -->
+            <div class="ribbons" aria-hidden="true">
+                <div class="ribbon ribbon-a">
+                    <div class="marquee-row" data-dir="-1">
+                        {[...marquee, ...marquee, ...marquee].map((w) => <span>{w}<i>✦</i></span>)}
+                    </div>
                 </div>
-            </section>
-
-            <!-- ================= CINTA: dos filas que cruzan con el scroll ================= -->
-            <div class="marquee" aria-hidden="true">
-                <div class="marquee-row" data-dir="-1">
-                    {[...marquee, ...marquee].map((w) => <span>{w}<i>✦</i></span>)}
-                </div>
-                <div class="marquee-row outline" data-dir="1">
-                    {[...marquee, ...marquee].reverse().map((w) => <span>{w}<i>✦</i></span>)}
+                <div class="ribbon ribbon-b">
+                    <div class="marquee-row" data-dir="1">
+                        {[...marquee2, ...marquee2, ...marquee2].map((w) => <span>{w}<i>✦</i></span>)}
+                    </div>
                 </div>
             </div>
 
@@ -266,7 +249,9 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                 <article class="pcard-inner">
                                     <div class="pcard-media">
                                         {c.image && (
-                                            <Image src={c.image} alt="" widths={[640, 960, 1280]} sizes="(min-width: 900px) 55vw, 92vw" loading={i < 2 ? 'eager' : 'lazy'} style={`object-position: ${c.imagePos}`} />
+                                            <div class="pcard-shot">
+                                                <Image src={c.image} alt="" widths={[640, 960, 1280]} sizes="(min-width: 900px) 48vw, 92vw" loading={i < 2 ? 'eager' : 'lazy'} style={`object-position: ${c.imagePos}`} />
+                                            </div>
                                         )}
                                         {c.status && <span class="pill pill-status">{c.status}</span>}
                                     </div>
@@ -461,16 +446,19 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
             </section>
         </main>
 
+        <!-- Pie: el nombre sobre un horizonte azul, con los enlaces dentro -->
         <footer class="foot">
-            <div class="wrap">
-                <p class="foot-name" aria-hidden="true">Felix Corcoran</p>
-                <div class="foot-row">
-                    <p>{t('footer.desc')}</p>
-                    <a href="https://felixcorcoran.es" target="_blank" rel="noopener">{t('footer.business')} <span>felixcorcoran.es ↗</span></a>
-                </div>
-                <div class="foot-row small">
+            <p class="foot-name" aria-label="Felix Corcoran">Felix Corcoran<span aria-hidden="true">●</span></p>
+            <div class="foot-arc" aria-hidden="true"></div>
+            <div class="foot-inner">
+                <p class="foot-desc">{t('footer.desc')}</p>
+                <nav class="foot-links" aria-label="Enlaces">
+                    {links.map((l) => <a href={l.href} target="_blank" rel="noopener">{l.label} <span aria-hidden="true">↗</span></a>)}
+                    <a href={`mailto:${persona.email}`}>{persona.email}</a>
+                    <a href="https://felixcorcoran.es" target="_blank" rel="noopener">{t('footer.business')} felixcorcoran.es <span aria-hidden="true">↗</span></a>
+                </nav>
+                <div class="foot-bottom">
                     <span>© {new Date().getFullYear()} · Félix Corcoran</span>
-                    <span>{links.map((l) => <a href={l.href} target="_blank" rel="noopener">{l.label}</a>)}</span>
                     <span>{t('footer.built')}</span>
                 </div>
             </div>
