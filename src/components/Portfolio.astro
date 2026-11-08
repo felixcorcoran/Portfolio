@@ -170,6 +170,8 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
         <main id="top">
             <!-- ================= PORTADA ================= -->
             <section class="hero" id="portada">
+                <!-- Humo azul con grano (src/scripts/smoke.ts) -->
+                <canvas class="hero-smoke" data-smoke aria-hidden="true"></canvas>
                 <p class="hero-meta" data-intro>
                     <span class="dot" aria-hidden="true"></span>
                     <span>{t('hero.remote')}</span>
@@ -456,6 +458,8 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
 
         <!-- Pie: el nombre sobre un horizonte azul y, dentro, LinkedIn, GitHub y correo -->
         <footer class="foot">
+            <!-- Cielo estrellado detrás del arco (src/scripts/stars.ts) -->
+            <canvas class="foot-stars" data-stars aria-hidden="true"></canvas>
             <p class="foot-name" aria-label="Felix Corcoran">Felix Corcoran<span aria-hidden="true">●</span></p>
             <div class="foot-arc" aria-hidden="true"></div>
             <nav class="foot-links" aria-label="Contacto">
@@ -473,6 +477,8 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
 
         <script>
             import '../scripts/motion';
+            import '../scripts/smoke';
+            import '../scripts/stars';
             import '../scripts/contacto';
         </script>
     </body>

@@ -126,6 +126,13 @@ html { background: var(--bg); overflow-x: clip; }
   padding: calc(var(--nav-h) + 2.5rem) var(--gutter) clamp(2rem, 5vh, 3.5rem);
   max-width: calc(var(--max) + 2 * var(--gutter)); margin-inline: auto;
 }
+/* El humo ocupa todo el ancho de la ventana aunque el contenido tenga máximo */
+.hero { isolation: isolate; }
+.hero-smoke {
+  position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; height: 100%; translate: -50% 0;
+  opacity: 0; transition: opacity 1.6s var(--ease); pointer-events: none;
+}
+.hero-smoke.is-on { opacity: 1; }
 .hero-meta {
   display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem;
   font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
@@ -390,7 +397,7 @@ html { background: var(--bg); overflow-x: clip; }
 /* ---------- Pie: el nombre sobre un horizonte azul, con tres iconos ---------- */
 .foot {
   --name: clamp(1.6rem, 7.8vw, 7rem);
-  --top: clamp(2rem, 4.5vh, 3rem);
+  --top: clamp(2.75rem, 8vh, 4.5rem);
   position: relative; overflow: hidden; isolation: isolate;
   background: var(--bg); padding-top: var(--top); min-height: var(--foot-h);
   display: flex; flex-direction: column; align-items: center; text-align: center;
@@ -410,6 +417,8 @@ html { background: var(--bg); overflow-x: clip; }
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .foot-name span { -webkit-text-fill-color: var(--accent); font-size: .3em; vertical-align: super; margin-left: .1em; }
+/* Estrellas: detrás del arco y del nombre, por encima del fondo */
+.foot-stars { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
 /* El arco: un círculo enorme con el borde de arriba encendido */
 .foot-arc {
   position: absolute; z-index: 1; left: 50%; top: calc(var(--top) + var(--name) * .62);
@@ -418,7 +427,7 @@ html { background: var(--bg); overflow-x: clip; }
   background: radial-gradient(60% 18% at 50% 0%, rgb(122 149 255 / .16), transparent 70%), #0d0e12;
   box-shadow: 0 -2px 30px -4px rgb(122 149 255 / .7), inset 0 18px 50px -24px rgb(122 149 255 / .55);
 }
-.foot-links { position: relative; z-index: 2; display: flex; justify-content: center; gap: .9rem; margin-top: clamp(1.25rem, 3vh, 2rem); }
+.foot-links { position: relative; z-index: 2; display: flex; justify-content: center; gap: .9rem; margin-top: clamp(1rem, 2.5vh, 1.75rem); }
 .foot-links a {
   width: 3.25rem; height: 3.25rem; display: grid; place-items: center; border-radius: 50%;
   border: 1px solid var(--line-2); background: rgb(10 10 11 / .55); color: var(--text);
