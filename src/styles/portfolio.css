@@ -170,7 +170,7 @@ html { background: var(--bg); overflow-x: clip; }
 }
 .focus-text {
   margin: 1.75rem 0 0; max-width: 24ch;
-  font-size: clamp(1.9rem, 4.6vw, 4.6rem); line-height: 1.04; letter-spacing: -.035em;
+  font-size: clamp(1.25rem, min(4.6vw, 7.2svh), 4.6rem); line-height: 1.04; letter-spacing: -.035em;
   font-weight: 500; font-variation-settings: "wdth" 105;
 }
 .focus-text .fw { transition: color .2s; }
@@ -243,7 +243,7 @@ html { background: var(--bg); overflow-x: clip; }
 .pcard-tag { color: var(--muted); text-align: right; }
 .pcard-name {
   margin: auto 0 0; font-weight: 800; text-transform: uppercase; font-variation-settings: "wdth" 115;
-  font-size: clamp(2rem, 3.6vw, 3.6rem); line-height: .9; letter-spacing: -.035em; overflow-wrap: anywhere;
+  font-size: clamp(1.6rem, 2.9vw, 3.2rem); line-height: .92; letter-spacing: -.035em; overflow-wrap: break-word; text-wrap: balance;
 }
 .pcard-summary { margin: 0; font-size: 1.12rem; line-height: 1.45; color: var(--text); }
 .pcard-more { margin: 0; font-size: .95rem; line-height: 1.6; color: var(--muted); }
@@ -420,7 +420,11 @@ html { background: var(--bg); overflow-x: clip; }
   .pcard-inner { grid-template-columns: minmax(0, 1fr); min-height: 0; }
   .pcard-media, .pcard:nth-child(even) .pcard-media { order: 0; padding: 1rem; border: 0; border-bottom: 1px solid var(--line); }
   .pcard:nth-child(even) .pcard-inner { grid-template-columns: minmax(0, 1fr); }
-  .pcard-name { margin-top: .25rem; }
+  .pcard-name { margin-top: .25rem; font-size: clamp(1.3rem, 7.2vw, 2.4rem); }
+  /* En pantallas estrechas las bandas se abren más para que se vean las dos */
+  .ribbon-a { transform: rotate(-7deg); }
+  .ribbon-b { transform: rotate(6deg); }
+  .ribbons { padding-block: 5.5rem; }
   .pcard-more { display: none; }
   .gallery-viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
   .gallery-viewport::-webkit-scrollbar { display: none; }
@@ -431,6 +435,24 @@ html { background: var(--bg); overflow-x: clip; }
   .skill-num { display: none; }
   .skill-icons { grid-column: 1; }
   .foot-bottom { justify-content: center; text-align: center; }
+}
+
+/* Móvil: el enfoque, con el tamaño que quepa en el alto de la pantalla */
+@media (max-width: 760px) {
+  .focus-text { font-size: clamp(1.25rem, min(7.4vw, 5.2svh), 2.4rem); }
+}
+
+/* Pantallas bajas (móvil en horizontal, ventanas aplastadas): nada fijo que
+   mida más que la pantalla. Tarjetas sin apilar y galería deslizable */
+@media (min-width: 761px) and (max-height: 600px) {
+  .pcard { position: static; }
+  .pcard-inner { min-height: 0; }
+  .gallery-viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .gallery-viewport::-webkit-scrollbar { display: none; }
+  .gcard { width: min(60vw, 30rem); scroll-snap-align: center; }
+  .gallery-hint { display: inline; }
+  .work-counter { display: none; }
+  .hero { padding-top: calc(var(--nav-h) + 1.5rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -42,7 +42,8 @@ const ordered = [
     ...withWeb.filter((p) => p.web.wide && !p.web.first),
 ];
 const cards = ordered.map((p) => ({
-    name: pick(p.name, lang),
+    // Un dominio puede partirse antes de «.es», nunca a mitad de palabra
+    name: pick(p.name, lang).replace(/\.(?=[a-z]+$)/, '​.'),
     url: p.web.url?.[lang] ?? p.url ?? null,
     repo: p.repo,
     tag: p.web.tag[lang],

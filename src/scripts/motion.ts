@@ -122,7 +122,7 @@ function start() {
     const mm = gsap.matchMedia();
 
     // ---------- Proyectos: al llegar la siguiente, la anterior se hunde ----------
-    mm.add('(min-width: 761px)', () => {
+    mm.add('(min-width: 761px) and (min-height: 601px)', () => {
         const cards = gsap.utils.toArray<HTMLElement>('[data-pcard]');
         const counter = document.querySelector<HTMLElement>('[data-work-current]');
         cards.forEach((card, i) => {
@@ -162,7 +162,7 @@ function start() {
     });
 
     // ---------- Galería: en escritorio se desliza en horizontal con el scroll ----------
-    mm.add('(min-width: 761px)', () => {
+    mm.add('(min-width: 761px) and (min-height: 601px)', () => {
         const track = document.querySelector<HTMLElement>('[data-track]');
         const pin = document.querySelector<HTMLElement>('.gallery-pin');
         if (!track || !pin) return;
