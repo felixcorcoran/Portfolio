@@ -22,6 +22,9 @@
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --max: 90rem;
   --nav-h: 3.5rem;
+  /* Alto del pie: el contacto ocupa el resto de la última pantalla */
+  --foot-h: clamp(14rem, 32svh, 19rem);
+  --contact-gap: 1.25rem;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   color-scheme: dark;
 }
@@ -319,11 +322,14 @@ html { background: var(--bg); overflow-x: clip; }
 .learning-item svg { width: 1.1rem; height: 1.1rem; fill: var(--c); }
 
 /* ---------- Contacto ---------- */
-.contact { background: var(--bg); padding-top: clamp(2rem, 6vh, 4rem); }
+.contact { background: var(--bg); padding-top: var(--contact-gap); }
 .contact-panel {
   background: var(--text); color: var(--bg);
   /* Mide lo que su contenido más el mismo aire arriba y abajo: el formulario
      queda centrado y, al final de la página, cabe con el pie debajo */
+  /* Contacto + pie = una pantalla: el panel ocupa lo que deja el pie, con el
+     formulario centrado (si no cabe, como en móvil, crece) */
+  min-height: calc(100svh - var(--foot-h) - var(--contact-gap));
   padding-block: clamp(2.25rem, 5.5vh, 4.5rem);
   display: flex; align-items: center;
   transform-origin: center top; will-change: transform;
@@ -361,7 +367,7 @@ html { background: var(--bg); overflow-x: clip; }
   --name: clamp(1.6rem, 7.8vw, 7rem);
   --top: clamp(2rem, 4.5vh, 3rem);
   position: relative; overflow: hidden; isolation: isolate;
-  background: var(--bg); padding-block: var(--top) clamp(1.75rem, 4.5vh, 2.75rem);
+  background: var(--bg); padding-top: var(--top); min-height: var(--foot-h);
   display: flex; flex-direction: column; align-items: center; text-align: center;
 }
 /* Resplandor detrás del nombre, donde el arco toca */
