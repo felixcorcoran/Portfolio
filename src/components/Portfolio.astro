@@ -475,14 +475,15 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             data-error={t('contact.error')}
                             data-failed={t('contact.failed')}
                         >
-                            {['name', 'email', 'project'].map((key) => (
+                            {['name', 'email', 'project'].map((key, i) => (
                                 <div class="field">
-                                    <label for={`f-${key}`}>{t(`contact.label.${key}`)}</label>
+                                    <label for={`f-${key}`}><span class="field-n" aria-hidden="true">{`0${i + 1}`}</span>{t(`contact.label.${key}`)}</label>
                                     {key === 'project' ? (
                                         <textarea id="f-project" name="proyecto" rows="3" required placeholder={t('contact.placeholder.project')}></textarea>
                                     ) : (
                                         <input id={`f-${key}`} name={key === 'email' ? 'correo' : 'nombre'} type={key === 'email' ? 'email' : 'text'} autocomplete={key === 'email' ? 'email' : 'name'} required placeholder={t(`contact.placeholder.${key}`)} />
                                     )}
+                                    <span class="field-line" aria-hidden="true"></span>
                                 </div>
                             ))}
                             <button type="submit" id="submit-btn" class="btn btn-solid btn-wide">
