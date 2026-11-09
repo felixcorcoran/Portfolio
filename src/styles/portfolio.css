@@ -510,7 +510,7 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   background: linear-gradient(180deg, #ffffff 0%, #d9d8d3 45%, #6d6e74 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.foot-name span { -webkit-text-fill-color: var(--accent); font-size: .3em; vertical-align: super; margin-left: .1em; }
+.foot-name .foot-dot { -webkit-text-fill-color: var(--accent); font-size: .3em; vertical-align: super; margin-left: .1em; }
 /* Estrellas: detrás del arco y del nombre, por encima del fondo */
 .foot-stars { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
 /* El arco: un círculo enorme con el borde de arriba encendido */

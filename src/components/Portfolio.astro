@@ -193,9 +193,10 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                     <span>{t('hero.bilingual')}</span>
                 </p>
 
-                <h1 class="hero-name" aria-label="Felix Corcoran">
-                    <span class="line" aria-hidden="true"><span class="word">Felix</span></span>
-                    <span class="line" aria-hidden="true"><span class="word">Corcoran</span></span>
+                <!-- Cada letra en su <span>: adelgaza al pasar el ratón (src/scripts/proximity.ts) -->
+                <h1 class="hero-name" aria-label="Felix Corcoran" data-prox data-max="850" data-min="200">
+                    <span class="line" aria-hidden="true"><span class="word">{[...'Felix'].map((ch) => <span class="ch">{ch}</span>)}</span></span>
+                    <span class="line" aria-hidden="true"><span class="word">{[...'Corcoran'].map((ch) => <span class="ch">{ch}</span>)}</span></span>
                 </h1>
 
                 <div class="hero-foot">
@@ -497,7 +498,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
         <footer class="foot">
             <!-- Cielo estrellado detrás del arco (src/scripts/stars.ts) -->
             <canvas class="foot-stars" data-stars aria-hidden="true"></canvas>
-            <p class="foot-name" aria-label="Felix Corcoran">Felix Corcoran<span aria-hidden="true">●</span></p>
+            <p class="foot-name" aria-label="Felix Corcoran" data-prox data-max="850" data-min="200"><span aria-hidden="true">{[...'Felix'].map((ch) => <span class="ch">{ch}</span>)} {[...'Corcoran'].map((ch) => <span class="ch">{ch}</span>)}</span><span class="foot-dot" aria-hidden="true">●</span></p>
             <div class="foot-arc" aria-hidden="true"></div>
             <nav class="foot-links" aria-label="Contacto">
                 <a href={persona.links.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
@@ -518,6 +519,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
             import '../scripts/smoke';
             import '../scripts/stars';
             import '../scripts/carrusel';
+            import '../scripts/proximity';
             import '../scripts/preview';
             import '../scripts/contacto';
         </script>

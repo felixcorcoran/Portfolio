@@ -19,7 +19,7 @@ Al cambiar `perfil.ts` o `cv/`, una GitHub Action ([`cv.yml`](.github/workflows/
 
 | Sección | Escritorio | Móvil |
 | --- | --- | --- |
-| Portada | Nombre que entra al cargar sobre humo azul con grano (shader WebGL, [`smoke.ts`](src/scripts/smoke.ts)) | Igual, más ligero |
+| Portada | Nombre que entra al cargar sobre humo azul con grano que se queda en la parte baja (shader WebGL, [`smoke.ts`](src/scripts/smoke.ts)); con ratón, las letras adelgazan al acercarse el cursor ([`proximity.ts`](src/scripts/proximity.ts), también en el nombre del pie) | Igual, más ligero y sin efecto de letras |
 | Cinta | Dos bandas cruzadas que corren con el scroll | Igual |
 | Mis trabajos | Tarjetas que se apilan: llegan inclinadas en 3D, la captura se descubre y la de debajo se hunde; contador que gira | Carrusel horizontal ([`carrusel.ts`](src/scripts/carrusel.ts)) |
 | Webs para negocios | Tarjetas tipográficas que se desplazan en horizontal al bajar; con ratón, la captura sigue al cursor con física y barrido entre webs ([`preview.ts`](src/scripts/preview.ts)) | Igual, sin captura (se toca y abre la web) |

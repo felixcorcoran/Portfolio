@@ -44,12 +44,16 @@ void main() {
     vec2 c = vec2(0.22 + 0.06 * sin(t * 0.05), -0.1);
     float d = length((p - c) * vec2(0.8, 1.15));
     float mask = smoothstep(1.35, 0.0, d) * smoothstep(0.0, 0.25, uv.y) * smoothstep(1.0, 0.75, uv.y);
-    float smoke = smoothstep(0.28, 0.82, n) * mask;
+    // La franja de abajo (rol, descripción, botones y enlaces) queda casi
+    // limpia: el humo no puede tapar el texto
+    mask *= mix(0.22, 1.0, smoothstep(0.2, 0.55, uv.y));
+    // Y nunca llega a ser opaco, aunque con el tiempo se concentre
+    float smoke = min(smoothstep(0.3, 0.85, n) * mask, 0.62);
 
     vec3 bg = vec3(0.039, 0.039, 0.043);
     vec3 deep = vec3(0.10, 0.14, 0.42);
-    vec3 glow = vec3(0.48, 0.58, 1.0);
-    vec3 col = bg + mix(deep, glow, smoothstep(0.25, 0.95, smoke)) * smoke * 1.35;
+    vec3 glow = vec3(0.40, 0.50, 0.95);
+    vec3 col = bg + mix(deep, glow, smoothstep(0.2, 0.65, smoke)) * smoke * 1.15;
 
     // Grano de película
     float g = hash(gl_FragCoord.xy + fract(t * 0.73) * 113.0) - 0.5;
