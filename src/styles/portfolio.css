@@ -501,13 +501,13 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
 .contact-meta a { border-bottom: 1px solid rgb(10 10 11 / .3); }
 .contact-meta .ok { display: inline-flex; align-items: center; gap: .5rem; }
 .contact-meta .dot { background: #1f9d55; animation: none; }
-/* Campos: rótulo numerado en mono, texto en la sans de la web y el
-   placeholder en la cursiva de «Escríbeme.»; al enfocar, sin recuadro: una
-   línea azul crece desde la izquierda y el rótulo se pone azul */
+/* Campos: rótulo numerado en mono y en negro; texto y placeholder en la sans
+   de la web (el placeholder, fino y en gris claro); al enfocar, sin recuadro:
+   una línea azul crece desde la izquierda y el rótulo se pone azul */
 .contact-form { display: grid; gap: .35rem; }
 .field { position: relative; display: grid; gap: .2rem; padding-top: 1.1rem; border-bottom: 1px solid rgb(10 10 11 / .16); }
-.field label { display: flex; align-items: baseline; gap: .75rem; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgb(10 10 11 / .55); transition: color .35s var(--ease); cursor: text; }
-.field-n { color: rgb(10 10 11 / .32); font-variant-numeric: tabular-nums; transition: color .35s var(--ease); }
+.field label { display: flex; align-items: baseline; gap: .75rem; font-family: var(--mono); font-size: 11.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--bg); transition: color .35s var(--ease); cursor: text; }
+.field-n { color: #3c5bdc; font-variant-numeric: tabular-nums; transition: color .35s var(--ease); }
 .field input, .field textarea {
   width: 100%; background: transparent; border: 0; border-radius: 0; color: var(--bg); caret-color: #3c5bdc;
   font: inherit; font-weight: 500; font-variation-settings: "wdth" 100; font-size: clamp(1.2rem, 1.6vw, 1.5rem); letter-spacing: -.015em; line-height: 1.35;
@@ -516,15 +516,13 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
 .pf .field input:focus-visible, .pf .field textarea:focus-visible { outline: none; }
 .field textarea { field-sizing: content; min-height: 4.6em; max-height: 13em; }
 .field input::placeholder, .field textarea::placeholder {
-  font-family: var(--serif); font-style: italic; font-weight: 400; font-variation-settings: normal; letter-spacing: 0; font-size: 1.12em;
-  color: rgb(10 10 11 / .32); transition: color .35s var(--ease);
+  font-weight: 400; color: rgb(10 10 11 / .3); transition: color .35s var(--ease);
 }
-.field :focus::placeholder { color: rgb(10 10 11 / .18); }
+.field :focus::placeholder { color: rgb(10 10 11 / .14); }
 .field-line { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: #3c5bdc; transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease); }
 .field:focus-within .field-line { transform: scaleX(1); }
 .field:focus-within label, .field:focus-within .field-n { color: #3c5bdc; }
 /* Rellenado: el número se oscurece; con un dato no válido, en rojo */
-.field:has(:not(:placeholder-shown)) .field-n { color: var(--bg); }
 .field:has(:user-invalid) .field-line { background: #c4432b; transform: scaleX(1); }
 .field:has(:user-invalid) label, .field:has(:user-invalid) .field-n { color: #c4432b; }
 /* Autorrelleno del navegador sin fondo amarillo ni azul */
