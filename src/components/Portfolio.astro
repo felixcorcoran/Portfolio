@@ -289,6 +289,12 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             </li>
                         ))}
                     </ol>
+                    <!-- En móvil, los proyectos van en un carrusel: posición y barra de avance -->
+                    <div class="pcards-nav" aria-hidden="true">
+                        <span class="pcards-n"><span data-pc-n>01</span> / {pad(cards.length)}</span>
+                        <span class="pcards-bar"><i data-pc-bar></i></span>
+                        <span class="pcards-hint">{t('gallery.hint')}</span>
+                    </div>
                 </div>
             </section>
 
@@ -504,6 +510,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
             import '../scripts/motion';
             import '../scripts/smoke';
             import '../scripts/stars';
+            import '../scripts/carrusel';
             import '../scripts/contacto';
         </script>
     </body>

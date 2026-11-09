@@ -165,11 +165,14 @@ function start() {
         });
     });
 
-    // ---------- Galería: en escritorio se desliza en horizontal con el scroll ----------
-    mm.add('(min-width: 761px) and (min-height: 601px)', () => {
+    // ---------- Galería: se desliza en horizontal con el scroll (también en
+    // móvil). En pantallas bajas no se fija: se desliza con el dedo ----------
+    mm.add('(min-height: 601px)', () => {
         const track = document.querySelector<HTMLElement>('[data-track]');
         const pin = document.querySelector<HTMLElement>('.gallery-pin');
-        if (!track || !pin) return;
+        const gallery = document.querySelector<HTMLElement>('.gallery');
+        if (!track || !pin || !gallery) return;
+        gallery.classList.add('is-pinned');
         const distance = () => Math.max(track.scrollWidth - innerWidth, 0);
         gsap.to(track, {
             x: () => -distance(), ease: 'none',
@@ -178,6 +181,7 @@ function start() {
                 pin: true, scrub: 0.8, invalidateOnRefresh: true, anticipatePin: 1,
             },
         });
+        return () => gallery.classList.remove('is-pinned');
     });
 
     // ---------- Experiencia ----------
