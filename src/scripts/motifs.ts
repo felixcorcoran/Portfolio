@@ -41,81 +41,115 @@ const floorDots = (c: CanvasRenderingContext2D, P: ReturnType<typeof iso>, n: nu
     }
 };
 
+type Pt = [number, number];
+const smooth = (v: number) => { const x = clamp01(v); return x * x * (3 - 2 * x); };
+// Opacidad de un ciclo: entra, se mantiene y se funde al final para volver a empezar
+const cycleFade = (ph: number, out = 0.93) => 1 - smooth((ph - out) / (1 - out));
+// Dibuja los tramos en orden hasta «prog» (0-1 del largo total) y devuelve la
+// punta del trazo, donde va el punto que dibuja
+const trace = (c: CanvasRenderingContext2D, segs: [Pt, Pt][], prog: number): Pt | null => {
+    const lens = segs.map(([a, b]) => Math.hypot(b[0] - a[0], b[1] - a[1]));
+    let left = lens.reduce((x, y) => x + y, 0) * clamp01(prog);
+    let head: Pt | null = null;
+    for (let i = 0; i < segs.length && left > 0; i++) {
+        const [a, b] = segs[i];
+        const f = Math.min(1, left / (lens[i] || 1));
+        line(c, a, b, f);
+        head = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+        left -= lens[i];
+    }
+    return prog >= 1 ? null : head;
+};
+// El punto que dibuja: núcleo blanco azulado con halo
+const pen = (c: CanvasRenderingContext2D, p: Pt | null, k: number) => {
+    if (!p) return;
+    c.fillStyle = A(0.2 * k);
+    dot(c, p[0], p[1], 7);
+    c.fillStyle = A(1 * k);
+    dot(c, p[0], p[1], 2.2);
+};
+
 const motifs: Record<string, Draw> = {
-    // Obra: una torre que se levanta planta a planta y vuelve a empezar
+    // Obra: la torre sube planta a planta (el punto marca dónde se construye);
+    // terminada, se encienden las ventanas una a una, se mantiene y vuelve a empezar
     tower(c, w, h, t, k) {
-        const u = Math.min(w, h) / 11;
-        const P = iso(w * 0.5, h * 0.7, u);
+        const u = Math.min(w, h) / 12.5;
+        const P = iso(w * 0.5, h * 0.76, u);
+        const ph = (t / 18) % 1;
+        const fade = cycleFade(ph, 0.9);
         floorDots(c, P, 4, k);
-        const floors = 5;
-        const cycle = (t * 0.12) % 1.25; // un rato de pausa con la torre entera
-        const built = clamp01(cycle / 1) * floors;
-        const s = 1.4;
+        const kk = k * fade;
+        const floors = 5, s = 1.4, fh = 1.05;
+        const built = smooth(ph / 0.55) * floors;
+        const corners: Pt[] = [[-s, -s], [s, -s], [s, s], [-s, s]];
+        c.lineWidth = 1;
+        // Losa de la planta baja
+        c.strokeStyle = A(0.45 * kk);
+        for (let i = 0; i < 4; i++) line(c, P(...corners[i], 0), P(...corners[(i + 1) % 4], 0));
+        let head: Pt | null = null;
         for (let f = 0; f < floors; f++) {
             const p = clamp01(built - f);
             if (p <= 0) break;
-            const z0 = f * 1.05;
-            const z1 = z0 + 1.05 * p;
-            const top = f === floors - 1 && p >= 1;
-            c.strokeStyle = A((0.35 + 0.4 * (f + 1) / floors) * k);
-            c.lineWidth = 1;
-            const corners: [number, number][] = [[-s, -s], [s, -s], [s, s], [-s, s]];
-            corners.forEach(([x, y]) => line(c, P(x, y, z0), P(x, y, z1)));
-            for (let i = 0; i < 4; i++) {
-                const [x0, y0] = corners[i];
-                const [x1, y1] = corners[(i + 1) % 4];
-                line(c, P(x0, y0, z1), P(x1, y1, z1), p);
-                // Ventanas: dos puntos por fachada visible
-                if (p >= 1 && (i === 1 || i === 2)) {
-                    c.fillStyle = A(0.55 * k);
-                    for (const m of [0.33, 0.66]) {
-                        const [px, py] = P(x0 + (x1 - x0) * m, y0 + (y1 - y0) * m, z0 + 0.5);
-                        dot(c, px, py, 1.3);
-                    }
+            const z0 = f * fh;
+            // Primero suben los pilares y después se cierra el forjado de arriba
+            const up = clamp01(p / 0.55);
+            const ring = clamp01((p - 0.55) / 0.45);
+            c.strokeStyle = A((0.35 + 0.4 * (f + 1) / floors) * kk);
+            corners.forEach(([x, y]) => line(c, P(x, y, z0), P(x, y, z0 + fh * up)));
+            const ringSegs: [Pt, Pt][] = corners.map((cn, i) => [P(...cn, z0 + fh), P(...corners[(i + 1) % 4], z0 + fh)]);
+            const tip = ring > 0 ? trace(c, ringSegs, ring) : null;
+            if (p < 1) head = tip ?? P(-s, -s, z0 + fh * up);
+        }
+        pen(c, head, kk);
+        // Ventanas: dos por planta en cada fachada visible, encendiéndose en orden
+        const lit = clamp01((ph - 0.58) / 0.22) * floors * 4;
+        let n = 0;
+        for (let f = 0; f < floors && built >= floors; f++) {
+            for (const face of [1, 2]) {
+                const [x0, y0] = corners[face];
+                const [x1, y1] = corners[(face + 1) % 4];
+                for (const m of [0.3, 0.7]) {
+                    const on = clamp01(lit - n);
+                    n++;
+                    const x = x0 + (x1 - x0) * m, y = y0 + (y1 - y0) * m;
+                    const a = P(x - (x1 - x0) * 0.1, y - (y1 - y0) * 0.1, f * fh + 0.3);
+                    const b = P(x + (x1 - x0) * 0.1, y + (y1 - y0) * 0.1, f * fh + 0.3);
+                    const cc = P(x + (x1 - x0) * 0.1, y + (y1 - y0) * 0.1, f * fh + 0.75);
+                    const d = P(x - (x1 - x0) * 0.1, y - (y1 - y0) * 0.1, f * fh + 0.75);
+                    c.beginPath();
+                    c.moveTo(...a); c.lineTo(...b); c.lineTo(...cc); c.lineTo(...d); c.closePath();
+                    c.fillStyle = A((0.06 + 0.5 * on) * kk);
+                    c.fill();
+                    c.strokeStyle = A((0.25 + 0.4 * on) * kk);
+                    c.stroke();
                 }
-            }
-            if (top) {
-                // Grúa en lo alto
-                c.strokeStyle = A(0.7 * k);
-                line(c, P(s, -s, z1), P(s, -s, z1 + 1.6));
-                line(c, P(s, -s, z1 + 1.6), P(-s - 1.2, -s, z1 + 1.6));
-                const sw = Math.sin(t * 1.5) * 0.3;
-                line(c, P(-s - 0.4 + sw, -s, z1 + 1.6), P(-s - 0.4 + sw, -s, z1 + 0.6));
             }
         }
     },
 
-    // Nave: estructura baja con cubierta a dos aguas y un punto que recorre sus aristas
+    // Nave: el punto la va trazando arista a arista (suelo, pórticos y
+    // largueros); terminada, se mantiene y se funde para empezar otra vez
     hall(c, w, h, t, k) {
         const u = Math.min(w, h) / 12;
-        const P = iso(w * 0.5, h * 0.6, u);
+        const P = iso(w * 0.5, h * 0.62, u);
+        const ph = (t / 16) % 1;
+        const kk = k * cycleFade(ph, 0.88);
         floorDots(c, P, 5, k);
-        const X = 2.8, Y = 1.8, Z = 1.4, R = 2.4;
+        const X = 2.8, Y = 1.8, Z = 1.4, R = 2.4, n = 5;
+        const xs = Array.from({ length: n }, (_, i) => -X + (2 * X * i) / (n - 1));
+        const segs: [Pt, Pt][] = [
+            [P(-X, -Y, 0), P(X, -Y, 0)], [P(X, -Y, 0), P(X, Y, 0)], [P(X, Y, 0), P(-X, Y, 0)], [P(-X, Y, 0), P(-X, -Y, 0)],
+        ];
+        xs.forEach((x, i) => {
+            // Pórtico: pilar, faldón, faldón y pilar
+            segs.push([P(x, -Y, 0), P(x, -Y, Z)], [P(x, -Y, Z), P(x, 0, R)], [P(x, 0, R), P(x, Y, Z)], [P(x, Y, Z), P(x, Y, 0)]);
+            // Largueros que lo unen con el anterior
+            if (i > 0) segs.push([P(xs[i - 1], Y, Z), P(x, Y, Z)], [P(xs[i - 1], 0, R), P(x, 0, R)], [P(xs[i - 1], -Y, Z), P(x, -Y, Z)]);
+        });
         c.lineWidth = 1;
-        // Pórticos a lo largo de la nave
-        const n = 5;
-        for (let i = 0; i < n; i++) {
-            const x = -X + (2 * X * i) / (n - 1);
-            const frame: [number, number, number][] = [[x, -Y, 0], [x, -Y, Z], [x, 0, R], [x, Y, Z], [x, Y, 0]];
-            c.strokeStyle = A((0.25 + 0.35 * (i / (n - 1))) * k);
-            for (let j = 0; j < frame.length - 1; j++) line(c, P(...frame[j]), P(...frame[j + 1]));
-        }
-        // Largueros
-        c.strokeStyle = A(0.4 * k);
-        for (const [y, z] of [[-Y, Z], [0, R], [Y, Z], [-Y, 0], [Y, 0]] as [number, number][]) line(c, P(-X, y, z), P(X, y, z));
-        // Punto que recorre el perfil de la cubierta de un extremo a otro
-        const q = (t * 0.18) % 1;
-        const along = -X + 2 * X * q;
-        const prof: [number, number][] = [[-Y, Z], [0, R], [Y, Z]];
-        const seg = (t * 0.9) % 2;
-        const i0 = Math.floor(seg);
-        const f = seg - i0;
-        const a = prof[i0], b = prof[i0 + 1];
-        const [px, py] = P(along, a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f);
-        c.fillStyle = A(0.25 * k);
-        dot(c, px, py, 7);
-        c.fillStyle = A(1 * k);
-        dot(c, px, py, 2.2);
+        c.strokeStyle = A(0.6 * kk);
+        const head = trace(c, segs, smooth(ph / 0.7));
+        pen(c, head, kk);
     },
 
     // Peluquería: mechones de líneas que se mecen
@@ -144,46 +178,103 @@ const motifs: Record<string, Draw> = {
         }
     },
 
-    // Reformas: la planta de una vivienda con un punto que la recorre
+    // Reformas: el plano de una vivienda se dibuja muro a muro; aparecen
+    // puertas, ventanas y muebles, y un punto la recorre entrando por la puerta
+    // de la calle y pasando de una habitación a otra solo por las puertas
     plan(c, w, h, t, k) {
-        const s = Math.min(w / 15, h / 11);
-        const ox = w * 0.5 - 4.5 * s, oy = h * 0.54 - 3.1 * s;
-        const X = (v: number) => ox + v * s, Y = (v: number) => oy + v * s;
+        const s = Math.min(w / 13, h / 9.6);
+        const ox = w * 0.5 - 5 * s, oy = h * 0.52 - 3.5 * s;
+        const Q = (x: number, y: number): Pt => [ox + x * s, oy + y * s];
+        const ph = (t / 30) % 1;
+        const kk = k * cycleFade(ph, 0.94);
         c.lineWidth = 1;
-        // Muros (exterior más marcado)
-        c.strokeStyle = A(0.65 * k);
-        c.strokeRect(X(0), Y(0), 9 * s, 6.2 * s);
-        c.strokeStyle = A(0.38 * k);
-        const walls: [number, number, number, number][] = [
-            [4, 0, 4, 2.2], [4, 3.2, 4, 6.2], [0, 3.4, 2.6, 3.4], [4, 3.4, 9, 3.4], [6.6, 0, 6.6, 1.6], [6.6, 2.4, 6.6, 3.4],
+        // Muros, con los huecos de las puertas
+        const W: [number, number, number, number][] = [
+            [0, 0, 1, 0], [1.8, 0, 10, 0], [10, 0, 10, 7], [10, 7, 0, 7], [0, 7, 0, 0],
+            [6, 0, 6, 1.2], [6, 2, 6, 3.2], [6, 3.9, 6, 7],
+            [0, 4, 2.6, 4], [3.4, 4, 4.6, 4], [5.4, 4, 6, 4],
+            [4, 4, 4, 7], [6, 3, 7.6, 3], [8.4, 3, 10, 3],
         ];
-        walls.forEach(([a, b, cc, d]) => line(c, [X(a), Y(b)], [X(cc), Y(d)]));
-        // Puertas: arcos
-        c.strokeStyle = A(0.3 * k);
-        c.beginPath(); c.arc(X(4), Y(2.2), s, Math.PI / 2, Math.PI); c.stroke();
-        c.beginPath(); c.arc(X(2.6), Y(3.4), s * 0.8, 0, Math.PI / 2); c.stroke();
-        // Cota arriba
-        c.strokeStyle = A(0.25 * k);
-        line(c, [X(0), Y(-0.6)], [X(9), Y(-0.6)]);
-        line(c, [X(0), Y(-0.85)], [X(0), Y(-0.35)]);
-        line(c, [X(9), Y(-0.85)], [X(9), Y(-0.35)]);
-        // Recorrido por las habitaciones
-        const path: [number, number][] = [[2, 1.6], [4, 2.7], [5.3, 1.8], [6.6, 2], [7.8, 1.6], [7.8, 4.8], [5.5, 4.8], [3.3, 3.9], [1.3, 4.8], [1.4, 1.6]];
-        const L = path.length;
-        const q = (t * 0.35) % L;
-        const i = Math.floor(q), f = q - i;
-        const a = path[i], b = path[(i + 1) % L];
-        const ease = f * f * (3 - 2 * f);
-        const px = X(a[0] + (b[0] - a[0]) * ease), py = Y(a[1] + (b[1] - a[1]) * ease);
-        // Habitación activa iluminada
-        c.fillStyle = A(0.06 * k);
-        const rooms: [number, number, number, number][] = [[0, 0, 4, 3.4], [4, 0, 2.6, 3.4], [6.6, 0, 2.4, 3.4], [4, 3.4, 5, 2.8], [0, 3.4, 4, 2.8]];
-        const r = rooms.find(([x, y, ww, hh]) => a[0] + (b[0] - a[0]) * ease >= x && a[0] + (b[0] - a[0]) * ease <= x + ww && a[1] + (b[1] - a[1]) * ease >= y && a[1] + (b[1] - a[1]) * ease <= y + hh);
-        if (r) c.fillRect(X(r[0]), Y(r[1]), r[2] * s, r[3] * s);
-        c.fillStyle = A(0.22 * k);
-        dot(c, px, py, 8);
-        c.fillStyle = A(1 * k);
-        dot(c, px, py, 2.4);
+        c.strokeStyle = A(0.62 * kk);
+        const head = trace(c, W.map(([a, b, cc, d]) => [Q(a, b), Q(cc, d)]), smooth(ph / 0.26));
+        pen(c, head, kk);
+        // Puertas (hoja y barrido) y ventanas
+        const det = smooth((ph - 0.26) / 0.06) * kk;
+        if (det > 0) {
+            c.strokeStyle = A(0.35 * det);
+            const door = (hx: number, hy: number, ax: number, ay: number, px: number, py: number, len: number) => {
+                const hinge = Q(hx, hy);
+                line(c, hinge, Q(hx + px * len, hy + py * len));
+                const a0 = Math.atan2(py, px), a1 = Math.atan2(ay, ax);
+                let d = a1 - a0;
+                while (d > Math.PI) d -= TAU;
+                while (d < -Math.PI) d += TAU;
+                c.beginPath();
+                c.arc(hinge[0], hinge[1], len * s, a0, a1, d < 0);
+                c.stroke();
+            };
+            door(1, 0, 1, 0, 0, 1, 0.8);
+            door(6, 1.2, 0, 1, 1, 0, 0.8);
+            door(6, 3.2, 0, 1, 1, 0, 0.7);
+            door(2.6, 4, 1, 0, 0, 1, 0.8);
+            door(4.6, 4, 1, 0, 0, 1, 0.8);
+            door(7.6, 3, 1, 0, 0, 1, 0.8);
+            c.strokeStyle = A(0.5 * det);
+            const win = (x0: number, y0: number, x1: number, y1: number) => {
+                const nx = y0 === y1 ? 0 : 0.13, ny = y0 === y1 ? 0.13 : 0;
+                line(c, Q(x0 - nx, y0 - ny), Q(x1 - nx, y1 - ny));
+                line(c, Q(x0 + nx, y0 + ny), Q(x1 + nx, y1 + ny));
+            };
+            win(3, 0, 5, 0); win(10, 0.8, 10, 2.2); win(10, 4.5, 10, 6); win(1, 7, 3, 7); win(7, 7, 9, 7);
+            // Cotas
+            c.strokeStyle = A(0.22 * det);
+            line(c, Q(0, -0.6), Q(10, -0.6)); line(c, Q(0, -0.8), Q(0, -0.4)); line(c, Q(10, -0.8), Q(10, -0.4));
+            line(c, Q(-0.6, 0), Q(-0.6, 7)); line(c, Q(-0.8, 0), Q(-0.4, 0)); line(c, Q(-0.8, 7), Q(-0.4, 7));
+        }
+        // Muebles
+        const fur = smooth((ph - 0.3) / 0.08) * kk;
+        if (fur > 0) {
+            c.strokeStyle = A(0.3 * fur);
+            const R = (x: number, y: number, ww: number, hh: number) => { const [a, b] = Q(x, y); c.strokeRect(a, b, ww * s, hh * s); };
+            const O = (x: number, y: number, r: number) => { const [a, b] = Q(x, y); c.beginPath(); c.arc(a, b, r * s, 0, TAU); c.stroke(); };
+            R(0.4, 2.6, 2.2, 0.8); R(0.4, 3.1, 2.2, 0.3); R(0.9, 1.4, 1.2, 0.6); O(5.5, 0.5, 0.25); // salón: sofá, mesa baja, planta
+            R(6.2, 0.2, 3.6, 0.6); O(8.7, 0.5, 0.15); O(9.3, 0.5, 0.15); // cocina: encimera y fuegos
+            R(0.4, 4.6, 1.8, 2); R(0.6, 4.75, 1.4, 0.35); R(2.4, 4.6, 0.4, 0.4); // dormitorio
+            R(4.2, 6, 1.6, 0.8); O(5.65, 5.2, 0.2); R(4.15, 4.9, 0.4, 0.5); // baño: bañera, inodoro, lavabo
+            R(8.4, 4.8, 1.4, 2); R(8.55, 4.95, 1.1, 0.3); R(6.3, 6.2, 1.4, 0.6); // segundo dormitorio y mesa
+        }
+        // Recorrido: calle → salón → cocina → dormitorio 2 → salón → dormitorio → salón → baño → salón → calle
+        const path: Pt[] = [
+            [1.4, -0.9], [1.4, 0.6], [3, 2], [5.6, 1.6], [6.4, 1.6], [8, 1.6], [8, 2.6], [8, 3.4], [7.6, 5.3],
+            [6.4, 3.55], [5.6, 3.55], [3, 3.6], [3, 4.4], [3.1, 5.8], [3, 4.4], [3, 3.6], [5, 3.6], [5, 4.4],
+            [5, 5.4], [5, 4.4], [5, 3.6], [1.4, 0.6], [1.4, -0.9],
+        ];
+        const walk = smooth((ph - 0.38) / 0.54);
+        if (walk > 0 && walk < 1) {
+            const lens = path.slice(1).map((p, i) => Math.hypot(p[0] - path[i][0], p[1] - path[i][1]));
+            const total = lens.reduce((x, y) => x + y, 0);
+            const at = (d: number): Pt => {
+                let left = Math.max(0, d);
+                for (let i = 0; i < lens.length; i++) {
+                    if (left <= lens[i]) { const f = left / lens[i]; return [path[i][0] + (path[i + 1][0] - path[i][0]) * f, path[i][1] + (path[i + 1][1] - path[i][1]) * f]; }
+                    left -= lens[i];
+                }
+                return path[path.length - 1];
+            };
+            const d = walk * total;
+            const cur = at(d);
+            // Habitación en la que está, iluminada
+            const rooms: [number, number, number, number][] = [[0, 0, 6, 4], [6, 0, 4, 3], [6, 3, 4, 4], [0, 4, 4, 3], [4, 4, 2, 3]];
+            const r = rooms.find(([x, y, ww, hh]) => cur[0] > x && cur[0] < x + ww && cur[1] > y && cur[1] < y + hh);
+            if (r) { c.fillStyle = A(0.07 * kk); const [a, b] = Q(r[0], r[1]); c.fillRect(a, b, r[2] * s, r[3] * s); }
+            // Estela
+            for (let j = 1; j <= 18; j++) {
+                const a = at(d - (j - 1) * 0.12), b = at(d - j * 0.12);
+                c.strokeStyle = A(0.5 * kk * (1 - j / 18));
+                line(c, Q(...a), Q(...b));
+            }
+            pen(c, Q(...cur), kk);
+        }
     },
 
     // Secretaría: un calendario de puntos donde se van reservando citas
@@ -320,3 +411,6 @@ items.forEach((it) => {
     ro.observe(it.canvas);
     io.observe(it.canvas);
 });
+
+// Solo en desarrollo: para revisar fotogramas desde la consola
+if (import.meta.env.DEV) Object.assign(window, { __motifs: { items, paint } });
