@@ -11,7 +11,7 @@ import '../styles/portfolio.css';
 import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource/instrument-serif/400-italic.css';
 import '@fontsource-variable/jetbrains-mono';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import { useTranslations } from '../utils/i18n';
 import { persona, projects, experience, skills, cvOnly, learning, education, pick } from '../data/perfil';
 import { techIcon } from '../data/iconos';
@@ -67,19 +67,26 @@ const clientSites = [
     { name: 'Susana Floria Nails', url: 'https://susanaflorianails.com/sobrenosotros.html', cat: { es: 'Estética', en: 'Beauty' }, image: 'susana', desc: { es: 'Web de un negocio de estética.', en: 'Website for a beauty business.' } },
     { name: 'Construcciones Omega', url: 'https://construccionesyserviciosomega.com/inicio', cat: { es: 'Construcción', en: 'Construction' }, image: 'omega', desc: { es: 'Web de una empresa de construcción.', en: 'Website for a construction company.' } },
 ].map((s) => ({ ...s, cat: s.cat[lang], desc: s.desc[lang], image: shot(s.image) }));
+// Captura de cada web, optimizada, para la vista previa que sigue al ratón
+const shotsBySite = await Promise.all(clientSites.map((s) => (s.image ? getImage({ src: s.image, width: 720, format: 'webp' }) : null)));
+clientSites.forEach((s, i) => { s.preview = shotsBySite[i]?.src ?? ''; });
 
 // ---------- Experiencia + formación ----------
+// Cada hito con su tipo (rótulo pequeño encima del cargo)
 const jobs = [
     ...experience.map((job) => ({
+        kind: job.company ? (/prácticas/i.test(job.role.es) ? t('exp.kind.intern') : job.company) : t('exp.kind.freelance'),
         role: job.role[lang],
-        place: job.company || 'Freelance',
+        // Sin empresa (freelance) no se repite el sitio: ya lo dice el tipo
+        place: job.company,
         period: job.period[lang],
         desc: job.highlights.map((h) => h[lang]).join(' '),
         tags: job.tags.map((tag) => pick(tag, lang)),
     })),
     ...education.map((e) => ({
+        kind: t('exp.education'),
         role: e.title[lang],
-        place: `${t('exp.education')} · ${e.center}`,
+        place: e.center,
         period: e.period,
         desc: '',
         tags: [],
@@ -311,67 +318,60 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                         <p class="gallery-sub">{t('projects.freelance.sub')}<span class="gallery-hint"> · {t('gallery.hint')}</span></p>
                     </div>
                     <div class="gallery-viewport">
+                        <!-- Tarjetas tipográficas: al pasar el ratón, la captura de la web sale
+                             flotando junto al cursor (src/scripts/preview.ts) -->
                         <ul class="gallery-track" data-track>
                             {clientSites.map((s, i) => (
                                 <li class="gcard">
-                                    <a href={s.url} target="_blank" rel="noopener">
-                                        <div class="gcard-media">
-                                            <Image src={s.image} alt="" widths={[480, 800]} sizes="(min-width: 900px) 34vw, 80vw" loading="lazy" />
-                                        </div>
-                                        <div class="gcard-body">
-                                            <span class="gcard-num">{pad(i + 1)}</span>
-                                            <div class="gcard-text">
-                                                <span class="gcard-cat">{s.cat}</span>
-                                                <h3>{s.name}</h3>
-                                                <p>{s.desc}</p>
-                                            </div>
+                                    <a href={s.url} target="_blank" rel="noopener" data-preview={s.preview}>
+                                        <span class="gcard-top">
+                                            <span class="gcard-num" aria-hidden="true">{pad(i + 1)}</span>
+                                            <span class="gcard-cat">{s.cat}</span>
+                                        </span>
+                                        <h3>{s.name}</h3>
+                                        <span class="gcard-foot">
+                                            <span class="gcard-desc">{s.desc}</span>
                                             <span class="gcard-go" aria-hidden="true">↗</span>
-                                        </div>
+                                        </span>
                                         <span class="sr-only">{t('btn.visit')}</span>
                                     </a>
                                 </li>
                             ))}
                         </ul>
                     </div>
+                    <div class="gallery-preview" aria-hidden="true"><img alt="" data-preview-img /></div>
                 </div>
             </section>
 
             <!-- ================= EXPERIENCIA =================
-                 En escritorio, una rueda: los puestos son tarjetas sobre un arco que
-                 gira con el scroll y cada una pasa por arriba, recta. En móvil (o sin
-                 animación), la línea de tiempo de siempre. Mismo marcado para las dos -->
+                 Línea central que se dibuja con el scroll y los hitos en zigzag, a un
+                 lado y a otro, con el año junto a la línea. En móvil, la línea a la
+                 izquierda y todos los hitos a su derecha -->
             <section class="exp" id="experiencia" aria-labelledby="exp-title">
-                <div class="exp-scroller">
-                    <div class="exp-stage">
-                        <!-- El titular va dentro de la escena: se sigue viendo mientras gira la rueda -->
-                        <div class="wrap exp-head">
-                            <header class="sec-head">
-                                <p class="label">{t('exp.label')}</p>
-                                <h2 class="sec-title" id="exp-title" data-split>
-                                    <span class="line"><span>{t('exp.title')}<i class="dot-end">.</i></span></span>
-                                </h2>
-                            </header>
-                        </div>
-                        <p class="exp-count" aria-hidden="true"><span data-exp-n>01</span> / {pad(jobs.length)}</p>
-                        <div class="wrap exp-track">
-                            <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
-                            <ol class="exp-list">
-                                {jobs.map((job) => (
-                                    <li class="exp-item" data-exp-item>
-                                        <span class="exp-dot" aria-hidden="true"></span>
-                                        <div class="exp-when">
-                                            <p class="exp-big"><span class="exp-o">{job.period}</span><span class="exp-f" aria-hidden="true">{job.period}</span></p>
-                                            <p class="exp-place">{job.place}</p>
-                                        </div>
-                                        <div class="exp-main">
-                                            <h3>{job.role}</h3>
-                                            {job.desc && <p>{job.desc}</p>}
-                                            {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
-                                        </div>
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
+                <div class="wrap">
+                    <header class="sec-head exp-head">
+                        <p class="label">{t('exp.label')}</p>
+                        <h2 class="sec-title" id="exp-title" data-split>
+                            <span class="line"><span>{t('exp.title')}<i class="dot-end">.</i></span></span>
+                        </h2>
+                    </header>
+                    <div class="exp-track">
+                        <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
+                        <ol class="exp-list">
+                            {jobs.map((job) => (
+                                <li class="exp-item" data-exp-item>
+                                    <span class="exp-dot" aria-hidden="true"></span>
+                                    <p class="exp-year">{job.period}</p>
+                                    <div class="exp-body">
+                                        <p class="exp-kind">{job.kind}</p>
+                                        <h3>{job.role}</h3>
+                                        {job.place && <p class="exp-place">{job.place}</p>}
+                                        {job.desc && <p class="exp-desc">{job.desc}</p>}
+                                        {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
+                                    </div>
+                                </li>
+                            ))}
+                        </ol>
                     </div>
                 </div>
             </section>
@@ -511,6 +511,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
             import '../scripts/smoke';
             import '../scripts/stars';
             import '../scripts/carrusel';
+            import '../scripts/preview';
             import '../scripts/contacto';
         </script>
     </body>

@@ -103,6 +103,8 @@ const languages = {
     'scroll.hint': 'Desliza',
     'projects.count': 'Proyecto',
     'exp.education': 'Formación',
+    'exp.kind.freelance': 'Freelance',
+    'exp.kind.intern': 'Prácticas',
     'gallery.hint': 'Desliza para ver más'
   },
   en: {
@@ -209,6 +211,8 @@ const languages = {
     'scroll.hint': 'Scroll',
     'projects.count': 'Project',
     'exp.education': 'Education',
+    'exp.kind.freelance': 'Freelance',
+    'exp.kind.intern': 'Internship',
     'gallery.hint': 'Swipe to see more'
   }
 };

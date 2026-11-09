@@ -273,19 +273,45 @@ html { background: var(--bg); overflow-x: clip; }
   list-style: none; margin: 0; display: flex; gap: clamp(1rem, 2vw, 1.75rem);
   padding: 0 var(--gutter); width: max-content; will-change: transform;
 }
-.gcard { width: clamp(22rem, 40vw, 62rem); flex: none; }
-.gcard a { display: block; border-radius: 1.5rem; overflow: hidden; background: var(--panel); border: 1px solid var(--line); transition: border-color .3s; }
-.gcard a:hover { border-color: var(--line-2); }
-.gcard-media { aspect-ratio: 16 / 10; overflow: hidden; background: var(--bg-2); }
-.gcard-media img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 1s var(--ease); }
-.gcard a:hover .gcard-media img { transform: scale(1.05); }
-.gcard-body { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 1rem; align-items: start; padding: 1.25rem 1.4rem 1.5rem; }
-.gcard-num { font-family: var(--mono); font-size: 11px; color: var(--accent); padding-top: .2rem; }
-.gcard-cat { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-.gcard h3 { margin: .45rem 0 .4rem; font-size: clamp(1.35rem, 1.8vw, 1.9rem); font-weight: 750; font-variation-settings: "wdth" 112; letter-spacing: -.02em; line-height: 1.05; }
-.gcard p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.5; }
-.gcard-go { width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line-2); transition: background .3s, color .3s, transform .4s var(--ease); }
+.gcard { width: clamp(18rem, 27vw, 28rem); flex: none; }
+.gcard a {
+  position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem;
+  height: clamp(20rem, 52vh, 28rem); padding: clamp(1.5rem, 2.4vw, 2.25rem);
+  border-radius: 1.5rem; background: var(--panel); border: 1px solid var(--line); overflow: hidden;
+  transition: border-color .4s, background .4s;
+}
+/* Cada tarjeta, con un fondo ligeramente distinto */
+.gcard:nth-child(3n + 2) a { background: #13141c; }
+.gcard:nth-child(3n + 3) a { background: #18171d; }
+.gcard a:hover { border-color: rgb(122 149 255 / .5); }
+.gcard-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.gcard-num {
+  font-weight: 850; font-variation-settings: "wdth" 125; font-size: clamp(3.5rem, 5vw, 5.5rem); line-height: .8; letter-spacing: -.04em;
+  color: transparent; -webkit-text-stroke: 1.2px rgb(122 149 255 / .65); transition: color .4s;
+}
+.gcard a:hover .gcard-num { color: rgb(122 149 255 / .2); }
+.gcard-cat { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); padding-top: .4rem; }
+.gcard h3 {
+  margin: auto 0 0; font-weight: 800; text-transform: uppercase; font-variation-settings: "wdth" 100;
+  font-size: clamp(1.9rem, 2.6vw, 2.8rem); line-height: .92; letter-spacing: -.025em; text-wrap: balance;
+  overflow-wrap: break-word; transition: color .35s;
+}
+.gcard a:hover h3 { color: var(--accent); }
+.gcard-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.gcard-desc { color: var(--muted); font-size: .92rem; line-height: 1.5; }
+.gcard-go { flex: none; width: 2.75rem; height: 2.75rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line-2); transition: background .3s, color .3s, transform .4s var(--ease), border-color .3s; }
 .gcard a:hover .gcard-go { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(45deg); }
+/* Captura que sigue al ratón (solo con ratón) */
+.gallery-preview {
+  position: fixed; left: 0; top: 0; z-index: 40; width: clamp(16rem, 24vw, 24rem); aspect-ratio: 16 / 10;
+  border-radius: 1rem; overflow: hidden; pointer-events: none; border: 1px solid var(--line-2);
+  box-shadow: 0 30px 70px -20px rgb(0 0 0 / .85); background: var(--bg-2);
+  opacity: 0; transform: translate(-50%, -50%) scale(.8) rotate(-6deg); transition: opacity .3s var(--ease), transform .45s var(--ease);
+  will-change: left, top, transform;
+}
+.gallery-preview.is-on { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-3deg); }
+.gallery-preview img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+@media (hover: none), (pointer: coarse) { .gallery-preview { display: none; } }
 .gallery-hint { display: none; }
 .gallery:not(.is-pinned) .gallery-viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
 .gallery:not(.is-pinned) .gallery-viewport::-webkit-scrollbar { display: none; }
@@ -294,38 +320,42 @@ html { background: var(--bg); overflow-x: clip; }
 /* Barra del carrusel de proyectos: solo en móvil */
 .pcards-nav { display: none; }
 
-/* ---------- Experiencia: cada puesto con su periodo en grande ---------- */
+/* ---------- Experiencia: línea central y hitos en zigzag ---------- */
 .exp { background: var(--bg); padding-block: clamp(5rem, 14vh, 10rem); border-top: 1px solid var(--line); }
-.exp-track { position: relative; padding-left: clamp(1.75rem, 4vw, 3.5rem); }
+.exp-head { margin-bottom: clamp(3rem, 8vh, 5.5rem); }
+.exp-track { position: relative; }
 .exp-list { list-style: none; margin: 0; padding: 0; }
-.exp-line { position: absolute; left: 0; top: .6rem; bottom: .6rem; width: 1px; background: var(--line); }
+.exp-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; translate: -50% 0; background: var(--line); }
 .exp-line span { position: absolute; inset: 0; background: var(--accent); transform-origin: top; }
 .motion .exp-line span { transform: scaleY(0); }
 .exp-item {
-  --pad: clamp(2.5rem, 7vh, 4.5rem);
-  position: relative; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.6fr); gap: 1.25rem clamp(2rem, 5vw, 5rem);
-  padding-block: var(--pad); border-bottom: 1px solid var(--line);
+  --pad: clamp(2rem, 6vh, 3.75rem);
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(3rem, 8vw, 7rem);
+  padding-block: var(--pad);
 }
-.exp-item:first-of-type { --pad: 0rem; padding-bottom: clamp(2.5rem, 7vh, 4.5rem); }
-/* El punto, a la altura de la primera línea del periodo; se enciende al llegar */
+.exp-item:first-child { padding-top: 0; --pad: 0rem; }
+/* Impares: el texto a la izquierda (alineado a la línea) y el año a la derecha; pares, al revés */
+.exp-body { grid-row: 1; display: grid; gap: .9rem; align-content: start; min-width: 0; }
+.exp-year { grid-row: 1; margin: 0; padding-top: .35rem; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.exp-item:nth-child(odd) .exp-body { grid-column: 1; text-align: right; justify-items: end; }
+.exp-item:nth-child(odd) .exp-year { grid-column: 2; }
+.exp-item:nth-child(even) .exp-body { grid-column: 2; }
+.exp-item:nth-child(even) .exp-year { grid-column: 1; text-align: right; }
+.exp-item:nth-child(odd) .chips { justify-content: flex-end; }
 .exp-dot {
-  position: absolute; left: calc(-1 * clamp(1.75rem, 4vw, 3.5rem)); top: calc(var(--pad) + clamp(.55rem, 1.5vw, 1.25rem)); translate: -50% 0;
+  position: absolute; left: 50%; top: calc(var(--pad) + .55rem); translate: -50% 0;
   width: 11px; height: 11px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line-2);
   transition: background .4s, border-color .4s, box-shadow .4s;
 }
 .exp-item.is-on .exp-dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 6px rgb(122 149 255 / .18); }
-.exp-when { display: grid; gap: .75rem; align-content: start; }
-.exp-big {
-  position: relative; margin: 0; justify-self: start;
-  font-weight: 800; text-transform: uppercase; font-variation-settings: "wdth" 118;
-  font-size: clamp(1.8rem, 3.4vw, 3.6rem); line-height: .95; letter-spacing: -.04em; text-wrap: balance;
+.exp-item.is-on .exp-year { color: var(--text); }
+.exp-kind { margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+.exp-body h3 {
+  margin: 0; font-weight: 800; text-transform: uppercase; font-variation-settings: "wdth" 92;
+  font-size: clamp(2rem, 3.6vw, 3.8rem); line-height: .92; letter-spacing: -.02em; text-wrap: balance;
 }
-.exp-o { color: transparent; -webkit-text-stroke: 1.2px rgb(241 239 234 / .4); }
-.exp-f { position: absolute; inset: 0; color: var(--text); }
-.motion .exp-f { clip-path: inset(0 100% 0 0); }
-.exp-place { margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
-.exp-main h3 { margin: 0 0 1rem; font-weight: 800; text-transform: uppercase; font-variation-settings: "wdth" 115; font-size: clamp(1.6rem, 2.6vw, 2.6rem); line-height: .95; letter-spacing: -.03em; text-wrap: balance; }
-.exp-main p { margin: 0 0 1.25rem; color: var(--muted); font-size: 1.05rem; line-height: 1.65; max-width: 62ch; }
+.exp-place { margin: 0; padding-top: .9rem; border-top: 1px solid var(--line); width: 100%; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--muted); }
+.exp-desc { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.65; max-width: 46ch; }
 
 /* ---------- Stack ---------- */
 .skills { background: var(--bg); padding-block: clamp(5rem, 14vh, 10rem); border-top: 1px solid var(--line); }
@@ -363,45 +393,6 @@ html { background: var(--bg); overflow-x: clip; }
 
 /* ---------- Punto azul al final de los titulares ---------- */
 .dot-end { font-style: normal; color: var(--accent); -webkit-text-stroke: 0; }
-
-/* ---------- Experiencia en rueda (escritorio, con movimiento) ----------
-   El script pone .is-wheel: las tarjetas giran alrededor de un centro muy
-   por debajo de la pantalla y cada una pasa recta por arriba */
-.exp-count { display: none; }
-.exp.is-wheel { padding-bottom: 0; }
-.exp.is-wheel .exp-scroller { height: 260vh; }
-.exp.is-wheel .exp-stage {
-  --title: clamp(2.4rem, min(6vw, 9svh), 5.5rem);
-  /* Alto del titular (rótulo + hueco + titular) y dónde empiezan las tarjetas */
-  --head: calc(1.1rem + .75rem + var(--title) * .9);
-  --card-top: calc(var(--nav-h) + 1rem + var(--head) + clamp(1rem, 3vh, 2rem));
-  position: sticky; top: 0; height: 100svh; overflow: hidden;
-}
-/* El titular, arriba y más compacto mientras gira la rueda */
-.exp.is-wheel .exp-head { position: absolute; z-index: 20; left: 0; right: 0; top: calc(var(--nav-h) + 1rem); }
-.exp.is-wheel .exp-head .sec-head { margin: 0; gap: .75rem; }
-.exp.is-wheel .exp-head .sec-title { font-size: var(--title); }
-.exp.is-wheel .exp-track { width: 100%; max-width: none; height: 100%; padding: 0; margin: 0; }
-.exp.is-wheel .exp-line, .exp.is-wheel .exp-dot { display: none; }
-.exp.is-wheel .exp-list { position: relative; height: 100%; }
-.exp.is-wheel .exp-item,
-.exp.is-wheel .exp-item:first-of-type {
-  --w: min(40rem, 46vw);
-  position: absolute; left: 50%; top: var(--card-top); width: var(--w); margin-left: calc(var(--w) / -2);
-  grid-template-columns: minmax(0, 1fr); gap: 1.1rem;
-  padding: clamp(1.75rem, 2.6vw, 2.5rem); border: 1px solid var(--line); border-radius: clamp(1.25rem, 2vw, 2rem);
-  background: var(--panel); box-shadow: 0 40px 80px -40px rgb(0 0 0 / .9);
-  transform-origin: 50% 1500px; will-change: transform, opacity;
-}
-.exp.is-wheel .exp-f { clip-path: none; }
-.exp.is-wheel .exp-big { font-size: clamp(2rem, 3vw, 3.2rem); }
-.exp.is-wheel .exp-main p { font-size: 1rem; margin-bottom: 1rem; }
-.exp.is-wheel .exp-count {
-  /* A la izquierda, a media altura: no choca con tarjetas altas */
-  display: block; position: absolute; left: var(--gutter); top: 50%; translate: 0 -50%; margin: 0;
-  font-family: var(--mono); font-size: 13px; letter-spacing: .14em; color: var(--muted); font-variant-numeric: tabular-nums;
-}
-.exp.is-wheel .exp-count span { color: var(--text); }
 
 /* ---------- Stack en círculo (escritorio, con movimiento) ----------
    El script pone .is-ring: el globo (globe.ts) ilumina su borde con el
@@ -542,11 +533,9 @@ html { background: var(--bg); overflow-x: clip; }
   .ribbon-b { transform: rotate(6deg); }
   .ribbons { padding-block: 5.5rem; }
   .pcard-more { display: none; }
-  .gcard { width: 80vw; }
-  /* Sin el número, el nombre tiene sitio; si aún no cabe, baja de línea */
-  .gcard-num { display: none; }
-  .gcard-body { grid-template-columns: minmax(0, 1fr) auto; padding: 1.1rem 1.1rem 1.25rem; }
-  .gcard h3 { font-size: clamp(1.1rem, 5.4vw, 1.4rem); overflow-wrap: break-word; hyphens: auto; }
+  .gcard { width: 78vw; }
+  .gcard a { height: auto; min-height: 19rem; }
+  .gcard h3 { font-size: clamp(1.6rem, 8vw, 2.2rem); }
   .skill-row { grid-template-columns: minmax(0, 1fr); }
   .skill-num { display: none; }
   .skill-icons { grid-column: 1; }
@@ -580,13 +569,20 @@ html { background: var(--bg); overflow-x: clip; }
   .pcards-bar i { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(var(--p, .17)); transition: transform .2s; }
   .pcards-hint { text-transform: uppercase; font-size: 10.5px; color: var(--faint); }
 
-  /* Experiencia, más compacta */
+  /* Experiencia: la línea a la izquierda y todos los hitos a su derecha */
   .exp { padding-block: 4rem; }
-  .exp-item, .exp-item:first-of-type { --pad: 1.75rem; gap: .6rem; }
-  .exp-item:first-of-type { --pad: 0rem; padding-bottom: 1.75rem; }
-  .exp-big { font-size: clamp(1.4rem, 6.4vw, 2rem); }
-  .exp-main h3 { font-size: clamp(1.25rem, 6.2vw, 1.8rem); margin-bottom: .7rem; }
-  .exp-main p { font-size: .95rem; line-height: 1.6; margin-bottom: .9rem; }
+  .exp-head { margin-bottom: 2.5rem; }
+  .exp-track { padding-left: 1.75rem; }
+  .exp-line { left: 0; translate: 0 0; }
+  .exp-item, .exp-item:first-child { grid-template-columns: minmax(0, 1fr); row-gap: .5rem; }
+  .exp-item { --pad: 2rem; }
+  .exp-item:first-child { --pad: 0rem; }
+  .exp-item .exp-year, .exp-item:nth-child(n) .exp-year { grid-column: 1; grid-row: 1; text-align: left; padding-top: 0; }
+  .exp-item .exp-body, .exp-item:nth-child(n) .exp-body { grid-column: 1; grid-row: 2; text-align: left; justify-items: start; }
+  .exp-item:nth-child(odd) .chips { justify-content: flex-start; }
+  .exp-dot { left: -1.75rem; top: calc(var(--pad) + .15rem); }
+  .exp-body h3 { font-size: clamp(1.5rem, 7.4vw, 2.2rem); }
+  .exp-desc { font-size: .95rem; }
 
   /* Stack, compacto: nombre del grupo y sus tecnologías */
   .skills { padding-block: 4rem 3rem; }
