@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # HTML intermedio del currículum (lleva las imágenes en base64)
 cv/out/
+
+# HTML intermedio de la imagen para redes
+og/out/

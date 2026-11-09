@@ -18,7 +18,9 @@ import { techIcon } from '../data/iconos';
 
 const { lang = 'es' } = Astro.props;
 const t = useTranslations(lang);
-const title = 'Félix Corcoran | Full Stack & AI Automation';
+const title = lang === 'en'
+    ? 'Félix Corcoran | Full Stack Developer & AI Integration'
+    : 'Félix Corcoran | Desarrollador full stack e integración de IA';
 
 const site = Astro.site ?? new URL('https://dev.felixcorcoran.es');
 const urlEs = new URL('/', site).href;
@@ -151,6 +153,11 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                 document.documentElement.classList.add('motion');
                 setTimeout(() => document.documentElement.classList.add('motion-ready'), 2500);
             }
+            // Si se llega desde el otro idioma, la página se oculta hasta colocarse
+            // en el mismo punto (src/scripts/idioma.ts)
+            try {
+                if (sessionStorage.getItem('lang-pos')) document.documentElement.classList.add('lang-arriving');
+            } catch {}
         </script>
     </head>
     <body class="pf">
@@ -250,7 +257,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                     <div class="pcard-media">
                                         {c.image && (
                                             <div class="pcard-shot">
-                                                <Image src={c.image} alt="" widths={[640, 960, 1280]} sizes="(min-width: 900px) 48vw, 92vw" loading={i < 2 ? 'eager' : 'lazy'} style={`object-position: ${c.imagePos}`} />
+                                                <Image src={c.image} alt={`${t('shot.alt')} ${c.name.replace('\u200b', '')}`} widths={[640, 960, 1280]} sizes="(min-width: 900px) 48vw, 92vw" loading={i < 2 ? 'eager' : 'lazy'} style={`object-position: ${c.imagePos}`} />
                                             </div>
                                         )}
                                         {c.status && <span class="pill pill-status">{c.status}</span>}
@@ -479,6 +486,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                 <span id="btn-text">{t('contact.send')}</span><span aria-hidden="true">→</span>
                             </button>
                             <p id="success-msg" role="status" class="form-ok" hidden>{t('contact.success')}</p>
+                            <p class="form-privacy">{t('contact.privacy')} <a href="https://felixcorcoran.es/privacidad#portfolio" target="_blank" rel="noopener">{t('contact.privacy.link')}</a></p>
                         </form>
                     </div>
                 </div>
@@ -505,6 +513,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
         </footer>
 
         <script>
+            import '../scripts/idioma';
             import '../scripts/motion';
             import '../scripts/smoke';
             import '../scripts/stars';

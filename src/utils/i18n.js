@@ -15,17 +15,12 @@ const languages = {
     // Botones / Acciones comunes
     'btn.projects': 'Proyectos',
     'btn.cv': 'Currículum',
-    'btn.download': 'Descargar',
     'btn.visit': 'Visitar web',
     'btn.explore': 'Explorar',
 
     // Pilares Técnicos
     'stack.tagline.1': 'Con lo que',
     'stack.tagline.2': 'construyo mis proyectos.',
-    'tech.backend': 'Lógica de servidor y bases de datos bien estructuradas: PHP con MVC en producción, Laravel, Node.js con TypeScript para funciones serverless e integraciones, y Java y Python cuando el proyecto lo pide.',
-    'tech.frontend': 'Interfaces fieles al diseño, responsivas y rápidas: de un prototipo estático a una experiencia fluida, con Astro, React, Tailwind CSS, GSAP y 3D en Three.js.',
-    'tech.automation': 'Conecto modelos de IA con procesos reales: workflows en n8n, APIs de OpenAI, Claude y Gemini, y APIs de terceros como Shopify, Telegram o Google Places, con JSON como puente.',
-    'tech.future': 'Profundizando en Next.js y Supabase para construir productos full stack con renderizado en servidor y datos en tiempo real.',
 
     // Experiencia
     'exp.label': 'Trayectoria',
@@ -36,12 +31,11 @@ const languages = {
     'projects.section.subtitle': 'Trabajos',
     'btn.case': 'Ver caso',
     'btn.code': 'Código',
+    'shot.alt': 'Captura de',
     'projects.freelance.label': 'Galería freelance',
-    'projects.own.label': 'Proyectos propios',
-    'carousel.of': 'de',
+    'projects.own.label': 'Proyectos',
     'projects.freelance.title': 'Webs para negocios',
     'projects.freelance.sub': 'Diseño y desarrollo a medida',
-    'btn.open': 'Abrir proyecto',
 
     // Formulario de Contacto
     'contact.label': 'Contacto',
@@ -58,6 +52,8 @@ const languages = {
     'contact.placeholder.email': 'Tu correo...',
     'contact.placeholder.project': 'Cuéntame qué quieres construir...',
     'contact.send': 'Enviar mensaje',
+    'contact.privacy': 'Solo uso tus datos para responderte; nunca para publicidad.',
+    'contact.privacy.link': 'Política de privacidad',
     'contact.sending': 'Enviando...',
     'contact.sent': 'Enviado',
     'contact.success': '> Mensaje enviado. Te respondo pronto.',
@@ -78,27 +74,13 @@ const languages = {
     'stack.learning': 'Ahora aprendiendo',
     'contact.title.1': '¿Hablamos?',
     'contact.title.2': 'Escríbeme.',
-    'footer.built': 'Hecho con Astro, GSAP y Lenis',
-    // Footer
-    'footer.desc': 'Desarrollador full stack: web, automatización e integración de IA.',
-    'footer.business': '¿Tienes un negocio?',
 
-    // Rediseño: menú, enfoque, cifras y rótulos
+    // Rediseño: menú y rótulos
     'nav.projects': 'Proyectos',
     'nav.experience': 'Experiencia',
     'nav.stack': 'Stack',
     'nav.contact': 'Contacto',
     'nav.menu': 'Secciones',
-    'stats.label': 'En cifras',
-    'stats.own': 'proyectos propios publicados',
-    'stats.clients': 'webs de clientes en producción',
-    'stats.since': 'trabajando con clientes desde',
-    'stats.tech': 'tecnologías en uso',
-    'marquee.1': 'Full stack',
-    'marquee.2': 'IA',
-    'marquee.3': 'Automatización',
-    'scroll.hint': 'Desliza',
-    'projects.count': 'Proyecto',
     'exp.education': 'Formación',
     'exp.kind.freelance': 'Freelance',
     'exp.kind.intern': 'Prácticas',
@@ -120,17 +102,12 @@ const languages = {
     // Botones / Acciones comunes
     'btn.projects': 'Projects',
     'btn.cv': 'Resume',
-    'btn.download': 'Download',
     'btn.visit': 'Visit site',
     'btn.explore': 'Explore',
 
     // Pilares Técnicos
     'stack.tagline.1': 'What I build',
     'stack.tagline.2': 'my projects with.',
-    'tech.backend': 'Well-structured server logic and databases: PHP with MVC in production, Laravel, Node.js with TypeScript for serverless functions and integrations, and Java and Python when the project calls for it.',
-    'tech.frontend': 'Interfaces true to the design, responsive and fast: from a static prototype to a fluid experience, with Astro, React, Tailwind CSS, GSAP and 3D in Three.js.',
-    'tech.automation': 'I connect AI models with real processes: n8n workflows, OpenAI, Claude and Gemini APIs, and third-party APIs such as Shopify, Telegram or Google Places, with JSON as the bridge.',
-    'tech.future': 'Going deeper into Next.js and Supabase to build full stack products with server-side rendering and real-time data.',
 
     // Experience
     'exp.label': 'Background',
@@ -141,12 +118,11 @@ const languages = {
     'projects.section.subtitle': 'Works',
     'btn.case': 'View case',
     'btn.code': 'Code',
+    'shot.alt': 'Screenshot of',
     'projects.freelance.label': 'Freelance gallery',
-    'projects.own.label': 'Own projects',
-    'carousel.of': 'of',
+    'projects.own.label': 'Projects',
     'projects.freelance.title': 'Websites for businesses',
     'projects.freelance.sub': 'Custom design and development',
-    'btn.open': 'Open project',
 
     // Formulario de Contacto
     'contact.label': 'Contact',
@@ -163,6 +139,8 @@ const languages = {
     'contact.placeholder.email': 'Your email...',
     'contact.placeholder.project': 'Tell me what you want to build...',
     'contact.send': 'Send message',
+    'contact.privacy': 'I only use your details to reply to you; never for advertising.',
+    'contact.privacy.link': 'Privacy policy (in Spanish)',
     'contact.sending': 'Sending...',
     'contact.sent': 'Sent',
     'contact.success': "> Message sent. I'll get back to you soon.",
@@ -183,27 +161,13 @@ const languages = {
     'stack.learning': 'Currently learning',
     'contact.title.1': 'Let\x27s',
     'contact.title.2': 'Talk.',
-    'footer.built': 'Built with Astro, GSAP and Lenis',
-    // Footer
-    'footer.desc': 'Full stack developer: web, automation and AI integration.',
-    'footer.business': 'Running a business?',
 
-    // Redesign: menu, focus, numbers and labels
+    // Redesign: menu and labels
     'nav.projects': 'Projects',
     'nav.experience': 'Experience',
     'nav.stack': 'Stack',
     'nav.contact': 'Contact',
     'nav.menu': 'Sections',
-    'stats.label': 'In numbers',
-    'stats.own': 'own projects published',
-    'stats.clients': 'client websites live',
-    'stats.since': 'working with clients since',
-    'stats.tech': 'technologies in use',
-    'marquee.1': 'Full stack',
-    'marquee.2': 'AI',
-    'marquee.3': 'Automation',
-    'scroll.hint': 'Scroll',
-    'projects.count': 'Project',
     'exp.education': 'Education',
     'exp.kind.freelance': 'Freelance',
     'exp.kind.intern': 'Internship',

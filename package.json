@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "cv": "node cv/cv.mjs"
+    "cv": "node cv/cv.mjs",
+    "og": "node og/og.mjs"
   },
   "dependencies": {
     "@astrojs/vercel": "^10.0.7",
