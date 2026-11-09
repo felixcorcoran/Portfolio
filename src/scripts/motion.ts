@@ -207,50 +207,40 @@ function start() {
         return () => gallery.classList.remove('is-pinned');
     });
 
-    // ---------- Experiencia ----------
     const big = '(min-width: 1001px) and (min-height: 601px)';
     const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
 
-    // Línea central que se dibuja con el scroll; cada hito enciende su punto al
-    // pasar y entra desde su lado (en móvil, todos desde abajo)
+    // ---------- Experiencia ----------
+    // La línea se dibuja hasta el marcador (fijo a media pantalla) y se enciende
+    // el último hito cuya parte de arriba ha pasado el marcador. Sin estado: se
+    // calcula en cada actualización, así que al volver arriba o recargar a media
+    // página queda bien.
     const progress = document.querySelector('[data-exp-progress]');
-    if (progress) {
+    const expList = document.querySelector<HTMLElement>('.exp-list');
+    if (progress && expList) {
         gsap.fromTo(progress, { scaleY: 0 }, {
             scaleY: 1, ease: 'none',
-            scrollTrigger: { trigger: '.exp-list', start: 'top 60%', end: 'bottom 60%', scrub: true },
+            scrollTrigger: { trigger: '.exp-track', start: 'top 50%', end: 'bottom 50%', scrub: true },
         });
+        const jobs = gsap.utils.toArray<HTMLElement>('[data-exp-item]');
+        const now = document.querySelector<HTMLElement>('[data-exp-now]');
+        let active = -1;
+        const light = () => {
+            const mid = innerHeight * 0.5;
+            let i = 0;
+            jobs.forEach((job, k) => { if (job.getBoundingClientRect().top < mid) i = k; });
+            if (i === active) return;
+            const dir = i > active ? 1 : -1;
+            active = i;
+            jobs.forEach((job, k) => job.classList.toggle('is-on', k === i));
+            if (now) {
+                now.textContent = String(i + 1).padStart(2, '0');
+                gsap.fromTo(now, { yPercent: 100 * dir }, { yPercent: 0, duration: 0.5, ease: 'expo.out', overwrite: true });
+            }
+        };
+        ScrollTrigger.create({ trigger: '.exp', start: 'top bottom', end: 'bottom top', onUpdate: light, onRefresh: light });
+        light();
     }
-    const wide = matchMedia('(min-width: 1001px)').matches;
-    gsap.utils.toArray<HTMLElement>('[data-exp-item]').forEach((job, i) => {
-        ScrollTrigger.create({
-            trigger: job, start: 'top 60%',
-            onEnter: () => job.classList.add('is-on'),
-            onLeaveBack: () => job.classList.remove('is-on'),
-        });
-        const side = wide ? (i % 2 === 0 ? -60 : 60) : 0;
-        gsap.from(job.querySelectorAll('.exp-body > *'), {
-            opacity: 0, x: side, y: wide ? 0 : 24, duration: 1, ease: 'expo.out', stagger: 0.06,
-            scrollTrigger: { trigger: job, start: 'top 80%', toggleActions: 'play none none none' },
-        });
-        // La descripción se enciende palabra a palabra mientras la lees
-        const desc = job.querySelector<HTMLElement>('[data-words]');
-        if (desc) {
-            const words = [...desc.querySelectorAll<HTMLElement>('.fw')];
-            ScrollTrigger.create({
-                trigger: desc, start: 'top 85%', end: 'bottom 45%',
-                onUpdate: (self) => {
-                    const lit = Math.ceil(self.progress * words.length);
-                    words.forEach((w, k) => w.classList.toggle('on', k < lit));
-                },
-                // Si ya se ha pasado (recarga a media página), queda encendida
-                onLeave: () => words.forEach((w) => w.classList.add('on')),
-            });
-        }
-        gsap.from(job.querySelector('.exp-year'), {
-            opacity: 0, duration: 0.8, delay: 0.2,
-            scrollTrigger: { trigger: job, start: 'top 80%', toggleActions: 'play none none none' },
-        });
-    });
 
     // ---------- Stack: el titular se rellena y cada fila se monta ----------
     const stackFill = document.querySelector('[data-stack-fill]');

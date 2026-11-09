@@ -349,32 +349,32 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
             </section>
 
             <!-- ================= EXPERIENCIA =================
-                 Línea central que se dibuja con el scroll y los hitos en zigzag, a un
-                 lado y a otro, con el año junto a la línea. En móvil, la línea a la
-                 izquierda y todos los hitos a su derecha -->
+                 Dos columnas: a la izquierda el título se queda fijo a media pantalla
+                 con un contador; en medio, una línea que se dibuja con el scroll y un
+                 marcador que se queda en el centro; a la derecha, los hitos pasan y se
+                 enciende el que cruza el marcador. En móvil, la línea a la izquierda -->
             <section class="exp" id="experiencia" aria-labelledby="exp-title">
-                <div class="wrap">
+                <div class="wrap exp-grid">
                     <header class="sec-head exp-head">
                         <p class="label">{t('exp.label')}</p>
                         <h2 class="sec-title" id="exp-title" data-split>
                             <span class="line"><span>{t('exp.title')}<i class="dot-end">.</i></span></span>
                         </h2>
+                        <p class="exp-count" aria-hidden="true"><span class="exp-now"><span data-exp-now>01</span></span><span class="exp-total">/ {String(jobs.length).padStart(2, '0')}</span></p>
                     </header>
                     <div class="exp-track">
-                        <span class="exp-line" aria-hidden="true"><span data-exp-progress></span></span>
+                        <div class="exp-line" aria-hidden="true">
+                            <span class="exp-fill" data-exp-progress></span>
+                            <span class="exp-mark"></span>
+                        </div>
                         <ol class="exp-list">
                             {jobs.map((job) => (
                                 <li class="exp-item" data-exp-item>
-                                    <span class="exp-dot" aria-hidden="true"></span>
-                                    <p class="exp-year">{job.period}</p>
-                                    <div class="exp-body">
-                                        <p class="exp-kind">{job.kind}</p>
-                                        <h3>{job.role}</h3>
-                                        {job.place && <p class="exp-place">{job.place}</p>}
-                                        <!-- La descripción se ilumina palabra a palabra con el scroll -->
-                                        {job.desc && <p class="exp-desc" data-words>{job.desc.split(' ').map((w) => <><span class="fw">{w}</span>{' '}</>)}</p>}
-                                        {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
-                                    </div>
+                                    <p class="exp-meta"><span class="exp-year">{job.period}</span><span class="exp-kind">{job.kind}</span></p>
+                                    <h3>{job.role}</h3>
+                                    {job.place && <p class="exp-place">{job.place}</p>}
+                                    {job.desc && <p class="exp-desc">{job.desc}</p>}
+                                    {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
                                 </li>
                             ))}
                         </ol>
