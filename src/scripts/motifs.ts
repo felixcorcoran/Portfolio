@@ -178,102 +178,100 @@ const motifs: Record<string, Draw> = {
         }
     },
 
-    // Reformas: el plano de una vivienda se dibuja muro a muro; aparecen
-    // puertas, ventanas y muebles, y un punto la recorre entrando por la puerta
-    // de la calle y pasando de una habitación a otra solo por las puertas
+    // Reformas: una reforma contada en un plano sencillo. Se dibuja una
+    // vivienda (cocina cerrada, salón, dormitorio y baño); el tabique de la
+    // cocina se marca y se derriba, el espacio queda abierto, se pone suelo
+    // nuevo y aparece una isla. Se mantiene, se funde y vuelve a empezar.
     plan(c, w, h, t, k) {
-        const s = Math.min(w / 13, h / 9.6);
-        const ox = w * 0.5 - 5 * s, oy = h * 0.52 - 3.5 * s;
+        const s = Math.min(w / 12.5, h / 9);
+        const ox = w * 0.5 - 5 * s, oy = h * 0.54 - 3.25 * s;
         const Q = (x: number, y: number): Pt => [ox + x * s, oy + y * s];
-        const ph = (t / 30) % 1;
-        const kk = k * cycleFade(ph, 0.94);
+        const ph = (t / 26) % 1;
+        const kk = k * cycleFade(ph, 0.93);
         c.lineWidth = 1;
-        // Muros, con los huecos de las puertas
-        const W: [number, number, number, number][] = [
-            [0, 0, 1, 0], [1.8, 0, 10, 0], [10, 0, 10, 7], [10, 7, 0, 7], [0, 7, 0, 0],
-            [6, 0, 6, 1.2], [6, 2, 6, 3.2], [6, 3.9, 6, 7],
-            [0, 4, 2.6, 4], [3.4, 4, 4.6, 4], [5.4, 4, 6, 4],
-            [4, 4, 4, 7], [6, 3, 7.6, 3], [8.4, 3, 10, 3],
-        ];
+
+        // 1. Muros (con los huecos de las puertas), trazados por el punto
+        const walls: [Pt, Pt][] = ([
+            [0, 0, 10, 0], [10, 0, 10, 6.5], [10, 6.5, 2.5, 6.5], [1.5, 6.5, 0, 6.5], [0, 6.5, 0, 0],
+            [6, 0, 6, 1.4], [6, 2.2, 6, 4.6], [6, 5.4, 6, 6.5], [6, 3.8, 10, 3.8],
+        ] as const).map(([a1, b1, c1, d1]) => [Q(a1, b1), Q(c1, d1)]);
         c.strokeStyle = A(0.62 * kk);
-        const head = trace(c, W.map(([a, b, cc, d]) => [Q(a, b), Q(cc, d)]), smooth(ph / 0.26));
+        const head = trace(c, walls, smooth(ph / 0.24));
         pen(c, head, kk);
-        // Puertas (hoja y barrido) y ventanas
-        const det = smooth((ph - 0.26) / 0.06) * kk;
+
+        // 2. Puertas y ventanas
+        const det = smooth((ph - 0.24) / 0.06) * kk;
+        const door = (hx: number, hy: number, ax: number, ay: number, px: number, py: number, len: number) => {
+            const hinge = Q(hx, hy);
+            line(c, hinge, Q(hx + px * len, hy + py * len));
+            const a0 = Math.atan2(py, px), a1 = Math.atan2(ay, ax);
+            let d = a1 - a0;
+            while (d > Math.PI) d -= TAU;
+            while (d < -Math.PI) d += TAU;
+            c.beginPath();
+            c.arc(hinge[0], hinge[1], len * s, a0, a1, d < 0);
+            c.stroke();
+        };
         if (det > 0) {
             c.strokeStyle = A(0.35 * det);
-            const door = (hx: number, hy: number, ax: number, ay: number, px: number, py: number, len: number) => {
-                const hinge = Q(hx, hy);
-                line(c, hinge, Q(hx + px * len, hy + py * len));
-                const a0 = Math.atan2(py, px), a1 = Math.atan2(ay, ax);
-                let d = a1 - a0;
-                while (d > Math.PI) d -= TAU;
-                while (d < -Math.PI) d += TAU;
-                c.beginPath();
-                c.arc(hinge[0], hinge[1], len * s, a0, a1, d < 0);
-                c.stroke();
-            };
-            door(1, 0, 1, 0, 0, 1, 0.8);
-            door(6, 1.2, 0, 1, 1, 0, 0.8);
-            door(6, 3.2, 0, 1, 1, 0, 0.7);
-            door(2.6, 4, 1, 0, 0, 1, 0.8);
-            door(4.6, 4, 1, 0, 0, 1, 0.8);
-            door(7.6, 3, 1, 0, 0, 1, 0.8);
+            door(1.5, 6.5, 1, 0, 0, -1, 1); // entrada
+            door(6, 1.4, 0, 1, 1, 0, 0.8); // dormitorio
+            door(6, 4.6, 0, 1, 1, 0, 0.8); // baño
             c.strokeStyle = A(0.5 * det);
-            const win = (x0: number, y0: number, x1: number, y1: number) => {
-                const nx = y0 === y1 ? 0 : 0.13, ny = y0 === y1 ? 0.13 : 0;
-                line(c, Q(x0 - nx, y0 - ny), Q(x1 - nx, y1 - ny));
-                line(c, Q(x0 + nx, y0 + ny), Q(x1 + nx, y1 + ny));
-            };
-            win(3, 0, 5, 0); win(10, 0.8, 10, 2.2); win(10, 4.5, 10, 6); win(1, 7, 3, 7); win(7, 7, 9, 7);
-            // Cotas
-            c.strokeStyle = A(0.22 * det);
-            line(c, Q(0, -0.6), Q(10, -0.6)); line(c, Q(0, -0.8), Q(0, -0.4)); line(c, Q(10, -0.8), Q(10, -0.4));
-            line(c, Q(-0.6, 0), Q(-0.6, 7)); line(c, Q(-0.8, 0), Q(-0.4, 0)); line(c, Q(-0.8, 7), Q(-0.4, 7));
-        }
-        // Muebles
-        const fur = smooth((ph - 0.3) / 0.08) * kk;
-        if (fur > 0) {
-            c.strokeStyle = A(0.3 * fur);
-            const R = (x: number, y: number, ww: number, hh: number) => { const [a, b] = Q(x, y); c.strokeRect(a, b, ww * s, hh * s); };
-            const O = (x: number, y: number, r: number) => { const [a, b] = Q(x, y); c.beginPath(); c.arc(a, b, r * s, 0, TAU); c.stroke(); };
-            R(0.4, 2.6, 2.2, 0.8); R(0.4, 3.1, 2.2, 0.3); R(0.9, 1.4, 1.2, 0.6); O(5.5, 0.5, 0.25); // salón: sofá, mesa baja, planta
-            R(6.2, 0.2, 3.6, 0.6); O(8.7, 0.5, 0.15); O(9.3, 0.5, 0.15); // cocina: encimera y fuegos
-            R(0.4, 4.6, 1.8, 2); R(0.6, 4.75, 1.4, 0.35); R(2.4, 4.6, 0.4, 0.4); // dormitorio
-            R(4.2, 6, 1.6, 0.8); O(5.65, 5.2, 0.2); R(4.15, 4.9, 0.4, 0.5); // baño: bañera, inodoro, lavabo
-            R(8.4, 4.8, 1.4, 2); R(8.55, 4.95, 1.1, 0.3); R(6.3, 6.2, 1.4, 0.6); // segundo dormitorio y mesa
-        }
-        // Recorrido: calle → salón → cocina → dormitorio 2 → salón → dormitorio → salón → baño → salón → calle
-        const path: Pt[] = [
-            [1.4, -0.9], [1.4, 0.6], [3, 2], [5.6, 1.6], [6.4, 1.6], [8, 1.6], [8, 2.6], [8, 3.4], [7.6, 5.3],
-            [6.4, 3.55], [5.6, 3.55], [3, 3.6], [3, 4.4], [3.1, 5.8], [3, 4.4], [3, 3.6], [5, 3.6], [5, 4.4],
-            [5, 5.4], [5, 4.4], [5, 3.6], [1.4, 0.6], [1.4, -0.9],
-        ];
-        const walk = smooth((ph - 0.38) / 0.54);
-        if (walk > 0 && walk < 1) {
-            const lens = path.slice(1).map((p, i) => Math.hypot(p[0] - path[i][0], p[1] - path[i][1]));
-            const total = lens.reduce((x, y) => x + y, 0);
-            const at = (d: number): Pt => {
-                let left = Math.max(0, d);
-                for (let i = 0; i < lens.length; i++) {
-                    if (left <= lens[i]) { const f = left / lens[i]; return [path[i][0] + (path[i + 1][0] - path[i][0]) * f, path[i][1] + (path[i + 1][1] - path[i][1]) * f]; }
-                    left -= lens[i];
-                }
-                return path[path.length - 1];
-            };
-            const d = walk * total;
-            const cur = at(d);
-            // Habitación en la que está, iluminada
-            const rooms: [number, number, number, number][] = [[0, 0, 6, 4], [6, 0, 4, 3], [6, 3, 4, 4], [0, 4, 4, 3], [4, 4, 2, 3]];
-            const r = rooms.find(([x, y, ww, hh]) => cur[0] > x && cur[0] < x + ww && cur[1] > y && cur[1] < y + hh);
-            if (r) { c.fillStyle = A(0.07 * kk); const [a, b] = Q(r[0], r[1]); c.fillRect(a, b, r[2] * s, r[3] * s); }
-            // Estela
-            for (let j = 1; j <= 18; j++) {
-                const a = at(d - (j - 1) * 0.12), b = at(d - j * 0.12);
-                c.strokeStyle = A(0.5 * kk * (1 - j / 18));
-                line(c, Q(...a), Q(...b));
+            for (const [x0, x1] of [[3.6, 5.4], [7, 9]]) {
+                line(c, Q(x0, -0.13), Q(x1, -0.13));
+                line(c, Q(x0, 0.13), Q(x1, 0.13));
             }
-            pen(c, Q(...cur), kk);
+            c.strokeStyle = A(0.22 * det);
+            line(c, Q(0, -0.7), Q(10, -0.7));
+            line(c, Q(0, -0.9), Q(0, -0.5));
+            line(c, Q(10, -0.9), Q(10, -0.5));
+        }
+
+        // 3. Tabique de la cocina: aparece, se marca a trazos y se derriba de
+        //    arriba abajo (el punto va cortándolo)
+        const built = smooth((ph - 0.27) / 0.05);
+        const mark = clamp01((ph - 0.4) / 0.08);
+        const gone = smooth((ph - 0.48) / 0.12);
+        if (built > 0 && gone < 1) {
+            const top = 6.5 * gone;
+            const parts: [number, number][] = [[0, 2.6], [3.4, 6.5]];
+            c.strokeStyle = A(0.62 * kk * built);
+            c.setLineDash(mark > 0 ? [4, 4] : []);
+            c.lineDashOffset = -t * 20;
+            for (const [y0, y1] of parts) {
+                const a0 = Math.max(y0, top);
+                if (a0 < y1) line(c, Q(3, a0), Q(3, y1));
+            }
+            c.setLineDash([]);
+            if (gone === 0 && det > 0) {
+                c.strokeStyle = A(0.35 * det * built);
+                door(3, 2.6, 0, 1, 1, 0, 0.8);
+            }
+            if (gone > 0) pen(c, Q(3, top), kk);
+        }
+
+        // 4. Suelo nuevo en el espacio abierto: rayado que barre de izquierda a derecha
+        const floor = smooth((ph - 0.62) / 0.14);
+        if (floor > 0) {
+            c.save();
+            const [fx, fy] = Q(0, 0);
+            c.beginPath();
+            c.rect(fx, fy, 6 * s * floor, 6.5 * s);
+            c.clip();
+            c.strokeStyle = A(0.13 * kk);
+            for (let d = -6.5; d < 6; d += 0.45) line(c, Q(d, 6.5), Q(d + 6.5, 0));
+            c.restore();
+            if (floor < 1) pen(c, Q(6 * floor, 3.25), kk);
+        }
+
+        // 5. Cocina abierta: encimera y una isla
+        const fit = smooth((ph - 0.76) / 0.06) * kk;
+        if (fit > 0) {
+            c.strokeStyle = A(0.5 * fit);
+            const R = (x: number, y: number, ww: number, hh: number) => { const [a1, b1] = Q(x, y); c.strokeRect(a1, b1, ww * s, hh * s); };
+            R(0.2, 0.2, 0.7, 3.2);
+            R(2.2, 1.4, 1.8, 0.9);
         }
     },
 
