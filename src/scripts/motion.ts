@@ -73,28 +73,6 @@ function start() {
         scrollTrigger: { trigger: '.hero', start: '40% top', end: 'bottom top', scrub: true },
     });
 
-    // ---------- Enfoque: las palabras se encienden con el scroll ----------
-    // El texto se queda fijo mientras la sección pasa; se enciende entero al
-    // 80 % del recorrido, así nunca se va a medias
-    const focus = document.querySelector<HTMLElement>('.focus');
-    const words = [...document.querySelectorAll<HTMLElement>('.focus-text .fw')];
-    if (focus && words.length) {
-        ScrollTrigger.create({
-            trigger: focus,
-            start: 'top 20%',
-            end: 'bottom bottom',
-            onUpdate: (self) => {
-                const lit = Math.ceil(Math.min(self.progress / 0.8, 1) * words.length);
-                words.forEach((w, i) => w.classList.toggle('on', i < lit));
-            },
-        });
-        // Al final, el texto se aleja mientras entra la cinta
-        gsap.to('.focus-sticky .wrap', {
-            scale: 0.94, opacity: 0.3, ease: 'none',
-            scrollTrigger: { trigger: '.ribbons', start: 'top bottom', end: 'top 30%', scrub: true },
-        });
-    }
-
     // ---------- Entradas genéricas ----------
     // Se reproducen una vez con toggleActions, no con once: un disparador con
     // once se borra solo y, si eso pasa mientras se crea otro (al recargar a
@@ -209,6 +187,20 @@ function start() {
             opacity: 0, x: side, y: wide ? 0 : 24, duration: 1, ease: 'expo.out', stagger: 0.06,
             scrollTrigger: { trigger: job, start: 'top 80%', toggleActions: 'play none none none' },
         });
+        // La descripción se enciende palabra a palabra mientras la lees
+        const desc = job.querySelector<HTMLElement>('[data-words]');
+        if (desc) {
+            const words = [...desc.querySelectorAll<HTMLElement>('.fw')];
+            ScrollTrigger.create({
+                trigger: desc, start: 'top 85%', end: 'bottom 45%',
+                onUpdate: (self) => {
+                    const lit = Math.ceil(self.progress * words.length);
+                    words.forEach((w, k) => w.classList.toggle('on', k < lit));
+                },
+                // Si ya se ha pasado (recarga a media página), queda encendida
+                onLeave: () => words.forEach((w) => w.classList.add('on')),
+            });
+        }
         gsap.from(job.querySelector('.exp-year'), {
             opacity: 0, duration: 0.8, delay: 0.2,
             scrollTrigger: { trigger: job, start: 'top 80%', toggleActions: 'play none none none' },

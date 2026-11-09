@@ -106,8 +106,6 @@ const learningIcons = learning.map(tech);
 // La esfera del Stack: cada tecnología con su icono, su color y su grupo
 const globeItems = stackGroups.flatMap((g, gi) => g.items.map((it) => ({ n: it.name, p: it.icon?.path ?? '', c: it.icon?.color ?? '#9fb4ff', g: gi })));
 
-// El texto del enfoque, palabra a palabra (se ilumina con el scroll)
-const focusWords = t('focus.text').split(' ');
 const pad = (n) => String(n).padStart(2, '0');
 const links = [
     { label: 'LinkedIn', href: persona.links.linkedin },
@@ -216,18 +214,6 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                     </div>
                 </div>
 
-            </section>
-
-            <!-- ================= ENFOQUE: el texto se ilumina con el scroll ================= -->
-            <section class="focus" id="enfoque" aria-labelledby="focus-label">
-                <div class="focus-sticky">
-                    <div class="wrap">
-                        <p class="label" id="focus-label">{t('focus.label')}</p>
-                        <p class="focus-text">
-                            {focusWords.map((w) => <><span class="fw">{w}</span>{' '}</>)}
-                        </p>
-                    </div>
-                </div>
             </section>
 
             <!-- ================= CINTA: dos bandas cruzadas que corren con el scroll ================= -->
@@ -376,7 +362,8 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                         <p class="exp-kind">{job.kind}</p>
                                         <h3>{job.role}</h3>
                                         {job.place && <p class="exp-place">{job.place}</p>}
-                                        {job.desc && <p class="exp-desc">{job.desc}</p>}
+                                        <!-- La descripción se ilumina palabra a palabra con el scroll -->
+                                        {job.desc && <p class="exp-desc" data-words>{job.desc.split(' ').map((w) => <><span class="fw">{w}</span>{' '}</>)}</p>}
                                         {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
                                     </div>
                                 </li>

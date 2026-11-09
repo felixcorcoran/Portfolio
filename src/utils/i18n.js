@@ -89,9 +89,6 @@ const languages = {
     'nav.stack': 'Stack',
     'nav.contact': 'Contacto',
     'nav.menu': 'Secciones',
-    'focus.label': 'Enfoque',
-    // Versión corta del resumen del CV (perfil.ts), solo para la web
-    'focus.text': 'Desarrollador full-stack titulado en DAW. Construyo webs y herramientas que conectan la IA con procesos reales, y automatizo lo repetitivo con n8n.',
     'stats.label': 'En cifras',
     'stats.own': 'proyectos propios publicados',
     'stats.clients': 'webs de clientes en producción',
@@ -197,9 +194,6 @@ const languages = {
     'nav.stack': 'Stack',
     'nav.contact': 'Contact',
     'nav.menu': 'Sections',
-    'focus.label': 'Focus',
-    // Short version of the resume summary (perfil.ts), web only
-    'focus.text': 'Full-stack developer with a DAW degree. I build websites and tools that connect AI to real processes, and automate repetitive work with n8n.',
     'stats.label': 'In numbers',
     'stats.own': 'own projects published',
     'stats.clients': 'client websites live',

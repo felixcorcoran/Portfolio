@@ -172,21 +172,6 @@ html { background: var(--bg); overflow-x: clip; }
 .motion:not(.motion-ready) .hero-name .word { transform: translateY(110%); }
 .motion:not(.motion-ready) [data-intro] { opacity: 0; }
 
-/* ---------- Enfoque ---------- */
-.focus { position: relative; height: 170vh; }
-.focus-sticky {
-  position: sticky; top: 0; height: 100svh; display: flex; align-items: center;
-  transform-origin: center top;
-}
-.focus-text {
-  margin: 1.75rem 0 0; max-width: 24ch;
-  font-size: clamp(1.25rem, min(4.6vw, 7.2svh), 4.6rem); line-height: 1.04; letter-spacing: -.035em;
-  font-weight: 500; font-variation-settings: "wdth" 105;
-}
-.focus-text .fw { transition: color .2s; }
-.motion .focus-text .fw { color: rgb(241 239 234 / .16); }
-.motion .focus-text .fw.on { color: var(--text); }
-
 /* ---------- Cinta: dos bandas cruzadas que se mueven con el scroll ---------- */
 .ribbons { position: relative; z-index: 2; display: grid; align-items: center; background: var(--bg); padding-block: clamp(5rem, 15vh, 9rem); overflow: hidden; }
 /* Las dos bandas en la misma celda: se cruzan en el centro como una X */
@@ -372,6 +357,10 @@ html { background: var(--bg); overflow-x: clip; }
 }
 .exp-place { margin: 0; padding-top: .9rem; border-top: 1px solid var(--line); width: 100%; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--muted); }
 .exp-desc { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.65; max-width: 46ch; }
+/* Las palabras de la descripción se encienden con el scroll (solo con movimiento) */
+.exp-desc .fw { transition: color .25s; }
+.motion .exp-desc .fw { color: rgb(241 239 234 / .16); }
+.motion .exp-desc .fw.on { color: var(--text); }
 
 /* ---------- Stack ---------- */
 .skills { background: var(--bg); padding-block: clamp(5rem, 14vh, 10rem); border-top: 1px solid var(--line); }
@@ -558,10 +547,8 @@ html { background: var(--bg); overflow-x: clip; }
   .skill-icons { grid-column: 1; }
 }
 
-/* Móvil: el enfoque, con el tamaño que quepa en el alto de la pantalla */
+/* Móvil */
 @media (max-width: 760px) {
-  .focus { height: 150vh; }
-  .focus-text { font-size: clamp(1.25rem, min(7.4vw, 5.2svh), 2.4rem); }
 
   /* «CORCORAN» cabe entero con los márgenes del móvil */
   .hero-name { font-size: 11.5vw; }
@@ -624,7 +611,5 @@ html { background: var(--bg); overflow-x: clip; }
 
 @media (prefers-reduced-motion: reduce) {
   .dot { animation: none; }
-  .focus { height: auto; }
-  .focus-sticky { position: static; height: auto; padding-block: 6rem; }
   .pcard { position: static; }
 }
