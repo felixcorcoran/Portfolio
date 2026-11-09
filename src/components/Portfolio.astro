@@ -357,8 +357,9 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                 <div class="wrap exp-grid">
                     <header class="sec-head exp-head">
                         <p class="label">{t('exp.label')}</p>
-                        <h2 class="sec-title" id="exp-title" data-split>
-                            <span class="line"><span>{t('exp.title')}<i class="dot-end">.</i></span></span>
+                        <!-- Las letras se encienden una a una con el scroll -->
+                        <h2 class="sec-title" id="exp-title" aria-label={t('exp.title')} data-exp-title>
+                            <span aria-hidden="true">{[...t('exp.title')].map((ch) => <span class="ch">{ch}</span>)}<i class="dot-end ch">.</i></span>
                         </h2>
                         <p class="exp-count" aria-hidden="true"><span class="exp-now"><span data-exp-now>01</span></span><span class="exp-total">/ {String(jobs.length).padStart(2, '0')}</span></p>
                     </header>
@@ -370,10 +371,11 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                         <ol class="exp-list">
                             {jobs.map((job) => (
                                 <li class="exp-item" data-exp-item>
-                                    <p class="exp-meta"><span class="exp-year">{job.period}</span><span class="exp-kind">{job.kind}</span></p>
-                                    <h3>{job.role}</h3>
-                                    {job.place && <p class="exp-place">{job.place}</p>}
-                                    {job.desc && <p class="exp-desc">{job.desc}</p>}
+                                    <!-- .wipe: el texto se colorea de izquierda a derecha al encenderse -->
+                                    <p class="exp-meta"><span class="exp-year wipe">{job.period}</span><span class="exp-kind wipe">{job.kind}</span></p>
+                                    <h3><span class="wipe">{job.role}</span></h3>
+                                    {job.place && <p class="exp-place"><span class="wipe">{job.place}</span></p>}
+                                    {job.desc && <p class="exp-desc wipe">{job.desc}</p>}
                                     {job.tags.length > 0 && <ul class="chips">{job.tags.map((tag) => <li>{tag}</li>)}</ul>}
                                 </li>
                             ))}

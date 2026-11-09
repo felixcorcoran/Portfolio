@@ -336,7 +336,8 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
 .pcards-nav { display: none; }
 
 /* ---------- Experiencia: título fijo, línea con marcador y el hito activo encendido ---------- */
-.exp { background: var(--bg); padding-block: clamp(5rem, 14vh, 10rem); border-top: 1px solid var(--line); }
+/* Sin línea arriba y con aire: lo anterior se va antes de que entre el título */
+.exp { background: var(--bg); padding-block: clamp(9rem, 32vh, 20rem) clamp(5rem, 14vh, 10rem); }
 .exp-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
 .exp-head {
   position: sticky; top: 50%; translate: 0 -50%; align-self: start;
@@ -366,10 +367,30 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
 .exp-item { display: grid; gap: .9rem; justify-items: start; padding-block: clamp(2.5rem, 8vh, 4.5rem); }
 .exp-item:first-child { padding-top: 0; }
 /* Con movimiento, los hitos están apagados y se enciende el que cruza el marcador */
-.motion .exp-item { opacity: .22; transition: opacity .6s var(--ease); }
-.motion .exp-item > * { transition: transform .7s var(--ease); }
-.motion .exp-item:not(.is-on) > * { transform: translateX(-.6rem); }
-.motion .exp-item.is-on { opacity: 1; }
+/* Cada texto es un degradado recortado al texto: mitad encendida, mitad apagada.
+   Al encenderse el hito, el degradado se desplaza y el color barre de
+   izquierda a derecha (y al revés al apagarse) */
+.exp-year { --on: var(--text); }
+.exp-kind { --on: var(--accent); }
+.exp-item h3 { --on: var(--text); }
+.exp-place, .exp-desc { --on: var(--muted); }
+.motion .exp-item .wipe {
+  color: transparent; -webkit-text-fill-color: transparent;
+  background: linear-gradient(90deg, var(--on) 0 42%, rgb(241 239 234 / .16) 58% 100%) 100% 0 / 250% 100% no-repeat;
+  -webkit-background-clip: text; background-clip: text;
+  transition: background-position .8s cubic-bezier(.6, 0, .25, 1) var(--d, 0s);
+}
+.motion .exp-item.is-on .wipe { background-position: 0 0; }
+.exp-kind { --d: .04s; }
+.exp-item h3 { --d: .06s; }
+.exp-place { --d: .14s; }
+.exp-desc { --d: .2s; }
+.motion .exp-item .chips, .motion .exp-place { transition: opacity .6s var(--ease) .2s; }
+.motion .exp-item:not(.is-on) .chips { opacity: .25; }
+.motion .exp-item:not(.is-on) .exp-place { border-top-color: rgb(241 239 234 / .05); }
+.exp-item h3 .wipe { display: inline; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+/* Título: letras apagadas que se encienden con el scroll */
+.motion .exp-head .ch { opacity: .1; }
 .exp-meta { margin: 0; display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; font-family: var(--mono); font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; }
 .exp-year { color: var(--text); }
 .exp-kind { color: var(--accent); }
@@ -595,7 +616,7 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   .pcards-hint { text-transform: uppercase; font-size: 10.5px; color: var(--faint); }
 
   /* Experiencia: el título arriba, la línea a la izquierda y los hitos a su derecha */
-  .exp { padding-block: 4rem; }
+  .exp { padding-block: 7rem 4rem; }
   .exp-grid { grid-template-columns: minmax(0, 1fr); }
   .exp-head { position: relative; top: auto; translate: none; padding-right: 0; justify-items: start; text-align: left; margin-bottom: 2.5rem; }
   .exp-head .sec-title { font-size: clamp(2.1rem, 9.4vw, 5rem); }
@@ -603,7 +624,6 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   .exp-track { padding-left: 1.75rem; }
   .exp-list { padding-bottom: 0; }
   .exp-item { padding-block: 2rem; }
-  .motion .exp-item { opacity: .3; }
   .exp-item h3 { font-size: clamp(1.5rem, 7.4vw, 2.2rem); }
   .exp-desc { font-size: .95rem; }
 

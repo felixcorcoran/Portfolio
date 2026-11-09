@@ -23,7 +23,7 @@ Al cambiar `perfil.ts` o `cv/`, una GitHub Action ([`cv.yml`](.github/workflows/
 | Cinta | Dos bandas cruzadas que corren con el scroll | Igual |
 | Mis trabajos | Tarjetas que se apilan: llegan inclinadas en 3D, la captura se descubre y la de debajo se hunde; contador que gira | Carrusel horizontal ([`carrusel.ts`](src/scripts/carrusel.ts)) |
 | Webs para negocios | Tarjetas tipográficas que se desplazan en horizontal al bajar; con ratón, la captura sigue al cursor con física y barrido entre webs ([`preview.ts`](src/scripts/preview.ts)) | Igual, sin captura (se toca y abre la web) |
-| Experiencia | Título fijo a la izquierda con contador; línea que se dibuja hasta un marcador fijo a media pantalla y se enciende el hito que lo cruza | Línea a la izquierda, mismo efecto |
+| Experiencia | El título se enciende letra a letra y queda fijo a la izquierda con contador; línea que se dibuja hasta un marcador fijo a media pantalla y el hito que lo cruza se colorea de izquierda a derecha | Línea a la izquierda, mismo efecto |
 | Stack | Globo de alambre con las tecnologías que se puede arrastrar; se encienden las del grupo activo ([`globe.ts`](src/scripts/globe.ts)) | Lista por grupos |
 | Contacto | Tarjeta que crece hasta su tamaño; pie con el nombre sobre un horizonte azul y estrellas ([`stars.ts`](src/scripts/stars.ts)) | Igual |
 

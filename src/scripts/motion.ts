@@ -227,19 +227,31 @@ function start() {
         let active = -1;
         const light = () => {
             const mid = innerHeight * 0.5;
-            let i = 0;
+            // -1: ninguno ha llegado aún al marcador y todos siguen apagados
+            let i = -1;
             jobs.forEach((job, k) => { if (job.getBoundingClientRect().top < mid) i = k; });
             if (i === active) return;
             const dir = i > active ? 1 : -1;
             active = i;
             jobs.forEach((job, k) => job.classList.toggle('is-on', k === i));
             if (now) {
-                now.textContent = String(i + 1).padStart(2, '0');
+                now.textContent = String(Math.max(i, 0) + 1).padStart(2, '0');
                 gsap.fromTo(now, { yPercent: 100 * dir }, { yPercent: 0, duration: 0.5, ease: 'expo.out', overwrite: true });
             }
         };
         ScrollTrigger.create({ trigger: '.exp', start: 'top bottom', end: 'bottom top', onUpdate: light, onRefresh: light });
         light();
+
+        // El título se enciende letra a letra al entrar, ligado al scroll, y
+        // después el rótulo, el contador y el marcador
+        const head = document.querySelector('.exp-head');
+        gsap.timeline({ scrollTrigger: { trigger: '.exp', start: 'top 80%', end: 'top 15%', scrub: 0.6 } })
+            .to('[data-exp-title] .ch', { opacity: 1, stagger: 0.08, duration: 0.3, ease: 'none' })
+            .from(head?.querySelectorAll('.label, .exp-count') ?? [], { opacity: 0, y: 12, duration: 0.4, stagger: 0.1 }, '-=0.3');
+        gsap.from('.exp-mark', {
+            scale: 0, duration: 0.9, ease: 'back.out(2)',
+            scrollTrigger: { trigger: '.exp-track', start: 'top 55%', toggleActions: 'play none none reverse' },
+        });
     }
 
     // ---------- Stack: el titular se rellena y cada fila se monta ----------
