@@ -206,6 +206,17 @@ html { background: var(--bg); overflow-x: clip; }
   font-family: var(--mono); font-size: 13px; letter-spacing: .1em; color: var(--muted); font-variant-numeric: tabular-nums;
 }
 .work-counter span { color: var(--text); }
+/* El número gira dentro de su hueco, como un marcador */
+.wc-roll { display: inline-block; overflow: hidden; vertical-align: bottom; height: 1.2em; line-height: 1.2; }
+.wc-roll span { display: inline-block; }
+/* Brillo que cruza la tarjeta mientras llega */
+.pcard-inner { position: relative; }
+.pcard-sheen {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(105deg, transparent 38%, rgb(255 255 255 / .07) 48%, rgb(122 149 255 / .08) 52%, transparent 62%);
+  background-size: 250% 100%; background-position: 120% 0; mix-blend-mode: screen;
+}
+.pcard-shot { will-change: clip-path; }
 .pcards { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1.5rem, 4vh, 3rem); }
 .pcard { position: sticky; top: calc(var(--nav-h) + 1.75rem + var(--i) * 12px); }
 .pcard-inner {

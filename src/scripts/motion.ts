@@ -103,44 +103,89 @@ function start() {
 
     const mm = gsap.matchMedia();
 
-    // ---------- Proyectos: al llegar la siguiente, la anterior se hunde ----------
+    // ---------- Proyectos: tarjetas que se apilan (escritorio) ----------
+    // Cada tarjeta llega inclinada hacia atrás y se endereza al fijarse, con un
+    // brillo que la cruza; su captura se descubre y se acerca, y su texto entra
+    // escalonado. Cuando la siguiente le pasa por encima, se hunde y se apaga.
+    // El contador gira como un marcador. Todo va ligado al scroll
     mm.add('(min-width: 761px) and (min-height: 601px)', () => {
         const cards = gsap.utils.toArray<HTMLElement>('[data-pcard]');
         const counter = document.querySelector<HTMLElement>('[data-work-current]');
+        const stickyTopOf = (el: HTMLElement) => parseFloat(getComputedStyle(el).top) || 0;
+
+        // Contador «01 / 06»: el número sale por arriba y entra el nuevo por abajo
+        let shownIndex = 0;
+        let roll: gsap.core.Timeline | null = null;
+        const setIndex = (i: number) => {
+            if (!counter || i === shownIndex) return;
+            const dir = i > shownIndex ? 1 : -1;
+            shownIndex = i;
+            roll?.kill();
+            roll = gsap.timeline()
+                .to(counter, { yPercent: -100 * dir, opacity: 0, duration: 0.18, ease: 'power2.in' })
+                .add(() => { counter.textContent = String(i + 1).padStart(2, '0'); })
+                .fromTo(counter, { yPercent: 100 * dir, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.45, ease: 'expo.out' });
+        };
+
         cards.forEach((card, i) => {
-            const inner = card.querySelector('.pcard-inner');
+            const inner = card.querySelector<HTMLElement>('.pcard-inner');
+            const shot = card.querySelector<HTMLElement>('.pcard-shot');
+            const img = card.querySelector<HTMLElement>('.pcard-shot img');
+            const sheen = card.querySelector<HTMLElement>('.pcard-sheen');
+            const body = card.querySelectorAll('.pcard-body > *');
+            if (!inner) return;
+
+            // Índice del contador: sin estado guardado, sale de qué tarjetas han pasado
             ScrollTrigger.create({
-                trigger: card, start: 'top 60%', end: 'bottom 40%',
-                onToggle: (self) => { if (self.isActive && counter) counter.textContent = String(i + 1).padStart(2, '0'); },
+                trigger: card, start: 'top 60%',
+                onEnter: () => setIndex(i),
+                onLeaveBack: () => setIndex(Math.max(i - 1, 0)),
             });
+
+            // Llegada: de inclinada y algo más baja a recta, mientras sube hasta fijarse
+            const arrive = {
+                trigger: card, start: 'top bottom',
+                end: () => `top ${stickyTopOf(card) + 24}px`,
+                scrub: 0.7, invalidateOnRefresh: true,
+            };
+            gsap.fromTo(inner, { rotationX: 9, y: 70, transformPerspective: 1600, transformOrigin: '50% 0%' }, {
+                rotationX: 0, y: 0, ease: 'power2.out', scrollTrigger: arrive,
+            });
+            if (sheen) {
+                gsap.fromTo(sheen, { backgroundPosition: '120% 0' }, { backgroundPosition: '-20% 0', ease: 'none', scrollTrigger: arrive });
+            }
+            if (shot) {
+                gsap.fromTo(shot, { clipPath: 'inset(14% 10% 14% 10% round 1.25rem)' }, {
+                    clipPath: 'inset(0% 0% 0% 0% round 0.9rem)', ease: 'power2.out', scrollTrigger: arrive,
+                });
+            }
+            if (img) {
+                gsap.fromTo(img, { scale: 1.22 }, { scale: 1.02, ease: 'power2.out', scrollTrigger: arrive });
+            }
+            // Texto: entra escalonado cuando la tarjeta ya se lee; se recoge al volver
+            gsap.from(body, {
+                y: 28, opacity: 0, duration: 0.9, ease: 'expo.out', stagger: 0.06,
+                scrollTrigger: { trigger: card, start: 'top 55%', toggleActions: 'play none none reverse' },
+            });
+
+            // Salida: se hunde y se apaga SOLO mientras la siguiente le pasa por encima
             const next = cards[i + 1];
-            if (!next || !inner) return;
-            // Se oscurece SOLO mientras la siguiente le pasa por encima: empieza
-            // cuando el borde de arriba de la siguiente llega al borde de abajo
-            // de esta (ya fija) y termina cuando la siguiente se fija. Antes de
-            // eso, la tarjeta que se está leyendo se ve entera. Sin transparencia:
-            // debajo hay otras tarjetas
-            const stickyTop = () => parseFloat(getComputedStyle(card).top) || 0;
+            if (!next) return;
             gsap.fromTo(inner, { scale: 1, filter: 'brightness(1)' }, {
-                scale: 0.94, filter: 'brightness(0.55)', ease: 'none',
+                scale: 0.92, filter: 'brightness(0.45)', ease: 'power1.in',
                 scrollTrigger: {
                     trigger: next,
-                    start: () => `top ${Math.min(stickyTop() + (inner as HTMLElement).offsetHeight, innerHeight)}px`,
-                    end: () => `top ${parseFloat(getComputedStyle(next).top) || 0}px`,
+                    start: () => `top ${Math.min(stickyTopOf(card) + inner.offsetHeight, innerHeight)}px`,
+                    end: () => `top ${stickyTopOf(next)}px`,
                     scrub: 0.5,
                     invalidateOnRefresh: true,
                 },
             });
         });
-        // La captura se mueve un poco dentro de su marco (paralaje)
-        cards.forEach((card) => {
-            const img = card.querySelector('.pcard-shot img');
-            if (!img) return;
-            gsap.fromTo(img, { yPercent: -2, scale: 1.05 }, {
-                yPercent: 2, ease: 'none',
-                scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true },
-            });
-        });
+        return () => {
+            roll?.kill();
+            if (counter) { counter.textContent = '01'; gsap.set(counter, { clearProps: 'all' }); }
+        };
     });
 
     // ---------- Galería: se desliza en horizontal con el scroll (también en

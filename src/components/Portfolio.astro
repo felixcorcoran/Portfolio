@@ -239,13 +239,14 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             <span class="line"><span>{t('projects.section.title')}</span></span>
                             <span class="line"><em>{t('projects.section.subtitle')}</em></span>
                         </h2>
-                        <p class="work-counter" aria-hidden="true"><span data-work-current>01</span> / {pad(cards.length)}</p>
+                        <p class="work-counter" aria-hidden="true"><span class="wc-roll"><span data-work-current>01</span></span> / {pad(cards.length)}</p>
                     </header>
 
                     <ol class="pcards">
                         {cards.map((c, i) => (
                             <li class="pcard" style={`--i: ${i}`} data-pcard>
                                 <article class="pcard-inner">
+                                    <span class="pcard-sheen" aria-hidden="true"></span>
                                     <div class="pcard-media">
                                         {c.image && (
                                             <div class="pcard-shot">
