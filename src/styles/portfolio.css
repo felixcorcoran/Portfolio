@@ -301,16 +301,32 @@ html { background: var(--bg); overflow-x: clip; }
 .gcard-desc { color: var(--muted); font-size: .92rem; line-height: 1.5; }
 .gcard-go { flex: none; width: 2.75rem; height: 2.75rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line-2); transition: background .3s, color .3s, transform .4s var(--ease), border-color .3s; }
 .gcard a:hover .gcard-go { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(45deg); }
-/* Captura que sigue al ratón (solo con ratón) */
+/* Captura que sigue al ratón (solo con ratón). El script la mueve con un
+   muelle y la inclina según la velocidad; al cambiar de web, la tira de
+   capturas se desliza en vertical (barrido) */
 .gallery-preview {
   position: fixed; left: 0; top: 0; z-index: 40; width: clamp(16rem, 24vw, 24rem); aspect-ratio: 16 / 10;
-  border-radius: 1rem; overflow: hidden; pointer-events: none; border: 1px solid var(--line-2);
-  box-shadow: 0 30px 70px -20px rgb(0 0 0 / .85); background: var(--bg-2);
-  opacity: 0; transform: translate(-50%, -50%) scale(.8) rotate(-6deg); transition: opacity .3s var(--ease), transform .45s var(--ease);
-  will-change: left, top, transform;
+  pointer-events: none; opacity: 0; transform: translate(-50%, -50%) scale(.6);
+  transition: opacity .35s var(--ease);
+  will-change: transform, opacity;
 }
-.gallery-preview.is-on { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-3deg); }
-.gallery-preview img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.gallery-preview.is-on { opacity: 1; }
+.gp-frame {
+  position: absolute; inset: 0; border-radius: 1rem; overflow: hidden; border: 1px solid var(--line-2);
+  box-shadow: 0 30px 70px -20px rgb(0 0 0 / .85); background: var(--bg-2);
+}
+.gp-track { display: flex; flex-direction: column; height: 100%; transition: transform .75s cubic-bezier(.76, 0, .24, 1); }
+.gp-track.no-anim { transition: none; }
+.gp-track img { flex: none; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+/* El cursor: círculo azul con la flecha, en el centro de la captura */
+.gp-cursor {
+  position: absolute; left: 50%; top: 50%; width: 4.25rem; height: 4.25rem; translate: -50% -50%;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink); font-size: 1.35rem; font-weight: 600;
+  box-shadow: 0 10px 30px -8px rgb(0 0 0 / .6);
+}
+/* Sobre las tarjetas, sin cursor del sistema (lo sustituye el círculo) */
+.gallery.has-preview .gcard a { cursor: none; }
 @media (hover: none), (pointer: coarse) { .gallery-preview { display: none; } }
 .gallery-hint { display: none; }
 .gallery:not(.is-pinned) .gallery-viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
@@ -387,7 +403,8 @@ html { background: var(--bg); overflow-x: clip; }
 .skill-icons li:hover { border-color: var(--c); color: var(--text); }
 .skill-icons svg { width: 1.05rem; height: 1.05rem; fill: var(--c); flex: none; }
 .skill-icons b { font-family: var(--mono); font-size: 9px; color: var(--c); }
-.learning { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; margin: 2.5rem 0 0; }
+.skills-side { min-width: 0; }
+.learning { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; margin: 0 0 clamp(1.25rem, 3vh, 2rem); }
 .learning-item { display: inline-flex; align-items: center; gap: .5rem; font-size: .95rem; }
 .learning-item svg { width: 1.1rem; height: 1.1rem; fill: var(--c); }
 
@@ -592,7 +609,7 @@ html { background: var(--bg); overflow-x: clip; }
   .skill-icons { gap: .4rem; }
   .skill-icons li { padding: .35rem .65rem .35rem .5rem; font-size: .78rem; gap: .4rem; }
   .skill-icons svg { width: .95rem; height: .95rem; }
-  .learning { margin-top: 1.5rem; }
+  .learning { margin-bottom: 1.5rem; }
 }
 
 /* Pantallas bajas (móvil en horizontal, ventanas aplastadas): nada fijo que

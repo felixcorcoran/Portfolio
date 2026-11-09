@@ -323,7 +323,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                         <ul class="gallery-track" data-track>
                             {clientSites.map((s, i) => (
                                 <li class="gcard">
-                                    <a href={s.url} target="_blank" rel="noopener" data-preview={s.preview}>
+                                    <a href={s.url} target="_blank" rel="noopener" data-preview={s.preview} data-preview-i={i}>
                                         <span class="gcard-top">
                                             <span class="gcard-num" aria-hidden="true">{pad(i + 1)}</span>
                                             <span class="gcard-cat">{s.cat}</span>
@@ -339,7 +339,17 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             ))}
                         </ul>
                     </div>
-                    <div class="gallery-preview" aria-hidden="true"><img alt="" data-preview-img /></div>
+                    <!-- Vista previa que sigue al ratón: todas las capturas apiladas; al
+                         cambiar de web, la tira se desliza (barrido). En el centro, el
+                         círculo con la flecha hace de cursor -->
+                    <div class="gallery-preview" aria-hidden="true">
+                        <div class="gp-frame">
+                            <div class="gp-track" data-preview-track>
+                                {clientSites.map((s) => <img src={s.preview} alt="" loading="lazy" decoding="async" />)}
+                            </div>
+                        </div>
+                        <span class="gp-cursor">↗</span>
+                    </div>
                 </div>
             </section>
 
@@ -398,6 +408,16 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             <div class="orbit" aria-hidden="true">
                                 <canvas class="orbit-globe" data-globe data-items={JSON.stringify(globeItems)}></canvas>
                             </div>
+                            <div class="skills-side">
+                                <p class="learning">
+                                    <span class="label">{t('stack.learning')}</span>
+                                    {learningIcons.map((item) => (
+                                        <span class="learning-item" style={`--c: ${item.icon?.color ?? '#9fb4ff'}`}>
+                                            {item.icon && <svg viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon.path} /></svg>}
+                                            {item.name}
+                                        </span>
+                                    ))}
+                                </p>
                             <div class="skill-rows">
                                 {stackGroups.map((g, i) => (
                                     <article class:list={['skill-row', i === 0 && 'is-on']} data-skill-row>
@@ -422,19 +442,9 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                     </article>
                                 ))}
                             </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="wrap">
-                    <p class="learning" data-reveal>
-                        <span class="label">{t('stack.learning')}</span>
-                        {learningIcons.map((item) => (
-                            <span class="learning-item" style={`--c: ${item.icon?.color ?? '#9fb4ff'}`}>
-                                {item.icon && <svg viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon.path} /></svg>}
-                                {item.name}
-                            </span>
-                        ))}
-                    </p>
                 </div>
             </section>
 
