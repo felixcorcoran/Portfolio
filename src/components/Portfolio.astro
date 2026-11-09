@@ -70,6 +70,8 @@ const clientSites = [
     { name: 'Construcciones Omega', url: 'https://construccionesyserviciosomega.com/inicio', cat: { es: 'Construcción', en: 'Construction' }, image: 'omega', desc: { es: 'Web de una empresa de construcción.', en: 'Website for a construction company.' } },
 ].map((s) => ({ ...s, cat: s.cat[lang], desc: s.desc[lang], image: shot(s.image) }));
 // Captura de cada web, optimizada, para la vista previa que sigue al ratón
+// Una animación por tarjeta, en el mismo orden que clientSites
+const motifs = ['tower', 'waves', 'plan', 'calendar', 'flower', 'hall'];
 const shotsBySite = await Promise.all(clientSites.map((s) => (s.image ? getImage({ src: s.image, width: 720, format: 'webp' }) : null)));
 clientSites.forEach((s, i) => { s.preview = shotsBySite[i]?.src ?? ''; });
 
@@ -319,11 +321,16 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             {clientSites.map((s, i) => (
                                 <li class="gcard">
                                     <a href={s.url} target="_blank" rel="noopener" data-preview={s.preview} data-preview-i={i}>
+                                        <!-- Animación de alambre según el sector (src/scripts/motifs.ts) -->
+                                        <canvas class="gcard-art" data-motif={motifs[i]} aria-hidden="true"></canvas>
                                         <span class="gcard-top">
+                                            <span class="gcard-url"><i aria-hidden="true"></i>{new URL(s.url).hostname.replace(/^www\./, '')}</span>
                                             <span class="gcard-num" aria-hidden="true">{pad(i + 1)}</span>
-                                            <span class="gcard-cat">{s.cat}</span>
                                         </span>
-                                        <h3>{s.name}</h3>
+                                        <span class="gcard-title">
+                                            <span class="gcard-cat">{s.cat}</span>
+                                            <h3 style={`--len: ${Math.max(...s.name.split(' ').map((w) => w.length))}`}>{s.name}</h3>
+                                        </span>
                                         <span class="gcard-foot">
                                             <span class="gcard-desc">{s.desc}</span>
                                             <span class="gcard-go" aria-hidden="true">↗</span>
@@ -524,6 +531,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
             import '../scripts/carrusel';
             import '../scripts/proximity';
             import '../scripts/preview';
+            import '../scripts/motifs';
             import '../scripts/contacto';
         </script>
     </body>
