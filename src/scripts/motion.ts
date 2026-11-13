@@ -130,7 +130,6 @@ function start() {
         cards.forEach((card, i) => {
             const inner = card.querySelector<HTMLElement>('.pcard-inner');
             const shot = card.querySelector<HTMLElement>('.pcard-shot');
-            const img = card.querySelector<HTMLElement>('.pcard-shot img');
             const sheen = card.querySelector<HTMLElement>('.pcard-sheen');
             const body = card.querySelectorAll('.pcard-body > *');
             if (!inner) return;
@@ -154,13 +153,12 @@ function start() {
             if (sheen) {
                 gsap.fromTo(sheen, { backgroundPosition: '120% 0' }, { backgroundPosition: '-20% 0', ease: 'none', scrollTrigger: arrive });
             }
+            // La captura llega pequeña, inclinada y algo baja, y se asienta. Se
+            // mueve el marco entero: la imagen nunca se recorta ni se acerca
             if (shot) {
-                gsap.fromTo(shot, { clipPath: 'inset(14% 10% 14% 10% round 1.25rem)' }, {
-                    clipPath: 'inset(0% 0% 0% 0% round 0.9rem)', ease: 'power2.out', scrollTrigger: arrive,
+                gsap.fromTo(shot, { scale: 0.82, y: 50, rotationX: 14, opacity: 0.35, transformPerspective: 1200, transformOrigin: '50% 100%' }, {
+                    scale: 1, y: 0, rotationX: 0, opacity: 1, ease: 'power2.out', scrollTrigger: arrive,
                 });
-            }
-            if (img) {
-                gsap.fromTo(img, { scale: 1.22 }, { scale: 1.02, ease: 'power2.out', scrollTrigger: arrive });
             }
             // Texto: entra escalonado cuando la tarjeta ya se lee; se recoge al volver
             gsap.from(body, {
@@ -224,7 +222,7 @@ function start() {
 
         cards.forEach((card) => {
             const inner = card.querySelector<HTMLElement>('.pcard-inner');
-            const img = card.querySelector<HTMLElement>('.pcard-shot img');
+            const shot = card.querySelector<HTMLElement>('.pcard-shot');
             if (!inner) return;
             // Al entrar por la derecha: girada y pequeña → recta en el centro
             const enter = { trigger: card, containerAnimation: rail, start: 'left right', end: 'center center', scrub: true };
@@ -236,9 +234,11 @@ function start() {
             gsap.fromTo(inner, { rotationY: 0, scale: 1, filter: 'brightness(1)' }, {
                 rotationY: 22, scale: 0.86, filter: 'brightness(0.5)', ease: 'power1.in', immediateRender: false, scrollTrigger: leave,
             });
-            if (img) {
-                gsap.fromTo(img, { xPercent: 8, scale: 1.18 }, {
-                    xPercent: -8, scale: 1.18, ease: 'none',
+            // Paralaje: el marco de la captura entero se desliza un poco dentro de
+            // su hueco (cabe en el margen), sin acercar ni recortar la imagen
+            if (shot) {
+                gsap.fromTo(shot, { xPercent: 5 }, {
+                    xPercent: -5, ease: 'none',
                     scrollTrigger: { trigger: card, containerAnimation: rail, start: 'left right', end: 'right left', scrub: true },
                 });
             }

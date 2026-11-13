@@ -262,7 +262,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                     <span class="pcard-sheen" aria-hidden="true"></span>
                                     <div class="pcard-media">
                                         {c.image && (
-                                            <div class="pcard-shot">
+                                            <div class="pcard-shot" style={`--ar: ${c.image.width / c.image.height}`}>
                                                 <Image src={c.image} alt={`${t('shot.alt')} ${c.name.replace('\u200b', '')}`} widths={[640, 960, 1280]} sizes="(min-width: 900px) 48vw, 92vw" loading={i < 2 ? 'eager' : 'lazy'} style={`object-position: ${c.imagePos}`} />
                                             </div>
                                         )}

@@ -219,7 +219,7 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   background: linear-gradient(105deg, transparent 38%, rgb(255 255 255 / .07) 48%, rgb(122 149 255 / .08) 52%, transparent 62%);
   background-size: 250% 100%; background-position: 120% 0; mix-blend-mode: screen;
 }
-.pcard-shot { will-change: clip-path; }
+.pcard-shot { will-change: transform; transition: translate .6s var(--ease), box-shadow .6s var(--ease); }
 .pcards { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1.5rem, 4vh, 3rem); }
 .pcard { position: sticky; top: calc(var(--nav-h) + 1.75rem + var(--i) * 12px); }
 .pcard-inner {
@@ -238,13 +238,15 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   background: radial-gradient(120% 90% at 50% 100%, rgb(122 149 255 / .1), transparent 60%), var(--bg-2);
   border-right: 1px solid var(--line);
 }
+/* El marco toma la proporción real de cada captura (--ar): se ve entera, sin
+   recortes. Las animaciones mueven el marco, nunca la imagen dentro de él */
 .pcard-shot {
-  position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden;
+  position: relative; width: 100%; aspect-ratio: var(--ar, 1.6); overflow: hidden;
   border-radius: clamp(.6rem, 1vw, 1rem); border: 1px solid var(--line-2);
   box-shadow: 0 40px 80px -40px rgb(0 0 0 / .9);
 }
-.pcard-shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
-.pcard:hover .pcard-shot img { transform: scale(1.03); }
+.pcard-shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pcard:hover .pcard-shot { translate: 0 -6px; box-shadow: 0 50px 90px -40px rgb(0 0 0 / .95); }
 .pill-status { position: absolute; top: 1.1rem; left: 1.1rem; z-index: 1; }
 .pcard-body { display: flex; flex-direction: column; gap: 1.1rem; padding: clamp(1.5rem, 3vw, 3rem); min-width: 0; }
 .pcard-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
@@ -657,9 +659,9 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   .work.is-rail .pcard-actions { flex-wrap: nowrap; gap: .5rem; }
   .work.is-rail .pcard-actions .btn { padding: 0 .85rem; font-size: .85rem; white-space: nowrap; }
   .work.is-rail .pcard-inner { will-change: transform, filter; transform-origin: 50% 50%; }
-  .work.is-rail .pcard-shot { aspect-ratio: auto; height: clamp(8rem, calc(100svh - 33rem), 13rem); }
+  /* La captura cabe a lo alto que deje la pantalla, sin perder su proporción */
+  .work.is-rail .pcard-shot { width: min(100%, clamp(8rem, calc(100svh - 33rem), 13rem) * var(--ar, 1.6)); }
   .work.is-rail .pcards-pin { padding-block: 1rem; }
-  .work.is-rail .pcard-shot img { transition: none; }
 
   /* Título «Mis Trabajos» a todo el ancho: con fuerza también en el móvil */
   #work-title { font-size: 20vw; line-height: .82; }
