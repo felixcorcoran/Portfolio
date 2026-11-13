@@ -84,7 +84,8 @@ const languages = {
     'exp.education': 'Formación',
     'exp.kind.freelance': 'Freelance',
     'exp.kind.intern': 'Prácticas',
-    'gallery.hint': 'Desliza para ver más'
+    'gallery.hint': 'Desliza para ver más',
+    'projects.scroll.hint': 'Sigue bajando'
   },
   en: {
     // SEO Metas
@@ -171,7 +172,8 @@ const languages = {
     'exp.education': 'Education',
     'exp.kind.freelance': 'Freelance',
     'exp.kind.intern': 'Internship',
-    'gallery.hint': 'Swipe to see more'
+    'gallery.hint': 'Swipe to see more',
+    'projects.scroll.hint': 'Keep scrolling'
   }
 };
 

@@ -252,7 +252,10 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                         <p class="work-counter" aria-hidden="true"><span class="wc-roll"><span data-work-current>01</span></span> / {pad(cards.length)}</p>
                     </header>
 
-                    <ol class="pcards">
+                    <!-- En móvil, este bloque se fija y las tarjetas pasan en horizontal con el
+                         scroll (src/scripts/motion.ts); sin animaciones, carrusel a dedo -->
+                    <div class="pcards-pin">
+                    <ol class="pcards" data-carousel>
                         {cards.map((c, i) => (
                             <li class="pcard" style={`--i: ${i}`} data-pcard>
                                 <article class="pcard-inner">
@@ -293,11 +296,13 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             </li>
                         ))}
                     </ol>
-                    <!-- En móvil, los proyectos van en un carrusel: posición y barra de avance -->
-                    <div class="pcards-nav" aria-hidden="true">
-                        <span class="pcards-n"><span data-pc-n>01</span> / {pad(cards.length)}</span>
-                        <span class="pcards-bar"><i data-pc-bar></i></span>
-                        <span class="pcards-hint">{t('gallery.hint')}</span>
+                    <!-- En móvil: posición y barra de avance -->
+                    <div class="cnav" aria-hidden="true">
+                        <span class="cnav-n"><span data-cnav-n>01</span> / {pad(cards.length)}</span>
+                        <span class="cnav-bar"><i></i></span>
+                        <span class="cnav-hint cnav-swipe">{t('gallery.hint')}</span>
+                        <span class="cnav-hint cnav-scroll">{t('projects.scroll.hint')}</span>
+                    </div>
                     </div>
                 </div>
             </section>
@@ -312,12 +317,12 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                 <span class="line"><span>{t('projects.freelance.title')}<i class="dot-end">.</i></span></span>
                             </h2>
                         </div>
-                        <p class="gallery-sub">{t('projects.freelance.sub')}<span class="gallery-hint"> · {t('gallery.hint')}</span></p>
+                        <p class="gallery-sub">{t('projects.freelance.sub')}</p>
                     </div>
                     <div class="gallery-viewport">
                         <!-- Tarjetas tipográficas: al pasar el ratón, la captura de la web sale
                              flotando junto al cursor (src/scripts/preview.ts) -->
-                        <ul class="gallery-track" data-track>
+                        <ul class="gallery-track" data-track data-carousel>
                             {clientSites.map((s, i) => (
                                 <li class="gcard">
                                     <a href={s.url} target="_blank" rel="noopener" data-preview={s.preview} data-preview-i={i}>
@@ -340,6 +345,14 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                    <!-- Cuando no se fija (móvil): carrusel a dedo con posición y barra -->
+                    <div class="wrap">
+                        <div class="cnav" aria-hidden="true">
+                            <span class="cnav-n"><span data-cnav-n>01</span> / {pad(clientSites.length)}</span>
+                            <span class="cnav-bar"><i></i></span>
+                            <span class="cnav-hint">{t('gallery.hint')}</span>
+                        </div>
                     </div>
                     <!-- Vista previa que sigue al ratón: todas las capturas apiladas; al
                          cambiar de web, la tira se desliza (barrido). En el centro, el

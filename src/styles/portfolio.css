@@ -339,13 +339,19 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
 /* Sobre las tarjetas, sin cursor del sistema (lo sustituye el círculo) */
 .gallery.has-preview .gcard a { cursor: none; }
 @media (hover: none), (pointer: coarse) { .gallery-preview { display: none; } }
-.gallery-hint { display: none; }
-.gallery:not(.is-pinned) .gallery-viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.gallery:not(.is-pinned) .gallery-viewport { overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; }
 .gallery:not(.is-pinned) .gallery-viewport::-webkit-scrollbar { display: none; }
 .gallery:not(.is-pinned) .gcard { scroll-snap-align: center; }
-.gallery:not(.is-pinned) .gallery-hint { display: inline; }
 /* Barra del carrusel de proyectos: solo en móvil */
-.pcards-nav { display: none; }
+/* Navegación de los carruseles: posición, barra de avance y pista */
+.cnav { display: none; align-items: center; gap: 1rem; margin-top: 1.25rem; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cnav-n span { color: var(--text); }
+.cnav-bar { position: relative; flex: 1; height: 1px; background: var(--line-2); overflow: hidden; }
+.cnav-bar i { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(var(--p, .17)); transition: transform .2s; }
+.cnav-hint { text-transform: uppercase; font-size: 10.5px; color: var(--faint); }
+.cnav-scroll, .is-rail .cnav-swipe { display: none; }
+.is-rail .cnav-scroll { display: inline; }
+.gallery:not(.is-pinned) .cnav { display: flex; }
 
 /* ---------- Experiencia: título fijo, línea con marcador y el hito activo encendido ---------- */
 /* Sin línea arriba y con aire: lo anterior se va antes de que entre el título */
@@ -607,7 +613,7 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   .pcard-inner { grid-template-columns: minmax(0, 1fr); min-height: 0; }
   .pcard-media, .pcard:nth-child(even) .pcard-media { order: 0; padding: 1rem; border: 0; border-bottom: 1px solid var(--line); }
   .pcard:nth-child(even) .pcard-inner { grid-template-columns: minmax(0, 1fr); }
-  .pcard-name { margin-top: .25rem; font-size: clamp(1.3rem, 7.2vw, 2.4rem); }
+  .pcard-name { margin-top: .25rem; font-size: clamp(1.3rem, 6.4vw, 2.4rem); }
   /* En pantallas estrechas las bandas se abren más para que se vean las dos */
   .ribbon-a { transform: rotate(-7deg); }
   .ribbon-b { transform: rotate(6deg); }
@@ -641,11 +647,24 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   .pcard-summary { font-size: 1rem; }
   .pcard-hint { display: none; }
   .pcard-actions .btn { height: 2.75rem; padding: 0 1rem; font-size: .9rem; }
-  .pcards-nav { display: flex; align-items: center; gap: 1rem; margin-top: 1.25rem; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--muted); }
-  .pcards-n span { color: var(--text); }
-  .pcards-bar { position: relative; flex: 1; height: 1px; background: var(--line-2); overflow: hidden; }
-  .pcards-bar i { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(var(--p, .17)); transition: transform .2s; }
-  .pcards-hint { text-transform: uppercase; font-size: 10.5px; color: var(--faint); }
+  .work .cnav { display: flex; }
+
+  /* Con animaciones (motion.ts): el bloque se fija y las tarjetas pasan en
+     horizontal con el scroll. Más estrechas, para ver asomar la siguiente, y
+     sin deslizar a dedo. La captura se ajusta para que todo quepa en pantalla */
+  .work.is-rail .pcards { position: relative; overflow: visible; scroll-snap-type: none; perspective: 1200px; }
+  .work.is-rail .pcard { flex-basis: 84%; }
+  .work.is-rail .pcard-actions { flex-wrap: nowrap; gap: .5rem; }
+  .work.is-rail .pcard-actions .btn { padding: 0 .85rem; font-size: .85rem; white-space: nowrap; }
+  .work.is-rail .pcard-inner { will-change: transform, filter; transform-origin: 50% 50%; }
+  .work.is-rail .pcard-shot { aspect-ratio: auto; height: clamp(8rem, calc(100svh - 33rem), 13rem); }
+  .work.is-rail .pcards-pin { padding-block: 1rem; }
+  .work.is-rail .pcard-shot img { transition: none; }
+
+  /* Título «Mis Trabajos» a todo el ancho: con fuerza también en el móvil */
+  #work-title { font-size: 20vw; line-height: .82; }
+  #work-title em { font-size: 1.12em; }
+  #work-title .line:nth-child(2) { text-align: right; margin-top: -.08em; }
 
   /* Experiencia: el título arriba, la línea a la izquierda y los hitos a su derecha */
   .exp { padding-block: 7rem 4rem; }

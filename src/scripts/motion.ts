@@ -188,9 +188,72 @@ function start() {
         };
     });
 
-    // ---------- Galería: se desliza en horizontal con el scroll (también en
-    // móvil). En pantallas bajas no se fija: se desliza con el dedo ----------
-    mm.add('(min-height: 601px)', () => {
+    // ---------- Proyectos en móvil: raíl horizontal ligado al scroll ----------
+    // El bloque se fija en el centro de la pantalla y las tarjetas pasan de
+    // derecha a izquierda al bajar. La del centro se ve recta y encendida; las
+    // de los lados, giradas, más pequeñas y apagadas, y su captura se desplaza
+    // dentro del marco (paralaje). La posición y la barra siguen al scroll
+    mm.add('(max-width: 760px) and (min-height: 601px)', () => {
+        const work = document.querySelector<HTMLElement>('.work');
+        const pin = document.querySelector<HTMLElement>('.pcards-pin');
+        const list = document.querySelector<HTMLElement>('.pcards');
+        const counter = work?.querySelector<HTMLElement>('[data-cnav-n]');
+        const bar = work?.querySelector<HTMLElement>('.cnav-bar');
+        const cards = gsap.utils.toArray<HTMLElement>('[data-pcard]');
+        if (!work || !pin || !list || !cards.length) return;
+        work.classList.add('is-rail');
+        list.scrollLeft = 0;
+
+        const last = cards[cards.length - 1];
+        // Hasta que la última tarjeta queda centrada
+        const distance = () => Math.max(last.offsetLeft + last.offsetWidth / 2 - list.clientWidth / 2, 0);
+        const rail = gsap.to(cards, {
+            x: () => -distance(), ease: 'none',
+            scrollTrigger: {
+                trigger: pin, start: 'center center', end: () => `+=${distance() * 1.15}`,
+                pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1,
+                // Al soltar, se queda con una tarjeta centrada
+                snap: { snapTo: 1 / (cards.length - 1), duration: { min: 0.2, max: 0.5 }, delay: 0.08, ease: 'power2.inOut' },
+                onUpdate: (self) => {
+                    const i = Math.round(self.progress * (cards.length - 1));
+                    if (counter) counter.textContent = String(i + 1).padStart(2, '0');
+                    bar?.style.setProperty('--p', String((i + 1) / cards.length));
+                },
+            },
+        });
+
+        cards.forEach((card) => {
+            const inner = card.querySelector<HTMLElement>('.pcard-inner');
+            const img = card.querySelector<HTMLElement>('.pcard-shot img');
+            if (!inner) return;
+            // Al entrar por la derecha: girada y pequeña → recta en el centro
+            const enter = { trigger: card, containerAnimation: rail, start: 'left right', end: 'center center', scrub: true };
+            // Al salir por la izquierda: se gira hacia el otro lado y se apaga
+            const leave = { trigger: card, containerAnimation: rail, start: 'center center', end: 'right left', scrub: true };
+            gsap.fromTo(inner, { rotationY: -22, scale: 0.86, filter: 'brightness(0.5)' }, {
+                rotationY: 0, scale: 1, filter: 'brightness(1)', ease: 'power1.out', immediateRender: card !== cards[0], scrollTrigger: enter,
+            });
+            gsap.fromTo(inner, { rotationY: 0, scale: 1, filter: 'brightness(1)' }, {
+                rotationY: 22, scale: 0.86, filter: 'brightness(0.5)', ease: 'power1.in', immediateRender: false, scrollTrigger: leave,
+            });
+            if (img) {
+                gsap.fromTo(img, { xPercent: 8, scale: 1.18 }, {
+                    xPercent: -8, scale: 1.18, ease: 'none',
+                    scrollTrigger: { trigger: card, containerAnimation: rail, start: 'left right', end: 'right left', scrub: true },
+                });
+            }
+        });
+
+        return () => {
+            work.classList.remove('is-rail');
+            if (counter) counter.textContent = '01';
+            bar?.style.removeProperty('--p');
+        };
+    });
+
+    // ---------- Galería: se desliza en horizontal con el scroll (escritorio).
+    // En móvil y en pantallas bajas no se fija: se desliza con el dedo ----------
+    mm.add('(min-width: 761px) and (min-height: 601px)', () => {
         const track = document.querySelector<HTMLElement>('[data-track]');
         const pin = document.querySelector<HTMLElement>('.gallery-pin');
         const gallery = document.querySelector<HTMLElement>('.gallery');
