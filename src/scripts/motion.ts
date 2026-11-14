@@ -202,16 +202,44 @@ function start() {
         work.classList.add('is-rail');
         list.scrollLeft = 0;
 
+        // Cada tarjeta mide 84vw con 8vw a los lados (CSS): la primera arranca
+        // centrada. El raíl avanza hasta que la última queda centrada
+        const first = cards[0];
         const last = cards[cards.length - 1];
-        // Hasta que la última tarjeta queda centrada
-        const distance = () => Math.max(last.offsetLeft + last.offsetWidth / 2 - list.clientWidth / 2, 0);
-        const rail = gsap.to(cards, {
+        const distance = () => Math.max(last.offsetLeft - first.offsetLeft, 0);
+        const parts = cards.map((card) => ({
+            card,
+            inner: card.querySelector<HTMLElement>('.pcard-inner'),
+            shot: card.querySelector<HTMLElement>('.pcard-shot'),
+        }));
+
+        // Cada fotograma: d = distancia de la tarjeta al centro, en tarjetas
+        // (0 = centrada, 1 = la siguiente). Centrada: recta, entera, encendida y
+        // con la captura en su sitio. A los lados: girada hacia fuera, más
+        // pequeña y apagada, y el marco de la captura algo desplazado (paralaje)
+        // sin acercar ni recortar la imagen
+        const paint = () => {
+            const x = Number(gsap.getProperty(first, 'x')) || 0;
+            const step = cards.length > 1 ? cards[1].offsetLeft - first.offsetLeft : first.offsetWidth;
+            const mid = list.clientWidth / 2;
+            parts.forEach(({ card, inner, shot }) => {
+                const center = card.offsetLeft + card.offsetWidth / 2 + x;
+                const d = gsap.utils.clamp(-1, 1, (center - mid) / step);
+                const a = Math.abs(d);
+                if (inner) gsap.set(inner, { transformPerspective: 1200, rotationY: -22 * d, scale: 1 - 0.14 * a, filter: `brightness(${1 - 0.5 * a})` });
+                if (shot) gsap.set(shot, { xPercent: -5 * d });
+            });
+        };
+
+        gsap.to(cards, {
             x: () => -distance(), ease: 'none',
+            onUpdate: paint,
             scrollTrigger: {
                 trigger: pin, start: 'center center', end: () => `+=${distance() * 1.15}`,
                 pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1,
                 // Al soltar, se queda con una tarjeta centrada
-                snap: { snapTo: 1 / (cards.length - 1), duration: { min: 0.2, max: 0.5 }, delay: 0.08, ease: 'power2.inOut' },
+                snap: { snapTo: 1 / Math.max(cards.length - 1, 1), duration: { min: 0.2, max: 0.5 }, delay: 0.08, ease: 'power2.inOut' },
+                onRefresh: paint,
                 onUpdate: (self) => {
                     const i = Math.round(self.progress * (cards.length - 1));
                     if (counter) counter.textContent = String(i + 1).padStart(2, '0');
@@ -219,33 +247,11 @@ function start() {
                 },
             },
         });
-
-        cards.forEach((card) => {
-            const inner = card.querySelector<HTMLElement>('.pcard-inner');
-            const shot = card.querySelector<HTMLElement>('.pcard-shot');
-            if (!inner) return;
-            // Al entrar por la derecha: girada y pequeña → recta en el centro
-            const enter = { trigger: card, containerAnimation: rail, start: 'left right', end: 'center center', scrub: true };
-            // Al salir por la izquierda: se gira hacia el otro lado y se apaga
-            const leave = { trigger: card, containerAnimation: rail, start: 'center center', end: 'right left', scrub: true };
-            gsap.fromTo(inner, { rotationY: -22, scale: 0.86, filter: 'brightness(0.5)' }, {
-                rotationY: 0, scale: 1, filter: 'brightness(1)', ease: 'power1.out', immediateRender: card !== cards[0], scrollTrigger: enter,
-            });
-            gsap.fromTo(inner, { rotationY: 0, scale: 1, filter: 'brightness(1)' }, {
-                rotationY: 22, scale: 0.86, filter: 'brightness(0.5)', ease: 'power1.in', immediateRender: false, scrollTrigger: leave,
-            });
-            // Paralaje: el marco de la captura entero se desliza un poco dentro de
-            // su hueco (cabe en el margen), sin acercar ni recortar la imagen
-            if (shot) {
-                gsap.fromTo(shot, { xPercent: 5 }, {
-                    xPercent: -5, ease: 'none',
-                    scrollTrigger: { trigger: card, containerAnimation: rail, start: 'left right', end: 'right left', scrub: true },
-                });
-            }
-        });
+        paint();
 
         return () => {
             work.classList.remove('is-rail');
+            parts.forEach(({ inner, shot }) => { if (inner) gsap.set(inner, { clearProps: 'all' }); if (shot) gsap.set(shot, { clearProps: 'all' }); });
             if (counter) counter.textContent = '01';
             bar?.style.removeProperty('--p');
         };

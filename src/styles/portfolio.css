@@ -654,8 +654,10 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   /* Con animaciones (motion.ts): el bloque se fija y las tarjetas pasan en
      horizontal con el scroll. Más estrechas, para ver asomar la siguiente, y
      sin deslizar a dedo. La captura se ajusta para que todo quepa en pantalla */
-  .work.is-rail .pcards { position: relative; overflow: visible; scroll-snap-type: none; perspective: 1200px; }
-  .work.is-rail .pcard { flex-basis: 84%; }
+  /* Tarjetas de 84vw con 8vw a cada lado: la primera arranca centrada y cada
+     parada del scroll deja una tarjeta exactamente en el centro */
+  .work.is-rail .pcards { position: relative; overflow: visible; scroll-snap-type: none; perspective: 1200px; padding-inline: 8vw; }
+  .work.is-rail .pcard { flex: 0 0 84vw; }
   .work.is-rail .pcard-actions { flex-wrap: nowrap; gap: .5rem; }
   .work.is-rail .pcard-actions .btn { padding: 0 .85rem; font-size: .85rem; white-space: nowrap; }
   .work.is-rail .pcard-inner { will-change: transform, filter; transform-origin: 50% 50%; }
