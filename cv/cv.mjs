@@ -150,12 +150,13 @@ ${fontFaces}
 		--ink: #18181b;
 		--muted: #5c5d66;
 		--soft: #8a8b94;
-		--rule: #e8e3df;
-		--accent: #f28c7a;
-		--accent-text: #c2513c;
-		--accent-line: #f6c3b7;
-		--chip: #fdede8;
-		--chip-text: #9e3f2d;
+		--rule: #e6e7ec;
+		/* El azul del portfolio (#7a95ff), más oscuro para leerse sobre blanco */
+		--accent: #3d5bd9;
+		--accent-text: #3049b8;
+		--accent-line: #b9c5f3;
+		--chip: #f1f2f5;
+		--chip-text: #3a3b44;
 		/* Multiplica los espacios verticales: lo ajusta el script del final
 		   para que el contenido llene la página, ni más ni menos */
 		--fit: 1;
@@ -199,19 +200,21 @@ ${fontFaces}
 
 	/* ---------- Secciones ---------- */
 	section { margin-top: calc(11pt * var(--fit)); }
-	/* Cabecera de sección: una franja suave a todo el ancho con una barra de
-	   color, para encontrar cada sección de un vistazo */
+	/* Cabecera de sección: «—— TÍTULO», como los rótulos del portfolio, con
+	   una línea fina debajo para encontrar cada sección de un vistazo */
 	h2 {
+		display: flex;
+		align-items: center;
+		gap: 7pt;
 		margin-bottom: calc(6pt * var(--fit));
-		padding: 4pt 8pt;
-		border-left: 3pt solid var(--accent);
-		border-radius: 0 2pt 2pt 0;
-		background: var(--chip);
+		padding: 0 0 4pt;
+		border-bottom: 0.75pt solid var(--rule);
 		font: 600 9.2pt/1.1 'Sora', sans-serif;
 		letter-spacing: 0.07em;
 		text-transform: uppercase;
 		color: var(--accent-text);
 	}
+	h2::before { content: ''; width: 18pt; height: 1.2pt; background: var(--accent); flex: none; }
 	.profile p { font-size: 8.8pt; line-height: 1.48; color: #2a2b31; }
 
 	/* Viñetas de lista de verdad (no dibujadas aparte): el texto se lee en su orden */
