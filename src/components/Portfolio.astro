@@ -36,7 +36,7 @@ const shot = (key) => (key ? shots[`../assets/projects/${key}-${lang}.jpg`] ?? s
 
 // ---------- Proyectos: los que tienen ficha web, en el orden de perfil.ts
 // (los «wide» al final salvo «first», que va el primero) ----------
-const actions = { visit: t('btn.visit'), explore: t('btn.explore'), case: t('btn.case') };
+const actions = { visit: t('btn.visit'), explore: t('btn.explore'), case: t('btn.case'), video: t('btn.video') };
 const withWeb = projects.filter((p) => p.web);
 const ordered = [
     ...withWeb.filter((p) => p.web.first),
@@ -307,67 +307,6 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                 </div>
             </section>
 
-            <!-- ================= WEBS PARA NEGOCIOS: galería horizontal ================= -->
-            <section class="gallery" id="webs" aria-labelledby="gallery-title">
-                <div class="gallery-pin">
-                    <div class="wrap gallery-head">
-                        <div>
-                            <p class="label">{t('projects.freelance.label')}</p>
-                            <h2 class="sec-title sm" id="gallery-title" data-split>
-                                <span class="line"><span>{t('projects.freelance.title')}<i class="dot-end">.</i></span></span>
-                            </h2>
-                        </div>
-                        <p class="gallery-sub">{t('projects.freelance.sub')}</p>
-                    </div>
-                    <div class="gallery-viewport">
-                        <!-- Tarjetas tipográficas: al pasar el ratón, la captura de la web sale
-                             flotando junto al cursor (src/scripts/preview.ts) -->
-                        <ul class="gallery-track" data-track data-carousel>
-                            {clientSites.map((s, i) => (
-                                <li class="gcard">
-                                    <a href={s.url} target="_blank" rel="noopener" data-preview={s.preview} data-preview-i={i}>
-                                        <!-- Animación de alambre según el sector (src/scripts/motifs.ts) -->
-                                        <canvas class="gcard-art" data-motif={motifs[i]} aria-hidden="true"></canvas>
-                                        <span class="gcard-top">
-                                            <span class="gcard-url"><i aria-hidden="true"></i>{new URL(s.url).hostname.replace(/^www\./, '')}</span>
-                                            <span class="gcard-num" aria-hidden="true">{pad(i + 1)}</span>
-                                        </span>
-                                        <span class="gcard-title">
-                                            <span class="gcard-cat">{s.cat}</span>
-                                            <h3 style={`--len: ${Math.max(...s.name.split(' ').map((w) => w.length))}`}>{s.name}</h3>
-                                        </span>
-                                        <span class="gcard-foot">
-                                            <span class="gcard-desc">{s.desc}</span>
-                                            <span class="gcard-go" aria-hidden="true">↗</span>
-                                        </span>
-                                        <span class="sr-only">{t('btn.visit')}</span>
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    <!-- Cuando no se fija (móvil): carrusel a dedo con posición y barra -->
-                    <div class="wrap">
-                        <div class="cnav" aria-hidden="true">
-                            <span class="cnav-n"><span data-cnav-n>01</span> / {pad(clientSites.length)}</span>
-                            <span class="cnav-bar"><i></i></span>
-                            <span class="cnav-hint">{t('gallery.hint')}</span>
-                        </div>
-                    </div>
-                    <!-- Vista previa que sigue al ratón: todas las capturas apiladas; al
-                         cambiar de web, la tira se desliza (barrido). En el centro, el
-                         círculo con la flecha hace de cursor -->
-                    <div class="gallery-preview" aria-hidden="true">
-                        <div class="gp-frame">
-                            <div class="gp-track" data-preview-track>
-                                {clientSites.map((s) => <img src={s.preview} alt="" loading="lazy" decoding="async" />)}
-                            </div>
-                        </div>
-                        <span class="gp-cursor">↗</span>
-                    </div>
-                </div>
-            </section>
-
             <!-- ================= EXPERIENCIA =================
                  Dos columnas: a la izquierda el título se queda fijo a media pantalla
                  con un contador; en medio, una línea que se dibuja con el scroll y un
@@ -462,6 +401,69 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                             </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= WEBS PARA NEGOCIOS: galería horizontal =================
+                 Al final, antes del contacto: primero los proyectos técnicos, la
+                 experiencia y el stack; las webs de clientes, como extra -->
+            <section class="gallery" id="webs" aria-labelledby="gallery-title">
+                <div class="gallery-pin">
+                    <div class="wrap gallery-head">
+                        <div>
+                            <p class="label">{t('projects.freelance.label')}</p>
+                            <h2 class="sec-title sm" id="gallery-title" data-split>
+                                <span class="line"><span>{t('projects.freelance.title')}<i class="dot-end">.</i></span></span>
+                            </h2>
+                        </div>
+                        <p class="gallery-sub">{t('projects.freelance.sub')}</p>
+                    </div>
+                    <div class="gallery-viewport">
+                        <!-- Tarjetas tipográficas: al pasar el ratón, la captura de la web sale
+                             flotando junto al cursor (src/scripts/preview.ts) -->
+                        <ul class="gallery-track" data-track data-carousel>
+                            {clientSites.map((s, i) => (
+                                <li class="gcard">
+                                    <a href={s.url} target="_blank" rel="noopener" data-preview={s.preview} data-preview-i={i}>
+                                        <!-- Animación de alambre según el sector (src/scripts/motifs.ts) -->
+                                        <canvas class="gcard-art" data-motif={motifs[i]} aria-hidden="true"></canvas>
+                                        <span class="gcard-top">
+                                            <span class="gcard-url"><i aria-hidden="true"></i>{new URL(s.url).hostname.replace(/^www\./, '')}</span>
+                                            <span class="gcard-num" aria-hidden="true">{pad(i + 1)}</span>
+                                        </span>
+                                        <span class="gcard-title">
+                                            <span class="gcard-cat">{s.cat}</span>
+                                            <h3 style={`--len: ${Math.max(...s.name.split(' ').map((w) => w.length))}`}>{s.name}</h3>
+                                        </span>
+                                        <span class="gcard-foot">
+                                            <span class="gcard-desc">{s.desc}</span>
+                                            <span class="gcard-go" aria-hidden="true">↗</span>
+                                        </span>
+                                        <span class="sr-only">{t('btn.visit')}</span>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <!-- Cuando no se fija (móvil): carrusel a dedo con posición y barra -->
+                    <div class="wrap">
+                        <div class="cnav" aria-hidden="true">
+                            <span class="cnav-n"><span data-cnav-n>01</span> / {pad(clientSites.length)}</span>
+                            <span class="cnav-bar"><i></i></span>
+                            <span class="cnav-hint">{t('gallery.hint')}</span>
+                        </div>
+                    </div>
+                    <!-- Vista previa que sigue al ratón: todas las capturas apiladas; al
+                         cambiar de web, la tira se desliza (barrido). En el centro, el
+                         círculo con la flecha hace de cursor -->
+                    <div class="gallery-preview" aria-hidden="true">
+                        <div class="gp-frame">
+                            <div class="gp-track" data-preview-track>
+                                {clientSites.map((s) => <img src={s.preview} alt="" loading="lazy" decoding="async" />)}
+                            </div>
+                        </div>
+                        <span class="gp-cursor">↗</span>
                     </div>
                 </div>
             </section>
