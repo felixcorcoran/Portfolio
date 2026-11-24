@@ -120,7 +120,7 @@ function page(lang) {
 			<header>
 				<h3>${esc(typeof p.name === 'string' ? p.name : p.name[lang])}</h3>
 				${p.status ? `<span class="status">${esc(p.status[lang])}</span>` : ''}
-				${p.url ? `<a class="url" href="${p.url}">${esc(bare(p.url))}</a>` : ''}
+				${p.cvUrl ? `<a class="url" href="${p.cvUrl[lang]}">${esc(lang === 'en' ? 'Watch the demo ↗' : 'Ver la demo ↗')}</a>` : p.url ? `<a class="url" href="${p.url}">${esc(bare(p.url))}</a>` : ''}
 			</header>
 			<p class="summary">${esc(p.summary[lang])}</p>
 			${p.highlights.map((h) => `<p class="detail">${esc(h[lang])}</p>`).join('')}
