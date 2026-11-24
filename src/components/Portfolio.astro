@@ -58,6 +58,8 @@ const cards = ordered.map((p) => ({
     client: p.web.client ?? false,
     image: shot(p.web.image),
     imagePos: p.web.imagePos ?? 'left top',
+    // La demo en vídeo se abre en la propia página (public/video), en el idioma de la página
+    video: p.web.action === 'video' ? (lang === 'en' ? '/video/demo-aws-en' : '/video/demo-aws') : null,
 }));
 
 // ---------- Galería: webs de clientes ----------
@@ -278,7 +280,12 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                         <p class="pcard-more">{c.highlights}</p>
                                         <ul class="chips">{c.chips.map((chip) => <li>{chip}</li>)}</ul>
                                         <div class="pcard-actions">
-                                            {c.url && (
+                                            {c.video && (
+                                                <a class="btn btn-solid" href={`${c.video}.mp4`} data-video={c.video} data-video-title={c.name}>
+                                                    <span>{c.action}</span><span aria-hidden="true">▶</span>
+                                                </a>
+                                            )}
+                                            {c.url && !c.video && (
                                                 <a class="btn btn-solid" href={c.url} target="_blank" rel="noopener">
                                                     <span>{c.action}</span><span aria-hidden="true">↗</span>
                                                 </a>
@@ -289,7 +296,7 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
                                                     <span>{t('btn.code')}</span>
                                                 </a>
                                             )}
-                                            {c.hover && c.url && <span class="pcard-hint">{c.hover}</span>}
+                                            {c.hover && (c.url || c.video) && <span class="pcard-hint">{c.hover}</span>}
                                         </div>
                                     </div>
                                 </article>
@@ -538,8 +545,17 @@ const githubPath = 'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4
             </nav>
         </footer>
 
+        <!-- La demo en vídeo (src/scripts/video.ts): se abre sobre la página y se cierra con Esc, el botón o fuera del vídeo -->
+        <dialog class="vdialog" data-lenis-prevent aria-label={t('video.title')}>
+            <div class="vdialog-box">
+                <button class="vdialog-close" type="button" aria-label={t('video.close')}>×</button>
+                <video controls playsinline preload="none"></video>
+            </div>
+        </dialog>
+
         <script>
             import '../scripts/idioma';
+            import '../scripts/video';
             import '../scripts/motion';
             import '../scripts/smoke';
             import '../scripts/stars';

@@ -707,3 +707,45 @@ html.lang-arriving .pf main, html.lang-arriving .pf footer { opacity: 0; }
   .dot { animation: none; }
   .pcard { position: static; }
 }
+
+/* ---------- La demo en vídeo (src/scripts/video.ts) ---------- */
+html.vopen { overflow: hidden; }
+.vdialog {
+  width: min(1200px, calc(100vw - 32px));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+.vdialog::backdrop { background: rgb(5 5 6 / 0.88); backdrop-filter: blur(6px); }
+.vdialog-box { position: relative; }
+.vdialog video {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 120px);
+  aspect-ratio: 16 / 9;
+  background: var(--bg);
+  border: 1px solid var(--panel-2);
+  border-radius: 14px;
+}
+.vdialog-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--panel-2);
+  background: var(--panel);
+  color: var(--accent);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+.vdialog-close:hover { background: var(--panel-2); }
+@media (min-width: 700px) and (min-height: 600px) { .vdialog-close { top: -56px; right: 0; } }
