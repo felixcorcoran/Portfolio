@@ -154,7 +154,7 @@ ${fontFaces}
 		/* El azul del portfolio (#7a95ff), más oscuro para leerse sobre blanco */
 		--accent: #3d5bd9;
 		--accent-text: #3049b8;
-		--accent-line: #b9c5f3;
+		--accent-line: #9fb0ee;
 		--chip: #f1f2f5;
 		--chip-text: #3a3b44;
 		/* Multiplica los espacios verticales: lo ajusta el script del final
@@ -251,9 +251,10 @@ ${fontFaces}
 	.project .detail { margin-top: 2pt; color: var(--muted); }
 	.stack { display: flex; flex-wrap: wrap; gap: 3pt; margin-top: calc(4pt * var(--fit)); }
 	.stack span {
-		padding: 1pt 5pt;
-		border-radius: 3pt;
-		background: var(--chip);
+		padding: 0.6pt 5pt;
+		border: 0.7pt solid var(--accent-line);
+		border-radius: 8pt;
+		background: #f5f7ff;
 		color: var(--chip-text);
 		font-size: 6.9pt;
 		font-weight: 500;
