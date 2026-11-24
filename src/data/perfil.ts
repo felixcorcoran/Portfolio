@@ -23,6 +23,8 @@ export interface Project {
 	url?: string;
 	/** Repositorio público en GitHub, si lo hay */
 	repo?: string;
+	/** En el CV, otro enlace en vez de `url` (p. ej. el vídeo de la demo, que en GitHub tiene una ruta larga) */
+	cvUrl?: Text;
 	/** false: no sale en el CV (que tiene que caber en una página) */
 	cv?: boolean;
 	/** Etiqueta corta junto al nombre: «En desarrollo», «Uso interno»… */
@@ -140,18 +142,19 @@ export const projects: Project[] = [
 	{
 		name: { es: 'Radar de subvenciones · plataforma', en: 'Grants radar · platform' },
 		url: 'https://github.com/felixcorcoran/subvenciones/blob/main/plataforma/docs/demo-aws.mp4',
+		cvUrl: { es: 'https://dev.felixcorcoran.es/video/demo-aws.mp4', en: 'https://dev.felixcorcoran.es/video/demo-aws-en.mp4' },
 		repo: 'https://github.com/felixcorcoran/subvenciones/tree/main/plataforma',
 		summary: {
-			es: 'El radar rehecho como lo llevaría una empresa: cinco servicios Spring Boot con arquitectura hexagonal unidos por Kafka, desplegados en AWS con Terraform.',
-			en: 'The radar rebuilt the way a company would run it: five hexagonal Spring Boot services connected through Kafka, deployed on AWS with Terraform.',
+			es: 'El radar a escala de empresa: cinco servicios Spring Boot unidos por Kafka, en AWS con Terraform.',
+			en: 'The radar at company scale: five Spring Boot services linked by Kafka, on AWS with Terraform.',
 		},
 		highlights: [
 			{
-				es: 'EKS, RDS y ECR; outbox, idempotencia y cola de errores; OpenTelemetry y Grafana; OAuth2 con Keycloak. Levantado, probado y apagado: está en vídeo.',
-				en: 'EKS, RDS and ECR; outbox, idempotency and dead-letter queue; OpenTelemetry and Grafana; OAuth2 with Keycloak. Deployed, tested and torn down: it is on video.',
+				es: 'Hexagonal, con outbox e idempotencia; EKS, RDS, OpenTelemetry y Keycloak. Grabado y apagado.',
+				en: 'Hexagonal, with outbox and idempotency; EKS, RDS, OpenTelemetry and Keycloak. Recorded, then torn down.',
 			},
 		],
-		stack: ['Spring Boot', 'Kafka', 'Kubernetes', 'AWS', 'Terraform', 'OpenTelemetry'],
+		stack: ['Spring Boot', 'Kafka', 'Kubernetes', 'AWS', 'Terraform'],
 		web: {
 			tag: { es: 'Arquitectura y cloud', en: 'Architecture & cloud' },
 			hover: { es: 'Demo en AWS', en: 'AWS demo' },
@@ -286,6 +289,8 @@ export const projects: Project[] = [
 	},
 	{
 		name: 'felixcorcoran.es',
+		// Web personal: en la web sí, en el CV no (no cabe en una página y suma poco)
+		cv: false,
 		url: 'https://felixcorcoran.es',
 		repo: 'https://github.com/felixcorcoran/felixcorcoran-landing',
 		summary: {
@@ -333,7 +338,7 @@ export type SkillGroup = 'ai' | 'backend' | 'frontend' | 'integrations' | 'tools
 
 export const skills: { id: SkillGroup; label: Text; items: string[] }[] = [
 	{ id: 'ai', label: { es: 'IA y automatización', en: 'AI & automation' }, items: ['n8n', 'OpenAI API', 'Claude API', 'Gemini API', 'JSON', 'REST'] },
-	{ id: 'backend', label: { es: 'Backend', en: 'Backend' }, items: ['Java', 'Spring Boot', 'Node.js', 'PHP', 'Laravel', 'PostgreSQL', 'MySQL', 'Python'] },
+	{ id: 'backend', label: { es: 'Backend', en: 'Backend' }, items: ['Java', 'Spring Boot', 'Kafka', 'Node.js', 'PHP', 'Laravel', 'PostgreSQL', 'MySQL', 'Python'] },
 	{
 		id: 'frontend',
 		label: { es: 'Frontend', en: 'Frontend' },
@@ -344,7 +349,7 @@ export const skills: { id: SkillGroup; label: Text; items: string[] }[] = [
 		label: { es: 'Integraciones', en: 'Integrations' },
 		items: ['Shopify (Liquid, GraphQL)', 'Telegram Bot API', 'Google Places API', 'Resend'],
 	},
-	{ id: 'tools', label: { es: 'Herramientas', en: 'Tools' }, items: ['Git', 'GitHub', 'GitHub Actions', 'Docker', 'Vercel', 'Postman'] },
+	{ id: 'tools', label: { es: 'Herramientas', en: 'Tools' }, items: ['Git', 'GitHub Actions', 'Docker', 'Kubernetes', 'AWS', 'Terraform', 'OpenTelemetry', 'Grafana', 'Vercel'] },
 ];
 
 /**
@@ -352,7 +357,7 @@ export const skills: { id: SkillGroup; label: Text; items: string[] }[] = [
  * lo obvio (HTML, JSON, REST…) o lo que ningún proyecto respalda, para que la
  * web enseñe solo lo que se ve en Mis trabajos
  */
-export const cvOnly = ['JSON', 'REST', 'Python', 'Vite', 'HTML', 'CSS/Sass', 'GitHub', 'Postman'];
+export const cvOnly = ['JSON', 'REST', 'Python', 'Vite', 'HTML', 'CSS/Sass'];
 
 /** Lo que estoy aprendiendo: sale en el portfolio (New horizons), no en el CV */
 export const learning = ['Next.js', 'Supabase'];
