@@ -38,7 +38,7 @@ export interface Project {
 		tag: Text;
 		/** Lo que se lee al pasar el ratón, bajo «Visitar web», «Explorar» o «Ver caso» */
 		hover?: Text;
-		action?: 'visit' | 'explore' | 'case';
+		action?: 'visit' | 'explore' | 'case' | 'video';
 		/** Otra dirección para la web (p. ej. con /en, o el caso contado en otra página) */
 		url?: Text;
 		/** Letra o símbolo gigante de fondo */
@@ -137,6 +137,32 @@ export const experience: {
 
 export const projects: Project[] = [
 	// En este orden salen en el CV y en Mis trabajos (las tarjetas anchas, al final salvo first)
+	{
+		name: { es: 'Radar de subvenciones · plataforma', en: 'Grants radar · platform' },
+		url: 'https://github.com/felixcorcoran/subvenciones/blob/main/plataforma/docs/demo-aws.mp4',
+		repo: 'https://github.com/felixcorcoran/subvenciones/tree/main/plataforma',
+		summary: {
+			es: 'El radar rehecho como lo llevaría una empresa: cinco servicios Spring Boot con arquitectura hexagonal unidos por Kafka, desplegados en AWS con Terraform.',
+			en: 'The radar rebuilt the way a company would run it: five hexagonal Spring Boot services connected through Kafka, deployed on AWS with Terraform.',
+		},
+		highlights: [
+			{
+				es: 'EKS, RDS y ECR; outbox, idempotencia y cola de errores; OpenTelemetry y Grafana; OAuth2 con Keycloak. Levantado, probado y apagado: está en vídeo.',
+				en: 'EKS, RDS and ECR; outbox, idempotency and dead-letter queue; OpenTelemetry and Grafana; OAuth2 with Keycloak. Deployed, tested and torn down: it is on video.',
+			},
+		],
+		stack: ['Spring Boot', 'Kafka', 'Kubernetes', 'AWS', 'Terraform', 'OpenTelemetry'],
+		web: {
+			tag: { es: 'Arquitectura y cloud', en: 'Architecture & cloud' },
+			hover: { es: 'Demo en AWS', en: 'AWS demo' },
+			action: 'video',
+			mark: 'K8s',
+			image: 'plataforma',
+			imagePos: 'left top',
+			wide: true,
+			first: true,
+		},
+	},
 	{
 		name: { es: 'Radar de subvenciones', en: 'Grants radar' },
 		url: 'https://subvenciones.felixcorcoran.es',
@@ -263,8 +289,8 @@ export const projects: Project[] = [
 		url: 'https://felixcorcoran.es',
 		repo: 'https://github.com/felixcorcoran/felixcorcoran-landing',
 		summary: {
-			es: 'Mi web de servicios: narrativa guiada por el scroll y escultura 3D con shaders propios.',
-			en: 'My services website: scroll-driven storytelling and a 3D sculpture with custom shaders.',
+			es: 'Web personal: narrativa guiada por el scroll y una escultura 3D con shaders propios.',
+			en: 'Personal website: scroll-driven storytelling and a 3D sculpture with custom shaders.',
 		},
 		highlights: [
 			{
@@ -275,7 +301,7 @@ export const projects: Project[] = [
 		stack: ['Astro', 'GSAP', 'Three.js', 'GLSL'],
 		web: {
 			tag: { es: 'Web y WebGL', en: 'Web & WebGL' },
-			hover: { es: 'Web de servicios', en: 'Services website' },
+			hover: { es: 'Web propia', en: 'Personal website' },
 			action: 'visit',
 			url: { es: 'https://felixcorcoran.es', en: 'https://felixcorcoran.es/en' },
 			mark: 'fc',
