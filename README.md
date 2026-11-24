@@ -36,6 +36,10 @@ Las animaciones de scroll están en [`src/scripts/motion.ts`](src/scripts/motion
 - **Tailwind CSS 4** solo para el reset; el resto, CSS propio. Tipografías Archivo, Instrument Serif y JetBrains Mono servidas desde el proyecto (Fontsource).
 - Capturas optimizadas con `astro:assets` e iconos del stack servidos desde el propio proyecto (Simple Icons).
 
+## Cómo trabajo
+
+El producto, la arquitectura y las decisiones son míos: qué se construye, cómo se reparte entre piezas, qué reglas no se pueden romper (nada inventado, coste cero, privacidad) y cuándo algo está listo. Para implementar uso Claude Code como asistente, y por eso hay commits en los que figura como coautor o como autor. Cada cambio pasa por un pull request que reviso y fusiono yo, y lo validan las pruebas y la CI de cada repositorio antes de llegar a producción.
+
 ## En local
 
 ```sh
